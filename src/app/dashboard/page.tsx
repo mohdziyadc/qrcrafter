@@ -17,6 +17,7 @@ const Dashboard = async (props: Props) => {
   if (!session?.user) {
     return redirect("/");
   }
+
   return (
     <div>
       <div className="max-w-full px-6 py-4 flex justify-between">

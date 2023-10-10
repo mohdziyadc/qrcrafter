@@ -20,9 +20,9 @@ export const freeTextFormSchema = z.object({
 });
 
 export const contactFormSchema = z.object({
-  first_name: z.string(),
-  last_name: z.string(),
-  organisation: z.string(),
+  first_name: z.string().min(1, { message: "Enter a first name" }),
+  last_name: z.string().min(1, { message: "Enter a last name" }),
+  organisation: z.string().min(1, { message: "Enter an organisation name" }),
   email: z.string().email({ message: "Enter a valid email" }),
   phone_number: z.string().regex(phoneRegex, "Invalid Number"),
 });

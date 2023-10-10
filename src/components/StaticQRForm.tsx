@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import URLForm from "./URLForm";
 import MultiURLForm from "./MultiURLForm";
 import FreeTextForm from "./FreeTextForm";
+import ContactForm from "./ContactForm";
 
 type Props = {};
 
@@ -25,7 +26,9 @@ const StaticQRForm = (props: Props) => {
       <TabsContent value="freetext">
         <FreeTextForm />
       </TabsContent>
-      <TabsContent value="contact">Contact Tab</TabsContent>
+      <TabsContent value="contact">
+        <ContactForm />
+      </TabsContent>
     </Tabs>
   );
 };

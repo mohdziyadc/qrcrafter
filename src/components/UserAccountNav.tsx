@@ -18,6 +18,7 @@ type Props = {
   user: User;
 };
 const UserAccountNav = ({ user }: Props) => {
+  // console.log(`Token Id: ${user.id}`);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className=" w-11 h-11">
