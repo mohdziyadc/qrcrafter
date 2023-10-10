@@ -51,4 +51,25 @@ model User {
   qrCode        String?
   accounts      Account[]
   sessions      Session[]
+  multiUrlQrCodes   MultiURLCode[]
+}
+
+
+model MultiURLCode {
+  id  String @id @default(cuid())
+  qrCode String @db.VarChar(3000)
+  urls URL[]
+  userId String
+  user User @relation(fields:[userId], references:[id])
+
+  @@index([userId], name:"userId")
+}
+
+model URL {
+  id String @id @default(cuid())
+  url String
+  multiURLCodeId String 
+  multiURLCode MultiURLCode @relation(fields: [multiURLCodeId], references: [id])
+
+  @@index([multiURLCodeId], name: "multiURLCodeId")
 }

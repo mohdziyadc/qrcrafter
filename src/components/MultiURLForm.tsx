@@ -1,7 +1,7 @@
 "use client";
 import { multiUrlFormSchema } from "@/validators/qrFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
@@ -10,11 +10,16 @@ import { Button } from "./ui/button";
 import { Plus, Trash } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { AnimatePresence, motion } from "framer-motion";
+import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
+import Image from "next/image";
 
 type Props = {};
 
 type multiUrlInput = z.infer<typeof multiUrlFormSchema>;
 const MultiURLForm = (props: Props) => {
+  // const [urlArray, setUrlArray] = useState([""]);
+  const [qrCode, setQrCode] = useState("");
   const form = useForm<multiUrlInput>({
     resolver: zodResolver(multiUrlFormSchema),
     defaultValues: {
@@ -22,10 +27,23 @@ const MultiURLForm = (props: Props) => {
     },
   });
   const formErrors = form.formState.errors;
-  console.log(`Error: ${JSON.stringify(formErrors)}`);
-  const onSubmitHandler = () => {
-    if (formErrors.urls) {
-    }
+
+  const { mutate: getMultiQR, isLoading } = useMutation({
+    mutationFn: async ({ urls: urlArray }: multiUrlInput) => {
+      const response = await axios.post("/api/multiurlqr", {
+        urls: urlArray,
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      setQrCode(data.multiQr);
+    },
+    onError: (e) => {
+      console.log(e);
+    },
+  });
+  const onSubmitHandler = ({ urls }: multiUrlInput) => {
+    getMultiQR({ urls });
   };
 
   return (
@@ -102,6 +120,18 @@ const MultiURLForm = (props: Props) => {
           </div>
         </form>
       </Form>
+      {qrCode && (
+        // animation needed
+        <div className="flex justify-center items-center mt-2">
+          <Image
+            className="border-black rounded-lg border-2"
+            src={qrCode}
+            alt="qrcode"
+            height={200}
+            width={200}
+          />
+        </div>
+      )}
     </div>
   );
 };
