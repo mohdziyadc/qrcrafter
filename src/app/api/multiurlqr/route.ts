@@ -11,9 +11,9 @@ export async function POST(req: Request, res: Response) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
     const body = await req.json();
-    const { urls } = multiUrlFormSchema.parse(body);
+    const { urls, titles } = multiUrlFormSchema.parse(body);
     // return NextResponse.json({ urlArray: urls });
-
+    // console.log(urls);
     const generateUserQr = await QRCode.toDataURL(
       `http://localhost:3000/multiqr/${session.user.id}`,
       {
@@ -24,21 +24,43 @@ export async function POST(req: Request, res: Response) {
       }
     );
 
-    const multiURLCode = await prismaClient.multiURLCode.create({
-      data: {
-        qrCode: generateUserQr,
+    const multiQRCode = await prismaClient.multiURLCode.findFirst({
+      where: {
         userId: session.user.id,
       },
     });
 
-    await prismaClient.uRL.createMany({
-      data: urls.map((url) => {
-        return {
-          url: url,
-          multiURLCodeId: multiURLCode.id,
-        };
-      }),
+    type MultiQR = {
+      id: string;
+      qrCode: string;
+      urls: string[];
+      userId: string;
+      titles: string[];
+    };
+
+    let createMultiQR: MultiQR;
+    if (!multiQRCode) {
+      createMultiQR = await prismaClient.multiURLCode.create({
+        data: {
+          qrCode: generateUserQr,
+          urls: urls,
+          userId: session.user.id,
+          titles: titles,
+        },
+      });
+    }
+
+    await prismaClient.multiURLCode.update({
+      where: {
+        id: multiQRCode?.id,
+      },
+      data: {
+        urls: urls,
+        titles: titles,
+      },
     });
+
+    // isInitial = first time calling the API
 
     return NextResponse.json({ multiQr: generateUserQr });
   } catch (error) {

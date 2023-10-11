@@ -13,11 +13,18 @@ const MultiQR = async (props: Props) => {
     where: {
       userId: userId,
     },
-    include: {
-      urls: true,
-    },
   });
-  return multiUrlQr?.urls.map((url, index) => <div key={index}>{url.url}</div>);
+
+  return (
+    <div>
+      <h1>Multi URL Codes</h1>
+      {multiUrlQr?.urls.map((url, idx) => (
+        <div key={idx}>
+          {url} Title: {multiUrlQr.titles[idx]}
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export default MultiQR;

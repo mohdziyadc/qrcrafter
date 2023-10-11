@@ -10,7 +10,7 @@ type Props = {};
 
 const StaticQRForm = (props: Props) => {
   return (
-    <Tabs defaultValue="url">
+    <Tabs defaultValue="url" className="max-h-screen">
       <TabsList className="grid grid-cols-4 gap-2 w-full">
         <TabsTrigger value="url">URL</TabsTrigger>
         <TabsTrigger value="multi_url">Multi-URL</TabsTrigger>

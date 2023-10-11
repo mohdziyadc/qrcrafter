@@ -7,7 +7,7 @@ import * as z from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Plus, Trash } from "lucide-react";
+import { Loader2, Plus, Trash } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
@@ -24,14 +24,16 @@ const MultiURLForm = (props: Props) => {
     resolver: zodResolver(multiUrlFormSchema),
     defaultValues: {
       urls: ["", ""],
+      titles: ["", ""],
     },
   });
   const formErrors = form.formState.errors;
 
   const { mutate: getMultiQR, isLoading } = useMutation({
-    mutationFn: async ({ urls: urlArray }: multiUrlInput) => {
+    mutationFn: async ({ urls: urlArray, titles }: multiUrlInput) => {
       const response = await axios.post("/api/multiurlqr", {
         urls: urlArray,
+        titles: titles,
       });
       return response.data;
     },
@@ -42,49 +44,84 @@ const MultiURLForm = (props: Props) => {
       console.log(e);
     },
   });
-  const onSubmitHandler = ({ urls }: multiUrlInput) => {
-    getMultiQR({ urls });
+  const onSubmitHandler = ({ urls, titles }: multiUrlInput) => {
+    console.log(
+      JSON.stringify({
+        url: urls,
+        title: titles,
+      })
+    );
+    getMultiQR({ urls, titles });
   };
 
   return (
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmitHandler)}>
-          <AnimatePresence>
-            {form.watch("urls").map((_, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{
-                  opacity: { duration: 0.2 },
-                  height: { duration: 0.2 },
-                }}
-              >
-                <FormField
-                  control={form.control}
+          <div>
+            <AnimatePresence>
+              {form.watch("urls").map((_, index) => (
+                <motion.div
                   key={index}
-                  name={`urls.${index}`}
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row justify-center items-baseline">
-                      <FormLabel className="flex-[1]">
-                        URL {index + 1}
-                      </FormLabel>
-                      <FormControl className="flex-[7]">
-                        <Input placeholder="Enter URL here" {...field} />
-                      </FormControl>
-                      {formErrors.urls && (
-                        <span className="text-red-500 text-sm flex-[2] ml-1">
-                          {formErrors.urls[index]?.message}
-                        </span>
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{
+                    opacity: { duration: 0.2 },
+                    height: { duration: 0.2 },
+                  }}
+                >
+                  <div className="border-2 border-black mb-2 py-2 rounded-md">
+                    <FormField
+                      control={form.control}
+                      key={index}
+                      name={`urls.${index}`}
+                      render={({ field }) => (
+                        <FormItem
+                          className="flex flex-col mt-2 px-2 justify-center items-baseline"
+                          autoFocus
+                        >
+                          <FormLabel className="flex-[1] text-md">
+                            URL {index + 1}
+                          </FormLabel>
+                          <FormControl className="">
+                            <Input placeholder="Enter URL here" {...field} />
+                          </FormControl>
+                          {formErrors.urls && (
+                            <span className="text-red-500 text-sm flex-[2] ml-1">
+                              {formErrors.urls[index]?.message}
+                            </span>
+                          )}
+                        </FormItem>
                       )}
-                    </FormItem>
-                  )}
-                />
-              </motion.div>
-            ))}
-          </AnimatePresence>
+                    />
+                    <FormField
+                      control={form.control}
+                      name={`titles.${index}`}
+                      render={({ field }) => (
+                        <FormItem
+                          autoFocus
+                          className="flex flex-col mt-2 px-2 justify-center items-baseline"
+                        >
+                          <FormLabel className="flex-[1] text-md">
+                            Title {index + 1}
+                          </FormLabel>
+                          <FormControl className="">
+                            <Input placeholder="Enter title here" {...field} />
+                          </FormControl>
+                          {formErrors.titles && (
+                            <span className="text-red-500 text-sm flex-[2] ml-1">
+                              {formErrors.titles[index]?.message}
+                            </span>
+                          )}
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
           <div className="flex items-center justify-center mt-4">
             <Separator className="flex-[1]" />
             <div className="mx-4">
@@ -95,6 +132,7 @@ const MultiURLForm = (props: Props) => {
                 className="font-semibold"
                 onClick={() => {
                   form.setValue("urls", [...form.watch("urls"), ""]); //appending to the units array
+                  form.setValue("titles", [...form.watch("titles"), ""]);
                 }}
               >
                 Add URL
@@ -106,6 +144,7 @@ const MultiURLForm = (props: Props) => {
                 className="font-semibold ml-2"
                 onClick={() => {
                   form.setValue("urls", form.watch("urls").slice(0, -1)); //removing from the units array
+                  form.setValue("titles", form.watch("titles").slice(0, -1));
                 }}
                 disabled={form.watch("urls").length == 2}
               >
@@ -116,7 +155,13 @@ const MultiURLForm = (props: Props) => {
             <Separator className="flex-[1]" />
           </div>
           <div className="flex justify-center items-center mt-4">
-            <Button type="submit">Generate QR</Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? (
+                <Loader2 className=" animate-spin" />
+              ) : (
+                <p>Generate QR</p>
+              )}
+            </Button>
           </div>
         </form>
       </Form>

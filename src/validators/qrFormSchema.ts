@@ -10,6 +10,7 @@ export const urlFormSchema = z.object({
 
 export const multiUrlFormSchema = z.object({
   urls: z.array(z.string().url({ message: "Invalid URL" })),
+  titles: z.array(z.string().min(1, { message: "Invalid Title" })),
 });
 
 export const freeTextFormSchema = z.object({
