@@ -18,7 +18,7 @@ const URLForm = (props: Props) => {
   const [qrCode, setQrCode] = useState("");
   const { mutate: getQRCode, isLoading } = useMutation({
     mutationFn: async ({ url }: urlFormInput) => {
-      const response = await axios.post("/api/urlqr", {
+      const response = await axios.post("/api/staticqr/urlqr", {
         url: url,
       });
       return response.data;

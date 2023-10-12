@@ -1,7 +1,7 @@
 "use client";
 import { multiUrlFormSchema } from "@/validators/qrFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
@@ -13,6 +13,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
+import { ScrollArea } from "./ui/scroll-area";
 
 type Props = {};
 
@@ -20,6 +21,7 @@ type multiUrlInput = z.infer<typeof multiUrlFormSchema>;
 const MultiURLForm = (props: Props) => {
   // const [urlArray, setUrlArray] = useState([""]);
   const [qrCode, setQrCode] = useState("");
+
   const form = useForm<multiUrlInput>({
     resolver: zodResolver(multiUrlFormSchema),
     defaultValues: {
@@ -31,7 +33,7 @@ const MultiURLForm = (props: Props) => {
 
   const { mutate: getMultiQR, isLoading } = useMutation({
     mutationFn: async ({ urls: urlArray, titles }: multiUrlInput) => {
-      const response = await axios.post("/api/multiurlqr", {
+      const response = await axios.post("/api/staticqr/multiurlqr", {
         urls: urlArray,
         titles: titles,
       });
@@ -60,66 +62,71 @@ const MultiURLForm = (props: Props) => {
         <form onSubmit={form.handleSubmit(onSubmitHandler)}>
           <div>
             <AnimatePresence>
-              {form.watch("urls").map((_, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{
-                    opacity: { duration: 0.2 },
-                    height: { duration: 0.2 },
-                  }}
-                >
-                  <div className="border-2 border-black mb-2 py-2 rounded-md">
-                    <FormField
-                      control={form.control}
-                      key={index}
-                      name={`urls.${index}`}
-                      render={({ field }) => (
-                        <FormItem
-                          className="flex flex-col mt-2 px-2 justify-center items-baseline"
-                          autoFocus
-                        >
-                          <FormLabel className="flex-[1] text-md">
-                            URL {index + 1}
-                          </FormLabel>
-                          <FormControl className="">
-                            <Input placeholder="Enter URL here" {...field} />
-                          </FormControl>
-                          {formErrors.urls && (
-                            <span className="text-red-500 text-sm flex-[2] ml-1">
-                              {formErrors.urls[index]?.message}
-                            </span>
-                          )}
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name={`titles.${index}`}
-                      render={({ field }) => (
-                        <FormItem
-                          autoFocus
-                          className="flex flex-col mt-2 px-2 justify-center items-baseline"
-                        >
-                          <FormLabel className="flex-[1] text-md">
-                            Title {index + 1}
-                          </FormLabel>
-                          <FormControl className="">
-                            <Input placeholder="Enter title here" {...field} />
-                          </FormControl>
-                          {formErrors.titles && (
-                            <span className="text-red-500 text-sm flex-[2] ml-1">
-                              {formErrors.titles[index]?.message}
-                            </span>
-                          )}
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </motion.div>
-              ))}
+              <ScrollArea className="h-72">
+                {form.watch("urls").map((_, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{
+                      opacity: { duration: 0.2 },
+                      height: { duration: 0.2 },
+                    }}
+                  >
+                    <div className="border-2 border-black mb-2 py-2 rounded-md">
+                      <FormField
+                        control={form.control}
+                        key={index}
+                        name={`urls.${index}`}
+                        render={({ field }) => (
+                          <FormItem
+                            className="flex flex-col mt-2 px-2 justify-center items-baseline"
+                            autoFocus
+                          >
+                            <FormLabel className="flex-[1] text-md">
+                              URL {index + 1}
+                            </FormLabel>
+                            <FormControl className="">
+                              <Input placeholder="Enter URL here" {...field} />
+                            </FormControl>
+                            {formErrors.urls && (
+                              <span className="text-red-500 text-sm flex-[2] ml-1">
+                                {formErrors.urls[index]?.message}
+                              </span>
+                            )}
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`titles.${index}`}
+                        render={({ field }) => (
+                          <FormItem
+                            autoFocus
+                            className="flex flex-col mt-2 px-2 justify-center items-baseline"
+                          >
+                            <FormLabel className="flex-[1] text-md">
+                              Title {index + 1}
+                            </FormLabel>
+                            <FormControl className="">
+                              <Input
+                                placeholder="Enter title here"
+                                {...field}
+                              />
+                            </FormControl>
+                            {formErrors.titles && (
+                              <span className="text-red-500 text-sm flex-[2] ml-1">
+                                {formErrors.titles[index]?.message}
+                              </span>
+                            )}
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </motion.div>
+                ))}
+              </ScrollArea>
             </AnimatePresence>
           </div>
           <div className="flex items-center justify-center mt-4">

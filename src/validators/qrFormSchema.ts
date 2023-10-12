@@ -14,10 +14,7 @@ export const multiUrlFormSchema = z.object({
 });
 
 export const freeTextFormSchema = z.object({
-  text: z.string().refine((str) => str.length >= 32, {
-    message:
-      "For the data you have entered, a Dynamic QR Code would be smaller and easier to scan.",
-  }),
+  text: z.string().min(1),
 });
 
 export const contactFormSchema = z.object({

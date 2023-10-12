@@ -7,13 +7,17 @@ import * as z from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { InfoIcon } from "lucide-react";
+import { InfoIcon, Loader2 } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import Image from "next/image";
 
 type Props = {};
 
 type freeTextInput = z.infer<typeof freeTextFormSchema>;
 const FreeTextForm = (props: Props) => {
   //   const [freeText, setFreeText] = useState("");
+  const [qrCode, setQRCode] = useState("");
   const form = useForm<freeTextInput>({
     resolver: zodResolver(freeTextFormSchema),
     defaultValues: {
@@ -22,7 +26,27 @@ const FreeTextForm = (props: Props) => {
   });
   const formErrors = form.formState.errors;
 
-  const onSubmitHandler = () => {};
+  const { mutate: generateFreeTextQR, isLoading } = useMutation({
+    mutationFn: async ({ text }: freeTextInput) => {
+      const response = await axios.post("/api/staticqr/freetext", {
+        text: text,
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      setQRCode(data.textQr);
+    },
+    onError: (e) => {
+      console.log(e);
+    },
+  });
+
+  const onSubmitHandler = ({ text }: freeTextInput) => {
+    console.log(`FREE TEXT: ${text.length}`);
+    if (text.length <= 2400) {
+      generateFreeTextQR({ text });
+    }
+  };
   return (
     <div>
       <Form {...form}>
@@ -37,6 +61,12 @@ const FreeTextForm = (props: Props) => {
                   <FormControl>
                     <Textarea placeholder="Enter your text here" {...field} />
                   </FormControl>
+                  {form.getValues("text").length >= 32 && (
+                    <span className="text-red-500 text-sm">
+                      For the data you have entered, a dynamic QR would be
+                      shorter and easier to compute
+                    </span>
+                  )}
                   {formErrors.text && (
                     <span className="text-red-500 text-sm">
                       {formErrors.text.message}
@@ -46,18 +76,30 @@ const FreeTextForm = (props: Props) => {
               );
             }}
           />
-          <div className="mt-2 flex flex-row text-sm justify-center bg-gray-200 p-2 rounded-md font-extralight">
-            <InfoIcon className="w-8 h-8 mr-2" />
-            <div>
-              For text with length greater than 32, a Dynamic QR code would be
-              short and easier to compute than a static QR.
-            </div>
-          </div>
+
           <div className="flex justify-center items-center mt-4">
-            <Button type="submit">Generate QR</Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? (
+                <Loader2 className=" animate-spin" />
+              ) : (
+                <p>Generate QR</p>
+              )}
+            </Button>
           </div>
         </form>
       </Form>
+      {qrCode && (
+        // animation needed
+        <div className="flex justify-center items-center mt-2">
+          <Image
+            className="border-black rounded-lg border-2"
+            src={qrCode}
+            alt="qrcode"
+            height={200}
+            width={200}
+          />
+        </div>
+      )}
     </div>
   );
 };

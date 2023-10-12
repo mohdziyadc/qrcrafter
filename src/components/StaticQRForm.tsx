@@ -1,10 +1,17 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import URLForm from "./URLForm";
 import MultiURLForm from "./MultiURLForm";
 import FreeTextForm from "./FreeTextForm";
 import ContactForm from "./ContactForm";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 
 type Props = {};
 
