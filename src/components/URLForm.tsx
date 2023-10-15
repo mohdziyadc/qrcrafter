@@ -11,7 +11,10 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 
-type Props = {};
+type Props = {
+  content: boolean;
+  setContent: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
 type urlFormInput = z.infer<typeof urlFormSchema>;
 const URLForm = (props: Props) => {
@@ -43,6 +46,12 @@ const URLForm = (props: Props) => {
     console.log(`URL: ${url}`);
     getQRCode({ url });
   };
+  // Show alert dialog if user types anything else don't
+  if (form.getValues("url").length >= 1) {
+    props.setContent(true);
+  } else {
+    props.setContent(false);
+  }
   return (
     <div>
       <Form {...form}>

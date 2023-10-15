@@ -12,7 +12,10 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 
-type Props = {};
+type Props = {
+  content: boolean;
+  setContent: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
 type freeTextInput = z.infer<typeof freeTextFormSchema>;
 const FreeTextForm = (props: Props) => {
@@ -47,6 +50,13 @@ const FreeTextForm = (props: Props) => {
       generateFreeTextQR({ text });
     }
   };
+
+  // Show alert dialog if user types anything else don't
+  if (form.getValues("text").length >= 1) {
+    props.setContent(true);
+  } else {
+    props.setContent(false);
+  }
   return (
     <div>
       <Form {...form}>

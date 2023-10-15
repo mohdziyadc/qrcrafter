@@ -15,7 +15,10 @@ import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import { ScrollArea } from "./ui/scroll-area";
 
-type Props = {};
+type Props = {
+  content: boolean;
+  setContent: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
 type multiUrlInput = z.infer<typeof multiUrlFormSchema>;
 const MultiURLForm = (props: Props) => {
@@ -56,6 +59,16 @@ const MultiURLForm = (props: Props) => {
     getMultiQR({ urls, titles });
   };
 
+  // Show alert dialog if user types anything else don't
+  if (
+    form.getValues("urls").some((url) => url.length >= 1) ||
+    form.getValues("titles").some((url) => url.length >= 1)
+  ) {
+    props.setContent(true);
+  } else {
+    props.setContent(false);
+  }
+
   return (
     <div>
       <Form {...form}>
@@ -79,49 +92,56 @@ const MultiURLForm = (props: Props) => {
                         control={form.control}
                         key={index}
                         name={`urls.${index}`}
-                        render={({ field }) => (
-                          <FormItem
-                            className="flex flex-col mt-2 px-2 justify-center items-baseline"
-                            autoFocus
-                          >
-                            <FormLabel className="flex-[1] text-md">
-                              URL {index + 1}
-                            </FormLabel>
-                            <FormControl className="">
-                              <Input placeholder="Enter URL here" {...field} />
-                            </FormControl>
-                            {formErrors.urls && (
-                              <span className="text-red-500 text-sm flex-[2] ml-1">
-                                {formErrors.urls[index]?.message}
-                              </span>
-                            )}
-                          </FormItem>
-                        )}
+                        render={({ field }) => {
+                          return (
+                            <FormItem
+                              className="flex flex-col mt-2 px-2 justify-center items-baseline"
+                              autoFocus
+                            >
+                              <FormLabel className="flex-[1] text-md">
+                                URL {index + 1}
+                              </FormLabel>
+                              <FormControl className="">
+                                <Input
+                                  placeholder="Enter URL here"
+                                  {...field}
+                                />
+                              </FormControl>
+                              {formErrors.urls && (
+                                <span className="text-red-500 text-sm flex-[2] ml-1">
+                                  {formErrors.urls[index]?.message}
+                                </span>
+                              )}
+                            </FormItem>
+                          );
+                        }}
                       />
                       <FormField
                         control={form.control}
                         name={`titles.${index}`}
-                        render={({ field }) => (
-                          <FormItem
-                            autoFocus
-                            className="flex flex-col mt-2 px-2 justify-center items-baseline"
-                          >
-                            <FormLabel className="flex-[1] text-md">
-                              Title {index + 1}
-                            </FormLabel>
-                            <FormControl className="">
-                              <Input
-                                placeholder="Enter title here"
-                                {...field}
-                              />
-                            </FormControl>
-                            {formErrors.titles && (
-                              <span className="text-red-500 text-sm flex-[2] ml-1">
-                                {formErrors.titles[index]?.message}
-                              </span>
-                            )}
-                          </FormItem>
-                        )}
+                        render={({ field }) => {
+                          return (
+                            <FormItem
+                              autoFocus
+                              className="flex flex-col mt-2 px-2 justify-center items-baseline"
+                            >
+                              <FormLabel className="flex-[1] text-md">
+                                Title {index + 1}
+                              </FormLabel>
+                              <FormControl className="">
+                                <Input
+                                  placeholder="Enter title here"
+                                  {...field}
+                                />
+                              </FormControl>
+                              {formErrors.titles && (
+                                <span className="text-red-500 text-sm flex-[2] ml-1">
+                                  {formErrors.titles[index]?.message}
+                                </span>
+                              )}
+                            </FormItem>
+                          );
+                        }}
                       />
                     </div>
                   </motion.div>

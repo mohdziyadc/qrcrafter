@@ -11,7 +11,10 @@ import axios from "axios";
 import Image from "next/image";
 import { Loader2 } from "lucide-react";
 
-type Props = {};
+type Props = {
+  content: boolean;
+  setContent: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
 type contactInput = z.infer<typeof contactFormSchema>;
 const ContactForm = (props: Props) => {
@@ -66,6 +69,18 @@ const ContactForm = (props: Props) => {
       phone_number,
     });
   };
+
+  if (
+    form.getValues("first_name").length >= 1 ||
+    form.getValues("last_name").length >= 1 ||
+    form.getValues("organisation").length >= 1 ||
+    form.getValues("email").length >= 1 ||
+    form.getValues("phone_number").length >= 1
+  ) {
+    props.setContent(true);
+  } else {
+    props.setContent(false);
+  }
   return (
     <div>
       <Form {...form}>
