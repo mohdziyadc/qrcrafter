@@ -17,6 +17,7 @@ import {
 } from "./ui/dialog";
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 import StaticQRForm from "./StaticQRForm";
+import DynamicQRForm from "./DynamicQRForm";
 
 type Props = {};
 
@@ -60,6 +61,7 @@ const CreateQRNav = (props: Props) => {
             <DialogTitle className="font-bold">Dynamic QR Code</DialogTitle>
             <DialogDescription>Create a dynamic QR code here</DialogDescription>
           </DialogHeader>
+          <DynamicQRForm />
         </DialogContent>
       </Dialog>
     </>

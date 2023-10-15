@@ -1,11 +1,4 @@
-"use client";
 import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import URLForm from "./URLForm";
-import MultiURLForm from "./MultiURLForm";
-import FreeTextForm from "./FreeTextForm";
-import ContactForm from "./ContactForm";
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,11 +9,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import DynamicURLForm from "./DynamicURLForm";
+import DynamicMultiURLForm from "./DynamicMultiURLForm";
+import DynamicFreeTextForm from "./DynamicFreeTextForm";
+import DynamicContactForm from "./DynamicContactForm";
 
 type Props = {};
 
-const StaticQRForm = (props: Props) => {
-  const [tab, setTab] = useState("url");
+const DynamicQRForm = (props: Props) => {
+  const [tab, setTab] = useState("dynamic_url");
   const [showDialog, setShowDialog] = useState(false);
   const [tabValue, setTabValue] = useState("");
   const [content, setContent] = useState(false);
@@ -32,7 +30,6 @@ const StaticQRForm = (props: Props) => {
       setTab(value);
     }
   };
-
   return (
     <>
       <Tabs
@@ -41,22 +38,22 @@ const StaticQRForm = (props: Props) => {
         className="max-h-screen"
       >
         <TabsList className="grid grid-cols-4 gap-2 w-full">
-          <TabsTrigger value="url">URL</TabsTrigger>
-          <TabsTrigger value="multi_url">Multi-URL</TabsTrigger>
-          <TabsTrigger value="freetext">Free Text</TabsTrigger>
-          <TabsTrigger value="contact">Contact</TabsTrigger>
+          <TabsTrigger value="dynamic_url">URL</TabsTrigger>
+          <TabsTrigger value="dynamic_multi_url">Multi-URL</TabsTrigger>
+          <TabsTrigger value="dynamic_freetext">Free Text</TabsTrigger>
+          <TabsTrigger value="dynamic_contact">Contact</TabsTrigger>
         </TabsList>
-        <TabsContent value="url" tabIndex={-1}>
-          <URLForm content={content} setContent={setContent} />
+        <TabsContent value="dynamic_url" tabIndex={-1}>
+          <DynamicURLForm isContent={content} setIsContent={setContent} />
         </TabsContent>
-        <TabsContent value="multi_url">
-          <MultiURLForm content={content} setContent={setContent} />
+        <TabsContent value="dynamic_multi_url">
+          <DynamicMultiURLForm isContent={content} setIsContent={setContent} />
         </TabsContent>
-        <TabsContent value="freetext">
-          <FreeTextForm content={content} setContent={setContent} />
+        <TabsContent value="dynamic_freetext">
+          <DynamicFreeTextForm isContent={content} setIsContent={setContent} />
         </TabsContent>
-        <TabsContent value="contact">
-          <ContactForm content={content} setContent={setContent} />
+        <TabsContent value="dynamic_contact">
+          <DynamicContactForm isContent={content} setIsContent={setContent} />
         </TabsContent>
       </Tabs>
 
@@ -84,4 +81,4 @@ const StaticQRForm = (props: Props) => {
   );
 };
 
-export default StaticQRForm;
+export default DynamicQRForm;
