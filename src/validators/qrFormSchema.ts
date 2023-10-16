@@ -24,3 +24,8 @@ export const contactFormSchema = z.object({
   email: z.string().email({ message: "Enter a valid email" }),
   phone_number: z.string().regex(phoneRegex, "Invalid Number"),
 });
+
+export const dynamicUrlQrFormSchema = z.object({
+  name: z.string().min(1, { message: "Enter a valid name" }),
+  url: z.string().url({ message: "Invalid URL" }),
+});

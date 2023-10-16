@@ -33,7 +33,6 @@ export const authOptions: NextAuthOptions = {
       });
       if (db_user) {
         token.id = db_user.id;
-        token.qrCode = db_user.qrCode;
       }
       return token;
     },
@@ -43,7 +42,6 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token.name;
         session.user.email = token.email;
         session.user.image = token.picture;
-        session.user.qrCode = token.qrCode;
       }
       return session;
     },

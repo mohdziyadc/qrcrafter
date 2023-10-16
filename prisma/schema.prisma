@@ -48,7 +48,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  multiUrlQrCodes   MultiURLCode[]
+  multiUrlQrCodes   MultiURLCode[] @relation("multiURLCodes")
+  dynamicURL       DynamicURL[] @relation("dynamicURL")
 }
 
 
@@ -58,6 +59,15 @@ model MultiURLCode {
   urls String[]
   titles String[]
   userId String
-  user User @relation(fields:[userId], references:[id])
+  user User @relation("multiURLCodes",fields:[userId], references:[id])
 }
 
+model DynamicURL {
+  id String @id @default(cuid())
+  url String @db.VarChar(500)
+  uniqueToken String @unique
+  qrCode String @db.VarChar(3000)
+  name String 
+  userId String
+  user User @relation("dynamicURL",fields: [userId], references: [id])
+}
