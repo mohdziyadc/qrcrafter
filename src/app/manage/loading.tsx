@@ -1,12 +1,23 @@
+import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import React from "react";
 
-type Props = {};
+type Props = {
+  component: boolean;
+};
 
-const LoadingSpinner = (props: Props) => {
+const LoadingSpinner = ({ component }: Props) => {
   return (
-    <div className="flex h-screen w-full justify-center items-center">
-      <Loader2 className=" animate-spin w-12 h-12" />
+    <div
+      className={cn("flex w-full justify-center items-center h-screen", {
+        "h-full": component,
+      })}
+    >
+      <Loader2
+        className={cn("animate-spin w-12 h-12", {
+          "h-6 w-6 m-10": component,
+        })}
+      />
     </div>
   );
 };

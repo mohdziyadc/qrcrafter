@@ -1,19 +1,12 @@
 import DynamicURLTable from "@/components/DynamicURLTable";
 import SavedQRCode from "@/components/DynamicURLTable";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { getAuthSession } from "@/lib/auth";
 import { prismaClient } from "@/lib/db";
 import { Edit2 } from "lucide-react";
 import { redirect } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
+import LoadingSpinner from "./loading";
 
 type Props = {};
 
@@ -26,6 +19,9 @@ const Manage = async (props: Props) => {
     where: {
       userId: session.user.id,
     },
+    orderBy: {
+      id: "asc",
+    },
   });
 
   return (
@@ -36,9 +32,11 @@ const Manage = async (props: Props) => {
         <CardHeader className="font-semibold text-xl">
           Dynamic URL QR Codes
         </CardHeader>
-        <CardContent>
-          <DynamicURLTable qrCodes={dynamicQrCodes} />
-        </CardContent>
+        <Suspense fallback={<LoadingSpinner component={true} />}>
+          <CardContent>
+            <DynamicURLTable qrCodes={dynamicQrCodes} />
+          </CardContent>
+        </Suspense>
       </Card>
     </div>
   );
