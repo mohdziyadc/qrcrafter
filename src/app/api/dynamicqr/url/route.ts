@@ -1,6 +1,7 @@
 import { getAuthSession } from "@/lib/auth";
 import { prismaClient } from "@/lib/db";
 import { dynamicUrlQrFormSchema } from "@/validators/qrFormSchema";
+import { DynamicURL } from "@prisma/client";
 import { NextResponse } from "next/server";
 import QRCode from "qrcode";
 import { v4 as uuidv4 } from "uuid";
