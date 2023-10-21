@@ -10,11 +10,9 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import { Delete, DeleteIcon, Edit2, Loader2, Trash2 } from "lucide-react";
+import { Edit2, Loader2, Trash2 } from "lucide-react";
 import { Dialog, DialogHeader, DialogContent, DialogTitle } from "./ui/dialog";
-import Image from "next/image";
 import UpdateURLForm from "./UpdateURLForm";
-import { ScrollArea } from "./ui/scroll-area";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,7 +24,6 @@ import {
   AlertDialogContent,
 } from "./ui/alert-dialog";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { prismaClient } from "@/lib/db";
 import axios, { AxiosResponse } from "axios";
 import { useToast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
@@ -41,6 +38,11 @@ const DynamicURLTable = ({ qrCodes }: Props) => {
   const [qrCode, setQrCode] = useState<DynamicURL>();
   const { toast } = useToast();
   const router = useRouter();
+
+  // const { data: qrCodes } = useQuery({
+  //   queryKey: ["dynamic_qr"],
+  //   queryFn: getDynamicURLQrCodes,
+  // });
 
   // need to call the delete post request when delete button is clicked in alert dialog
   const {
