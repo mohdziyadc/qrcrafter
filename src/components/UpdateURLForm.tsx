@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useToast } from "./ui/use-toast";
 import { usePathname, useRouter } from "next/navigation";
+import { useSWRConfig } from "swr";
 
 type Props = {
   qrCode: DynamicURL;
@@ -40,7 +41,7 @@ const UpdateURLForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
   });
 
   const { toast } = useToast();
-  const router = useRouter();
+  const { mutate } = useSWRConfig();
 
   const {
     mutate: updateQRCode,
@@ -61,7 +62,7 @@ const UpdateURLForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
         description: "Your QR code has been updated!",
         variant: "default",
       });
-      router.refresh();
+      mutate("/api/dynamicqr/url/getall"); //update without refreshing
       setEditDialog(false);
     },
     onError: () => {

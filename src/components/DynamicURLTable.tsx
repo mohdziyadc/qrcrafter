@@ -26,7 +26,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useToast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
 import LoadingSpinner from "@/app/manage/loading";
 
 type Props = {};
@@ -41,6 +41,7 @@ const DynamicURLTable = ({}: Props) => {
     error,
     isLoading: isFetching,
   } = useSWR("/api/dynamicqr/url/getall", fetcher);
+  const { mutate } = useSWRConfig();
   const [qrCodes, setQRCodes] = useState<DynamicURL[]>([]);
   const [qrCode, setQrCode] = useState<DynamicURL>();
   const { toast } = useToast();
@@ -49,19 +50,12 @@ const DynamicURLTable = ({}: Props) => {
   useEffect(() => {
     const setData = async () => {
       if (data !== undefined) {
-        const qrCodes = await data.qrCodes;
+        const qrCodes = await data.qrCodes; //dont forget to add the await keyword
         setQRCodes(qrCodes);
       }
     };
     setData();
   }, [data]);
-  // const { data: qrCodes } = useQuery({
-  //   queryKey: ["dynamic_qr"],
-  //   queryFn: getDynamicURLQrCodes,
-  // });
-  // if (!data) {
-  //   return <div>No QR Codes to show</div>;
-  // }
 
   // need to call the delete post request when delete button is clicked in alert dialog
   const {
@@ -80,7 +74,7 @@ const DynamicURLTable = ({}: Props) => {
         title: "Success",
         description: "QR Code has been deleted successfully!",
       });
-      router.refresh();
+      mutate("/api/dynamicqr/url/getall");
     },
     onError: () => {
       toast({
