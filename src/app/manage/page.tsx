@@ -1,21 +1,9 @@
 import DynamicURLTable from "@/components/DynamicURLTable";
-import SavedQRCode from "@/components/DynamicURLTable";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getAuthSession } from "@/lib/auth";
 import { prismaClient } from "@/lib/db";
-import { Edit2 } from "lucide-react";
 import { redirect } from "next/navigation";
 import React, { Suspense } from "react";
 import LoadingSpinner from "./loading";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DynamicQRCard from "@/components/DynamicQRCard";
 import MultiURLTable from "@/components/MultiURLTable";
 
@@ -26,14 +14,14 @@ const Manage = async (props: Props) => {
   if (!session?.user) {
     return redirect("/");
   }
-  const dynamicQrCodes = await prismaClient.dynamicURL.findMany({
-    where: {
-      userId: session.user.id,
-    },
-    orderBy: {
-      id: "asc",
-    },
-  });
+  // const dynamicQrCodes = await prismaClient.dynamicURL.findMany({
+  //   where: {
+  //     userId: session.user.id,
+  //   },
+  //   orderBy: {
+  //     id: "asc",
+  //   },
+  // });
   // control tabs programmatically.
   return (
     <div className="flex flex-col p-4">
@@ -43,7 +31,7 @@ const Manage = async (props: Props) => {
       <DynamicQRCard
         dynamicURLTable={
           <Suspense fallback={<LoadingSpinner component={true} />}>
-            <DynamicURLTable qrCodes={dynamicQrCodes} />
+            <DynamicURLTable />
           </Suspense>
         }
         multiURLTable={<MultiURLTable />}

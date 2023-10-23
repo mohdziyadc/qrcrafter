@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { DynamicURL, User } from "@prisma/client";
-import { Card, CardContent, CardHeader } from "./ui/card";
+import { DynamicURL } from "@prisma/client";
 import {
   Table,
   TableBody,
@@ -23,26 +22,46 @@ import {
   AlertDialogTitle,
   AlertDialogContent,
 } from "./ui/alert-dialog";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import axios, { AxiosResponse } from "axios";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import { useToast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
+import useSWR from "swr";
+import LoadingSpinner from "@/app/manage/loading";
 
-type Props = {
-  qrCodes: DynamicURL[];
-};
+type Props = {};
 
-const DynamicURLTable = ({ qrCodes }: Props) => {
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+
+const DynamicURLTable = ({}: Props) => {
   const [editDialog, setEditDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
+  const {
+    data,
+    error,
+    isLoading: isFetching,
+  } = useSWR("/api/dynamicqr/url/getall", fetcher);
+  const [qrCodes, setQRCodes] = useState<DynamicURL[]>([]);
   const [qrCode, setQrCode] = useState<DynamicURL>();
   const { toast } = useToast();
   const router = useRouter();
 
+  useEffect(() => {
+    const setData = async () => {
+      if (data !== undefined) {
+        const qrCodes = await data.qrCodes;
+        setQRCodes(qrCodes);
+      }
+    };
+    setData();
+  }, [data]);
   // const { data: qrCodes } = useQuery({
   //   queryKey: ["dynamic_qr"],
   //   queryFn: getDynamicURLQrCodes,
   // });
+  // if (!data) {
+  //   return <div>No QR Codes to show</div>;
+  // }
 
   // need to call the delete post request when delete button is clicked in alert dialog
   const {
@@ -71,6 +90,12 @@ const DynamicURLTable = ({ qrCodes }: Props) => {
     },
   });
 
+  if (isFetching) {
+    return <LoadingSpinner component={true} />;
+  }
+  if (error) {
+    return <div>Failed to Load. Please Refresh</div>;
+  }
   return (
     <>
       <Table>
