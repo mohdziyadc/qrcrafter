@@ -29,3 +29,9 @@ export const dynamicUrlQrFormSchema = z.object({
   name: z.string().min(1, { message: "Enter a valid name" }),
   url: z.string().url({ message: "Invalid URL" }),
 });
+
+export const dynamicMultiUrlFormSchema = z.object({
+  name: z.string().min(1, { message: "Enter a valid name" }),
+  urls: z.array(z.string().url({ message: "Invalid URL" })),
+  titles: z.array(z.string().min(1, { message: "Invalid Title" })),
+});

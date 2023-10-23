@@ -25,7 +25,6 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useToast } from "./ui/use-toast";
-import { useRouter } from "next/navigation";
 import useSWR, { useSWRConfig } from "swr";
 import LoadingSpinner from "@/app/manage/loading";
 
@@ -45,7 +44,6 @@ const DynamicURLTable = ({}: Props) => {
   const [qrCodes, setQRCodes] = useState<DynamicURL[]>([]);
   const [qrCode, setQrCode] = useState<DynamicURL>();
   const { toast } = useToast();
-  const router = useRouter();
 
   useEffect(() => {
     const setData = async () => {
@@ -74,7 +72,7 @@ const DynamicURLTable = ({}: Props) => {
         title: "Success",
         description: "QR Code has been deleted successfully!",
       });
-      mutate("/api/dynamicqr/url/getall");
+      mutate("/api/dynamicqr/url/getall"); //update without refreshing
     },
     onError: () => {
       toast({
