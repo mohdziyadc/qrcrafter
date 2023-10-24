@@ -18,6 +18,8 @@ export async function GET(req: Request, res: Response) {
     });
     return NextResponse.json({ qrCodes }, { status: 200 });
   } catch (error) {
-    return new NextResponse("[INTERNAL SERVOR ERROR]", { status: 500 });
+    return new NextResponse("[INTERNAL SERVOR ERROR] " + error, {
+      status: 500,
+    });
   }
 }

@@ -1,5 +1,6 @@
 import { getAuthSession } from "@/lib/auth";
 import { prismaClient } from "@/lib/db";
+import { getBase64UUID } from "@/lib/utils";
 import { dynamicUrlQrFormSchema } from "@/validators/qrFormSchema";
 import { DynamicURL } from "@prisma/client";
 import { NextResponse } from "next/server";
@@ -14,10 +15,8 @@ export async function POST(req: Request, res: Response) {
     }
     const body = await req.json();
     const { url, name } = dynamicUrlQrFormSchema.parse(body);
-    const uuid = uuidv4();
-    //shorten the uuid
-    const uuidUndecorated = uuid.replace("-", "");
-    const base64uuid = Buffer.from(uuidUndecorated, "hex").toString("base64");
+
+    const base64uuid = getBase64UUID();
     console.log(base64uuid);
     const generateQr = await QRCode.toDataURL(
       `http://localhost:3000/api/redirect/${base64uuid}`,
