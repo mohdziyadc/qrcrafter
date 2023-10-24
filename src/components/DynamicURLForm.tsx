@@ -1,8 +1,5 @@
 "use client";
-import {
-  dynamicUrlQrFormSchema,
-  urlFormSchema,
-} from "@/validators/qrFormSchema";
+import { dynamicUrlQrFormSchema } from "@/validators/qrFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -22,6 +19,7 @@ import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useToast } from "./ui/use-toast";
 
 type Props = {
   isContent: boolean;
@@ -39,6 +37,8 @@ const DynamicURLForm = (props: Props) => {
       url: "",
     },
   });
+
+  const { toast } = useToast();
   const {
     mutate: generateDynamicUrlQr,
     isLoading,
@@ -52,9 +52,18 @@ const DynamicURLForm = (props: Props) => {
       return response.data;
     },
     onSuccess: (data) => {
+      toast({
+        title: "Sucess!",
+        description: "Your URL QR Code has been created successfully",
+      });
       setQrCode(data.qrCode);
     },
     onError: (error) => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occurred during the process",
+        variant: "destructive",
+      });
       console.log(`[MUTATION ERROR] ${error}`);
     },
   });
