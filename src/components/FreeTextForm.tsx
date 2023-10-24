@@ -4,7 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { InfoIcon, Loader2 } from "lucide-react";
@@ -27,7 +34,6 @@ const FreeTextForm = (props: Props) => {
       text: "",
     },
   });
-  const formErrors = form.formState.errors;
 
   const { mutate: generateFreeTextQR, isLoading } = useMutation({
     mutationFn: async ({ text }: freeTextInput) => {
@@ -77,11 +83,7 @@ const FreeTextForm = (props: Props) => {
                       shorter and easier to compute
                     </span>
                   )}
-                  {formErrors.text && (
-                    <span className="text-red-500 text-sm">
-                      {formErrors.text.message}
-                    </span>
-                  )}
+                  <FormMessage />
                 </FormItem>
               );
             }}

@@ -35,3 +35,8 @@ export const dynamicMultiUrlFormSchema = z.object({
   urls: z.array(z.string().url({ message: "Invalid URL" })),
   titles: z.array(z.string().min(1, { message: "Invalid Title" })),
 });
+
+export const dynamicFreeTextFormSchema = z.object({
+  name: z.string().min(1, { message: "Enter a valid name" }),
+  text: z.string().min(1),
+});

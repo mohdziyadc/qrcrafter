@@ -44,6 +44,15 @@ const DynamicMultiURLForm = (props: Props) => {
     );
     // getMultiQR({ urls, titles });
   };
+  if (
+    form.getValues("name").length >= 1 ||
+    form.getValues("urls").some((url) => url.length >= 1) ||
+    form.getValues("titles").some((url) => url.length >= 1)
+  ) {
+    props.setIsContent(true);
+  } else {
+    props.setIsContent(false);
+  }
   return (
     <div>
       <Form {...form}>

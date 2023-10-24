@@ -35,6 +35,7 @@ const DynamicURLForm = (props: Props) => {
   const form = useForm<urlFormInput>({
     resolver: zodResolver(dynamicUrlQrFormSchema),
     defaultValues: {
+      name: "",
       url: "",
     },
   });
@@ -60,6 +61,12 @@ const DynamicURLForm = (props: Props) => {
   const onSubmitHandler = async ({ url, name }: urlFormInput) => {
     generateDynamicUrlQr({ url, name });
   };
+
+  if (form.getValues("url").length >= 1 || form.getValues("name").length >= 1) {
+    props.setIsContent(true);
+  } else {
+    props.setIsContent(false);
+  }
 
   return (
     <div>
