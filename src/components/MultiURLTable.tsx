@@ -21,10 +21,11 @@ import {
 } from "./ui/alert-dialog";
 import { DynamicMultiURL } from "@prisma/client";
 import { Edit2, Loader2, Trash2 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
 import { title } from "process";
+import { useToast } from "./ui/use-toast";
 
 type Props = {};
 
@@ -33,12 +34,43 @@ const MultiURLTable = (props: Props) => {
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [qrCodes, setQRCodes] = useState<DynamicMultiURL[]>([]);
   const [qrCode, setQrCode] = useState<DynamicMultiURL>();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const { data, isLoading, isSuccess, isError } = useQuery({
     queryKey: ["dynamicMultiUrlQr"],
     queryFn: async () => {
       const response = await axios.get("/api/dynamicqr/multiurl");
       return response.data.qrCodes;
+    },
+  });
+
+  const {
+    mutate: deleteQR,
+    isSuccess: isDeleted,
+    isLoading: isDeleting,
+  } = useMutation({
+    mutationFn: async (uniqueToken: string) => {
+      const response = await axios.post("/api/dynamicqr/multiurl/delete", {
+        uniqueToken: uniqueToken,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["dynamicMultiUrlQr"],
+      });
+      toast({
+        title: "Success",
+        description: "QR Code has been deleted successfully!",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occured during this process.",
+        variant: "destructive",
+      });
     },
   });
 
@@ -136,13 +168,17 @@ const MultiURLTable = (props: Props) => {
             <AlertDialogAction
               className="bg-red-500"
               onClick={() => {
-                // deleteQR(qrCode!.uniqueToken);
-                // if (isSuccess) {
-                //   setDeleteDialog(false);
-                // }
+                deleteQR(qrCode!.uniqueToken);
+                if (isDeleted) {
+                  setDeleteDialog(false);
+                }
               }}
             >
-              {isLoading ? <Loader2 className="h-4 w-4" /> : <p>Delete</p>}
+              {isDeleting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <p>Delete</p>
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

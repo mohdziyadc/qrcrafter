@@ -165,7 +165,11 @@ const DynamicURLTable = ({}: Props) => {
                 }
               }}
             >
-              {isLoading ? <Loader2 className="h-4 w-4" /> : <p>Delete</p>}
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <p>Delete</p>
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
