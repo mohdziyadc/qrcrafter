@@ -20,6 +20,9 @@ import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
 import { Loader2, Plus, Trash } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "./ui/use-toast";
+import axios from "axios";
 
 type Props = {
   qrCode: DynamicMultiURL;
@@ -39,7 +42,44 @@ const UpdateMultiURLForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
     },
   });
 
-  const onSubmitHandler = () => {};
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  const {
+    mutate: updateQR,
+    isLoading,
+    isSuccess,
+  } = useMutation({
+    mutationFn: async ({ name, urls, titles }: updateFormInput) => {
+      const response = await axios.post("/api/dynamicqr/multiurl/update", {
+        name: name,
+        urls: urls,
+        titles: titles,
+        uniqueToken: qrCode.uniqueToken,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["dynamicMultiUrlQr"],
+      });
+      toast({
+        title: "Success!",
+        description: "You have updated the QR code successfully.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occured during the process.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const onSubmitHandler = ({ name, urls, titles }: updateFormInput) => {
+    updateQR({ name, urls, titles });
+  };
   return (
     <>
       <div className="flex justify-center items-center mt-2 ">
@@ -169,21 +209,19 @@ const UpdateMultiURLForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
               type="button"
               onClick={() => setEditDialog(false)}
               className={cn({
-                // hidden: isSuccess,
+                hidden: isSuccess,
               })}
             >
               Cancel
             </Button>
-            <Button type="submit" className="ml-2">
-              <p>Update QR</p>
-
-              {/* {isLoading ? (
+            <Button type="submit" className="ml-2" disabled={isSuccess}>
+              {isLoading ? (
                 <Loader2 className=" animate-spin" />
               ) : isSuccess ? (
                 <p>Updated</p>
               ) : (
                 <p>Update QR</p>
-              )} */}
+              )}
             </Button>
           </div>
         </form>
