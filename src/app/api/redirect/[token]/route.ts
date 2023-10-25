@@ -13,7 +13,7 @@ export async function GET(
     if (!session?.user) {
       return new NextResponse("User Unauthorized", { status: 401 });
     }
-    const token = params.token;
+    const token = params.token; //decoded URI
     const dynamicUrl = await prismaClient.dynamicURL.findUnique({
       where: {
         uniqueToken: token,

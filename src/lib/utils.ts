@@ -23,5 +23,6 @@ export function getBase64UUID() {
   const uuid = uuidv4();
   //shorten the UUID
   const uuidUndecorated = uuid.replace("-", "");
-  return Buffer.from(uuidUndecorated, "hex").toString("base64");
+  const base64Uuid = Buffer.from(uuidUndecorated, "hex").toString("base64");
+  return base64Uuid;
 }

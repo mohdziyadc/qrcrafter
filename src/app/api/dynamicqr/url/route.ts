@@ -17,9 +17,9 @@ export async function POST(req: Request, res: Response) {
     const { url, name } = dynamicUrlQrFormSchema.parse(body);
 
     const base64uuid = getBase64UUID();
-    console.log(base64uuid);
+    const encodeUuid = encodeURIComponent(base64uuid);
     const generateQr = await QRCode.toDataURL(
-      `http://localhost:3000/api/redirect/${base64uuid}`,
+      `http://localhost:3000/api/redirect/${encodeUuid}`,
       {
         errorCorrectionLevel: "M",
         rendererOpts: {
