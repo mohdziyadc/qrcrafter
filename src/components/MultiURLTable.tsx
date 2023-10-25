@@ -26,6 +26,7 @@ import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
 import { title } from "process";
 import { useToast } from "./ui/use-toast";
+import UpdateMultiURLForm from "./UpdateMultiURLForm";
 
 type Props = {};
 
@@ -146,12 +147,11 @@ const MultiURLTable = (props: Props) => {
             <DialogTitle>Edit QR Code</DialogTitle>
           </DialogHeader>
           {qrCode && (
-            <p>Hello</p>
-            // <UpdateURLForm
-            //   qrCode={qrCode}
-            //   editDialog={editDialog}
-            //   setEditDialog={setEditDialog}
-            // />
+            <UpdateMultiURLForm
+              qrCode={qrCode}
+              editDialog={editDialog}
+              setEditDialog={setEditDialog}
+            />
           )}
         </DialogContent>
       </Dialog>

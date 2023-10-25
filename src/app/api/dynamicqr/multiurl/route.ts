@@ -16,7 +16,7 @@ export async function POST(req: Request, res: Response) {
 
     const base64Uuid = getBase64UUID();
     const generateQR = await QRCode.toDataURL(
-      `http://localhost:3000/multiqr/${base64Uuid}`,
+      `http://localhost:3000/dynamicmultiqr/${base64Uuid}`,
       {
         rendererOpts: {
           quality: 1,

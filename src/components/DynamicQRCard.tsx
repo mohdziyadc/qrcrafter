@@ -85,7 +85,9 @@ const DynamicQRCard: React.FC<DynamicQRCardProps> = ({
               <CardContent>{dynamicURLTable}</CardContent>
             </Suspense>
           </TabsContent>
-          <TabsContent value="dynamic_multi_url">{multiURLTable}</TabsContent>
+          <TabsContent value="dynamic_multi_url">
+            <CardContent>{multiURLTable}</CardContent>
+          </TabsContent>
           <TabsContent value="dynamic_freetext">Free Text QR Tab</TabsContent>
           <TabsContent value="dynamic_contact">
             Contact Dynamic QR Tab
