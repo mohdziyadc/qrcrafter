@@ -2,7 +2,6 @@ import { getAuthSession } from "@/lib/auth";
 import { prismaClient } from "@/lib/db";
 import { getBase64UUID } from "@/lib/utils";
 import { dynamicMultiUrlFormSchema } from "@/validators/qrFormSchema";
-import { url } from "inspector";
 import { NextResponse } from "next/server";
 import QRCode from "qrcode";
 
@@ -33,6 +32,7 @@ export async function POST(req: Request, res: Response) {
         titles: titles,
         qrCode: generateQR,
         userId: session.user.id,
+        uniqueToken: base64Uuid,
       },
     });
     return NextResponse.json({ qrCode: generateQR }, { status: 200 });

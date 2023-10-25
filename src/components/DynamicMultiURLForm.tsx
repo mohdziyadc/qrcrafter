@@ -1,6 +1,6 @@
 import { dynamicMultiUrlFormSchema } from "@/validators/qrFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { AnimatePresence, motion } from "framer-motion";
@@ -15,8 +15,13 @@ import {
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
-import { Plus, Trash } from "lucide-react";
+import { Loader2, Plus, Trash } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { useToast } from "./ui/use-toast";
+import Image from "next/image";
+import Link from "next/link";
 
 type Props = {
   isContent: boolean;
@@ -34,6 +39,38 @@ const DynamicMultiURLForm = (props: Props) => {
     },
   });
 
+  const [qrCode, setQRCode] = useState("");
+  const { toast } = useToast();
+
+  const {
+    mutate: getDynamicMultiUrlQr,
+    isLoading,
+    isSuccess,
+  } = useMutation({
+    mutationFn: async ({ name, urls, titles }: dynamicMultiUrlInput) => {
+      const response = await axios.post("/api/dynamicqr/multiurl", {
+        name: name,
+        urls: urls,
+        titles: titles,
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      setQRCode(data.qrCode);
+      toast({
+        title: "Success!",
+        description: "You have created the dynamic QR code successfully.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occured during this process.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const onSubmitHandler = ({ name, urls, titles }: dynamicMultiUrlInput) => {
     console.log(
       JSON.stringify({
@@ -42,7 +79,7 @@ const DynamicMultiURLForm = (props: Props) => {
         title: titles,
       })
     );
-    // getMultiQR({ urls, titles });
+    getDynamicMultiUrlQr({ name, urls, titles });
   };
   if (
     form.getValues("name").length >= 1 ||
@@ -165,10 +202,38 @@ const DynamicMultiURLForm = (props: Props) => {
             <Separator className="flex-[1]" />
           </div>
           <div className="flex justify-center items-center mt-4">
-            <Button type="submit">Generate QR</Button>
+            <Button type="submit" disabled={isSuccess}>
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <p>Generate QR</p>
+              )}
+            </Button>
           </div>
         </form>
       </Form>
+      {qrCode && (
+        // animation needed
+        <div className="flex flex-col justify-center items-center mt-2">
+          <Image
+            className="border-black rounded-lg border-2"
+            src={qrCode}
+            alt="qrcode"
+            height={200}
+            width={200}
+          />
+          <div className=" mt-2 text-gray-400 text-sm">
+            <p>
+              Your QR code has been saved.{" "}
+              <span>
+                <Link href={"/manage"} className="underline underline-offset-1">
+                  Manage QR Code
+                </Link>
+              </span>
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
