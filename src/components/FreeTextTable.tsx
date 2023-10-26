@@ -19,61 +19,30 @@ import {
   AlertDialogTitle,
   AlertDialogContent,
 } from "./ui/alert-dialog";
-import { DynamicMultiURL } from "@prisma/client";
+import { DynamicFreeText } from "@prisma/client";
 import { Edit2, Loader2, Trash2 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
 import { useToast } from "./ui/use-toast";
-import UpdateMultiURLForm from "./UpdateMultiURLForm";
 
 type Props = {};
 
-const MultiURLTable = (props: Props) => {
+const FreeTextTable = (props: Props) => {
   const [editDialog, setEditDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
-  const [qrCodes, setQRCodes] = useState<DynamicMultiURL[]>([]);
-  const [qrCode, setQrCode] = useState<DynamicMultiURL>();
+  const [qrCodes, setQRCodes] = useState<DynamicFreeText[]>([]);
+  const [qrCode, setQrCode] = useState<DynamicFreeText>();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const { data, isLoading, isSuccess, isError } = useQuery({
-    queryKey: ["dynamicMultiUrlQr"],
+    queryKey: ["dynamicFreeTextQr"],
     queryFn: async () => {
-      const response = await axios.get("/api/dynamicqr/multiurl");
+      const response = await axios.get("/api/dynamicqr/freetext");
       return response.data.qrCodes;
     },
   });
-
-  const {
-    mutate: deleteQR,
-    isSuccess: isDeleted,
-    isLoading: isDeleting,
-  } = useMutation({
-    mutationFn: async (uniqueToken: string) => {
-      const response = await axios.post("/api/dynamicqr/multiurl/delete", {
-        uniqueToken: uniqueToken,
-      });
-      return response.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["dynamicMultiUrlQr"],
-      });
-      toast({
-        title: "Success",
-        description: "QR Code has been deleted successfully!",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Error!",
-        description: "An unknown error occured during this process.",
-        variant: "destructive",
-      });
-    },
-  });
-
   // Avoids too many rerenders error if we use useEffect
   useEffect(() => {
     if (isSuccess) {
@@ -88,15 +57,14 @@ const MultiURLTable = (props: Props) => {
   if (isError) {
     return <div>Unknown Error Occured. Please refresh the page</div>;
   }
-
   return (
-    <>
+    <div>
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>S.No</TableHead>
             <TableHead>Name</TableHead>
-            <TableHead>Titles</TableHead>
+            <TableHead>Text</TableHead>
             <TableHead>Edit</TableHead>
           </TableRow>
         </TableHeader>
@@ -106,13 +74,11 @@ const MultiURLTable = (props: Props) => {
               <TableCell>{idx + 1}</TableCell>
               <TableCell>{qrCode.name}</TableCell>
               <TableCell>
-                {qrCode.titles.map((title, idx, titles) => {
-                  if (idx !== titles.length - 1) {
-                    return `${title}, `;
-                  } else {
-                    return `${title}`;
-                  }
-                })}
+                {qrCode.freetext.length > 80 ? (
+                  <p>{qrCode.freetext.slice(0, 80)}...</p>
+                ) : (
+                  <p>{qrCode.freetext}</p>
+                )}
               </TableCell>
               <TableCell>
                 <div className="flex flex-row justify-start items-center">
@@ -145,13 +111,13 @@ const MultiURLTable = (props: Props) => {
           <DialogHeader>
             <DialogTitle>Edit QR Code</DialogTitle>
           </DialogHeader>
-          {qrCode && (
+          {/* {qrCode && (
             <UpdateMultiURLForm
               qrCode={qrCode}
               editDialog={editDialog}
               setEditDialog={setEditDialog}
             />
-          )}
+          )} */}
         </DialogContent>
       </Dialog>
       <AlertDialog open={deleteDialog} onOpenChange={setDeleteDialog}>
@@ -167,23 +133,24 @@ const MultiURLTable = (props: Props) => {
             <AlertDialogAction
               className="bg-red-500"
               onClick={() => {
-                deleteQR(qrCode!.uniqueToken);
-                if (isDeleted) {
-                  setDeleteDialog(false);
-                }
+                // deleteQR(qrCode!.uniqueToken);
+                // if (isDeleted) {
+                //   setDeleteDialog(false);
+                // }
               }}
             >
-              {isDeleting ? (
+              Delete
+              {/* {isDeleting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <p>Delete</p>
-              )}
+              )} */}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   );
 };
 
-export default MultiURLTable;
+export default FreeTextTable;

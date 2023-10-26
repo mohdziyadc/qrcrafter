@@ -16,11 +16,13 @@ import { cn } from "@/lib/utils";
 interface DynamicQRCardProps {
   dynamicURLTable: ReactNode;
   multiURLTable: ReactNode;
+  freeTextTable: ReactNode;
 }
 
 const DynamicQRCard: React.FC<DynamicQRCardProps> = ({
   dynamicURLTable,
   multiURLTable,
+  freeTextTable,
 }) => {
   const [tab, setTab] = useState("dynamic_url");
 
@@ -88,7 +90,9 @@ const DynamicQRCard: React.FC<DynamicQRCardProps> = ({
           <TabsContent value="dynamic_multi_url">
             <CardContent>{multiURLTable}</CardContent>
           </TabsContent>
-          <TabsContent value="dynamic_freetext">Free Text QR Tab</TabsContent>
+          <TabsContent value="dynamic_freetext">
+            <CardContent>{freeTextTable}</CardContent>
+          </TabsContent>
           <TabsContent value="dynamic_contact">
             Contact Dynamic QR Tab
           </TabsContent>

@@ -6,6 +6,7 @@ import React, { Suspense } from "react";
 import LoadingSpinner from "./loading";
 import DynamicQRCard from "@/components/DynamicQRCard";
 import MultiURLTable from "@/components/MultiURLTable";
+import FreeTextTable from "@/components/FreeTextTable";
 
 type Props = {};
 
@@ -35,6 +36,7 @@ const Manage = async (props: Props) => {
           </Suspense>
         }
         multiURLTable={<MultiURLTable />}
+        freeTextTable={<FreeTextTable />}
       />
     </div>
   );
