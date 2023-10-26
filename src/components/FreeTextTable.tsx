@@ -25,6 +25,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
 import { useToast } from "./ui/use-toast";
+import UpdateFreeTextForm from "./UpdateFreeTextForm";
 
 type Props = {};
 
@@ -41,6 +42,35 @@ const FreeTextTable = (props: Props) => {
     queryFn: async () => {
       const response = await axios.get("/api/dynamicqr/freetext");
       return response.data.qrCodes;
+    },
+  });
+
+  const {
+    mutate: deleteFreeTextQR,
+    isSuccess: isDeleted,
+    isLoading: isDeleting,
+  } = useMutation({
+    mutationFn: async (uniqueToken: string) => {
+      const response = await axios.post("/api/dynamicqr/freetext/delete", {
+        uniqueToken: uniqueToken,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["dynamicFreeTextQr"],
+      });
+      toast({
+        title: "Success",
+        description: "QR Code has been deleted successfully!",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occured during this process.",
+        variant: "destructive",
+      });
     },
   });
   // Avoids too many rerenders error if we use useEffect
@@ -111,13 +141,13 @@ const FreeTextTable = (props: Props) => {
           <DialogHeader>
             <DialogTitle>Edit QR Code</DialogTitle>
           </DialogHeader>
-          {/* {qrCode && (
-            <UpdateMultiURLForm
+          {qrCode && (
+            <UpdateFreeTextForm
               qrCode={qrCode}
               editDialog={editDialog}
               setEditDialog={setEditDialog}
             />
-          )} */}
+          )}
         </DialogContent>
       </Dialog>
       <AlertDialog open={deleteDialog} onOpenChange={setDeleteDialog}>
@@ -133,18 +163,17 @@ const FreeTextTable = (props: Props) => {
             <AlertDialogAction
               className="bg-red-500"
               onClick={() => {
-                // deleteQR(qrCode!.uniqueToken);
-                // if (isDeleted) {
-                //   setDeleteDialog(false);
-                // }
+                deleteFreeTextQR(qrCode!.uniqueToken);
+                if (isDeleted) {
+                  setDeleteDialog(false);
+                }
               }}
             >
-              Delete
-              {/* {isDeleting ? (
+              {isDeleting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <p>Delete</p>
-              )} */}
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
