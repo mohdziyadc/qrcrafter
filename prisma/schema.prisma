@@ -51,6 +51,7 @@ model User {
   multiUrlQrCodes   MultiURLCode[] @relation("multiURLCodes")
   dynamicURL       DynamicURL[] @relation("dynamicURL")
   dynamicMultiURL   DynamicMultiURL[] @relation("dynamicMultiURL")
+  dynamicFreeText    DynamicFreeText[]  @relation("dynamicFreeText")
 }
 
 
@@ -82,4 +83,14 @@ model DynamicMultiURL {
   qrCode String @db.VarChar(3000)
   userId String
   user User @relation("dynamicMultiURL", fields: [userId], references: [id])
+}
+
+model DynamicFreeText {
+  id String @id @default(cuid())
+  name String
+  freetext String @db.VarChar(5000)
+  qrCode String @db.VarChar(3000)
+  uniqueToken String @unique
+  userId String
+  user User @relation("dynamicFreeText", fields: [userId], references: [id])
 }
