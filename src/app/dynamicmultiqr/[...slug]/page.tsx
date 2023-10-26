@@ -11,9 +11,10 @@ type Props = {
 
 const DynamicMultiQR = async (props: Props) => {
   const [uniqueToken] = props.params.slug;
+  const decodedToken = decodeURIComponent(uniqueToken);
   const dynamicMultiUrlQr = await prismaClient.dynamicMultiURL.findUnique({
     where: {
-      uniqueToken: uniqueToken,
+      uniqueToken: decodedToken,
     },
   });
   return (
