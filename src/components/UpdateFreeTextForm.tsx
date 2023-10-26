@@ -16,6 +16,11 @@ import {
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { useToast } from "./ui/use-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { Loader2 } from "lucide-react";
+import { Textarea } from "./ui/textarea";
 
 type Props = {
   qrCode: DynamicFreeText;
@@ -32,10 +37,45 @@ const UpdateFreeTextForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
       text: qrCode.freetext,
     },
   });
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const {
+    mutate: updateQRCode,
+    isLoading,
+    isSuccess,
+  } = useMutation({
+    mutationFn: async ({ name, text }: updateFormInput) => {
+      const response = await axios.post("/api/dynamicqr/freetext/update", {
+        name: name,
+        text: text,
+        uniqueToken: qrCode.uniqueToken,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Update Success",
+        description: "Your QR code has been updated!",
+        variant: "default",
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["dynamicFreeTextQr"],
+      });
+      setEditDialog(false);
+    },
+    onError: () => {
+      toast({
+        title: "Error Occured",
+        description: "Updation of QR code has met with an error!",
+        variant: "destructive",
+      });
+    },
+  });
 
   const onSumbitHandler = ({ text, name }: updateFormInput) => {
     // console.log("Update Button Clicked");
-    // updateQRCode({ url, name });
+    updateQRCode({ name, text });
   };
   return (
     <div>
@@ -73,7 +113,7 @@ const UpdateFreeTextForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
                 <FormItem className="w-full mt-2">
                   <FormLabel>Text</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter Text" {...field} />
+                    <Textarea placeholder="Enter your text here" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -86,21 +126,19 @@ const UpdateFreeTextForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
               type="button"
               onClick={() => setEditDialog(false)}
               className={cn({
-                //   hidden: isSuccess,
+                hidden: isSuccess,
               })}
             >
               Cancel
             </Button>
-            <Button type="submit" className="ml-2">
-              <p>Update QR</p>
-
-              {/* {isLoading ? (
-          <Loader2 className=" animate-spin" />
-        ) : isSuccess ? (
-          <p>Updated</p>
-        ) : (
-          <p>Update QR</p>
-        )} */}
+            <Button type="submit" className="ml-2" disabled={isSuccess}>
+              {isLoading ? (
+                <Loader2 className=" animate-spin" />
+              ) : isSuccess ? (
+                <p>Updated</p>
+              ) : (
+                <p>Update QR</p>
+              )}
             </Button>
           </div>
         </form>
