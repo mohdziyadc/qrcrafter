@@ -41,3 +41,25 @@ export async function POST(req: Request, res: Response) {
     });
   }
 }
+
+export async function GET(req: Request, res: Response) {
+  try {
+    const session = await getAuthSession();
+    if (!session?.user) {
+      return new NextResponse("User Unauthorized", { status: 401 });
+    }
+    const qrCodes = await prismaClient.dynamicFreeText.findMany({
+      where: {
+        userId: session.user.id,
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
+    return NextResponse.json({ qrCodes }, { status: 200 });
+  } catch (error) {
+    return new NextResponse("[INTERNAL SERVOR ERROR] " + error, {
+      status: 500,
+    });
+  }
+}
