@@ -16,6 +16,11 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import Image from "next/image";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { useToast } from "./ui/use-toast";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
 
 type Props = {
   isContent: boolean;
@@ -34,8 +39,38 @@ const DynamicFreeTextForm = (props: Props) => {
     },
   });
 
+  const { toast } = useToast();
+
+  const {
+    mutate: generateFreeTextQR,
+    isLoading,
+    isSuccess,
+  } = useMutation({
+    mutationFn: async ({ name, text }: dynamicFreeTextInput) => {
+      const response = await axios.post("/api/dynamicqr/freetext", {
+        name: name,
+        text: text,
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Success!",
+        description: "You have created the QR code successfully.",
+      });
+      setQRCode(data.qrCode);
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occured during the process.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const onSubmitHandler = ({ name, text }: dynamicFreeTextInput) => {
-    console.log(`FREE TEXT: ${text}`);
+    generateFreeTextQR({ name, text });
   };
   // Show alert dialog if user types anything else don't
   if (
@@ -82,15 +117,19 @@ const DynamicFreeTextForm = (props: Props) => {
             )}
           />
           <div className="flex justify-center items-center mt-4">
-            <Button type="submit">
-              <p>Generate QR</p>
+            <Button type="submit" disabled={isSuccess}>
+              {isLoading ? (
+                <Loader2 className=" animate-spin" />
+              ) : (
+                <p>Generate QR</p>
+              )}
             </Button>
           </div>
         </form>
       </Form>
       {qrCode && (
         // animation needed
-        <div className="flex justify-center items-center mt-2">
+        <div className="flex flex-col justify-center items-center mt-2">
           <Image
             className="border-black rounded-lg border-2"
             src={qrCode}
@@ -98,6 +137,16 @@ const DynamicFreeTextForm = (props: Props) => {
             height={200}
             width={200}
           />
+          <div className="mt-4 text-gray-400 text-sm">
+            <p>
+              Your QR code has been saved.{" "}
+              <span>
+                <Link href={"/manage"} className="underline underline-offset-1">
+                  Manage QR Code
+                </Link>
+              </span>
+            </p>
+          </div>
         </div>
       )}
     </div>
