@@ -13,6 +13,10 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { useToast } from "./ui/use-toast";
+import { Loader2 } from "lucide-react";
 
 type Props = {
   isContent: boolean;
@@ -32,6 +36,44 @@ const DynamicContactForm = (props: Props) => {
       phone_number: "",
     },
   });
+  const { toast } = useToast();
+
+  const {
+    mutate: createQR,
+    isLoading,
+    isSuccess,
+  } = useMutation({
+    mutationFn: async ({
+      first_name,
+      last_name,
+      organisation,
+      email,
+      phone_number,
+    }: dynamicContactInput) => {
+      const response = await axios.post("/api/dynamicqr/contact", {
+        first_name: first_name,
+        last_name: last_name,
+        organisation: organisation,
+        email: email,
+        phone_number: phone_number,
+      });
+      return response.data.qrCode;
+    },
+    onSuccess: (qrCode) => {
+      toast({
+        title: "Success!",
+        description: "You have created the QR Code successfully.",
+      });
+      setQRCode(qrCode);
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occurred during this process.",
+        variant: "destructive",
+      });
+    },
+  });
 
   const onSubmitHandler = ({
     first_name,
@@ -40,7 +82,7 @@ const DynamicContactForm = (props: Props) => {
     email,
     phone_number,
   }: dynamicContactInput) => {
-    console.log({
+    createQR({
       first_name,
       last_name,
       organisation,
@@ -132,8 +174,14 @@ const DynamicContactForm = (props: Props) => {
             )}
           />
           <div className="flex justify-center items-center mt-4">
-            <Button type="submit">
-              <p>Generate QR</p>
+            <Button type="submit" disabled={isSuccess}>
+              {isLoading ? (
+                <div>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                </div>
+              ) : (
+                <p>Generate QR</p>
+              )}
             </Button>
           </div>
         </form>
