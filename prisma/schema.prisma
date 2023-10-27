@@ -52,6 +52,7 @@ model User {
   dynamicURL       DynamicURL[] @relation("dynamicURL")
   dynamicMultiURL   DynamicMultiURL[] @relation("dynamicMultiURL")
   dynamicFreeText    DynamicFreeText[]  @relation("dynamicFreeText")
+  dynamicContact    DynamicContact[]   @relation("dynamicContact")
 }
 
 
@@ -93,4 +94,18 @@ model DynamicFreeText {
   uniqueToken String @unique
   userId String
   user User @relation("dynamicFreeText", fields: [userId], references: [id])
+}
+
+model DynamicContact {
+  id String @id @default(cuid())
+  firstName String
+  lastName String
+  organisation String
+  email String
+  phoneNumber String
+  qrCode String @db.VarChar(3000)
+  uniqueToken String @unique
+  userId String
+  user User @relation("dynamicContact",fields: [userId], references: [id])
+
 }
