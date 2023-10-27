@@ -17,6 +17,8 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useToast } from "./ui/use-toast";
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 type Props = {
   isContent: boolean;
@@ -186,6 +188,27 @@ const DynamicContactForm = (props: Props) => {
           </div>
         </form>
       </Form>
+      {qrCode && (
+        <div className="flex flex-col justify-center items-center mt-2 ">
+          <Image
+            src={qrCode}
+            alt="dynamic qr"
+            height={200}
+            width={200}
+            className="border-2 border-black rounded-lg"
+          />
+          <div className="mt-4 text-gray-400 text-sm">
+            <p>
+              Your QR code has been saved.{" "}
+              <span>
+                <Link href={"/manage"} className="underline underline-offset-1">
+                  Manage QR Code
+                </Link>
+              </span>
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
