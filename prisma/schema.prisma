@@ -107,5 +107,4 @@ model DynamicContact {
   uniqueToken String @unique
   userId String
   user User @relation("dynamicContact",fields: [userId], references: [id])
-
 }
