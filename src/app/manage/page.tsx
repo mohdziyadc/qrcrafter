@@ -7,6 +7,7 @@ import LoadingSpinner from "./loading";
 import DynamicQRCard from "@/components/DynamicQRCard";
 import MultiURLTable from "@/components/MultiURLTable";
 import FreeTextTable from "@/components/FreeTextTable";
+import ContactQrTable from "@/components/ContactQrTable";
 
 type Props = {};
 
@@ -37,6 +38,7 @@ const Manage = async (props: Props) => {
         }
         multiURLTable={<MultiURLTable />}
         freeTextTable={<FreeTextTable />}
+        contactQrTable={<ContactQrTable />}
       />
     </div>
   );
