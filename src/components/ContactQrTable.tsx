@@ -25,6 +25,7 @@ import { Edit2, Loader2, Trash2 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
+import UpdateContactForm from "./UpdateContactForm";
 
 type Props = {};
 
@@ -141,13 +142,13 @@ const ContactQrTable = (props: Props) => {
               <DialogHeader>
                 <DialogTitle>Edit QR Code</DialogTitle>
               </DialogHeader>
-              {/* {qrCode && (
-            <UpdateFreeTextForm
-              qrCode={qrCode}
-              editDialog={editDialog}
-              setEditDialog={setEditDialog}
-            />
-          )} */}
+              {qrCode && (
+                <UpdateContactForm
+                  qrCode={qrCode}
+                  editDialog={editDialog}
+                  setEditDialog={setEditDialog}
+                />
+              )}
             </DialogContent>
           </Dialog>
           <AlertDialog open={deleteDialog} onOpenChange={setDeleteDialog}>

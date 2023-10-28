@@ -73,7 +73,7 @@ const UpdateFreeTextForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
     },
   });
 
-  const onSumbitHandler = ({ text, name }: updateFormInput) => {
+  const onSubmitHandler = ({ text, name }: updateFormInput) => {
     // console.log("Update Button Clicked");
     updateQRCode({ name, text });
   };
@@ -89,7 +89,7 @@ const UpdateFreeTextForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
         />
       </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSumbitHandler)}>
+        <form onSubmit={form.handleSubmit(onSubmitHandler)}>
           <FormField
             control={form.control}
             name="name"
