@@ -5,9 +5,10 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request, res: Response) {
   try {
     const session = await getAuthSession();
-    if (session?.user) {
+    if (!session?.user) {
       return new NextResponse("User Unauthorized", { status: 401 });
     }
+
     const { uniqueToken } = await req.json();
     await prismaClient.dynamicContact.delete({
       where: {

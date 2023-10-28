@@ -21,8 +21,8 @@ import {
 } from "./ui/alert-dialog";
 import { DynamicContact } from "@prisma/client";
 import { useToast } from "./ui/use-toast";
-import { Edit2, Trash2 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { Edit2, Loader2, Trash2 } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
 
@@ -34,6 +34,7 @@ const ContactQrTable = (props: Props) => {
   const [qrCodes, setQRCodes] = useState<DynamicContact[]>([]);
   const [qrCode, setQrCode] = useState<DynamicContact>();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const {
     data: contactQrCodes,
@@ -44,6 +45,33 @@ const ContactQrTable = (props: Props) => {
     queryFn: async () => {
       const response = await axios.get("/api/dynamicqr/contact");
       return response.data.qrCodes;
+    },
+  });
+
+  const {
+    mutate: deleteQR,
+    isLoading: isDeleting,
+    isSuccess: isDeleted,
+  } = useMutation({
+    mutationFn: async (uniqueToken: string) => {
+      const response = await axios.post("/api/dynamicqr/contact/delete", {
+        uniqueToken: uniqueToken,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["dynamicContactQr"]);
+      toast({
+        title: "Success!",
+        description: "You have deleted the QR code successfully.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown occurred during the process.",
+        variant: "destructive",
+      });
     },
   });
 
@@ -136,18 +164,17 @@ const ContactQrTable = (props: Props) => {
                 <AlertDialogAction
                   className="bg-red-500"
                   onClick={() => {
-                    // deleteFreeTextQR(qrCode!.uniqueToken);
-                    // if (isDeleted) {
-                    //   setDeleteDialog(false);
-                    // }
+                    deleteQR(qrCode!.uniqueToken);
+                    if (isDeleted) {
+                      setDeleteDialog(false);
+                    }
                   }}
                 >
-                  <p>Delete</p>
-                  {/* {isDeleting ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <p>Delete</p>
-              )} */}
+                  {isDeleting ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <p>Delete</p>
+                  )}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
