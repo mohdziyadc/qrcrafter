@@ -40,3 +40,8 @@ export const dynamicFreeTextFormSchema = z.object({
   name: z.string().min(1, { message: "Enter a valid name" }),
   text: z.string().min(1),
 });
+
+export const aiUrlFormSchema = z.object({
+  url: z.string().url().min(1),
+  prompt: z.string().min(3).max(160),
+});

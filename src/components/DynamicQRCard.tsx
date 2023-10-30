@@ -85,9 +85,7 @@ const DynamicQRCard: React.FC<DynamicQRCardProps> = ({
             </DropdownMenu>
           </CardHeader>
           <TabsContent value="dynamic_url">
-            <Suspense fallback={<LoadingSpinner component={true} />}>
-              <CardContent>{dynamicURLTable}</CardContent>
-            </Suspense>
+            <CardContent>{dynamicURLTable}</CardContent>
           </TabsContent>
           <TabsContent value="dynamic_multi_url">
             <CardContent>{multiURLTable}</CardContent>
