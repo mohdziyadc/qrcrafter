@@ -18,6 +18,7 @@ import {
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 import StaticQRForm from "./StaticQRForm";
 import DynamicQRForm from "./DynamicQRForm";
+import Link from "next/link";
 
 type Props = {};
 
@@ -36,6 +37,9 @@ const CreateQRNav = (props: Props) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
+          <DropdownMenuItem>
+            <Link href={"/aiqrcode"}>AI QR Code</Link>
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsStaticDialog(true)}>
             Static QR Code
           </DropdownMenuItem>
