@@ -16,6 +16,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import { Button } from "./ui/button";
+import { QrCode } from "lucide-react";
 
 type Props = {};
 
@@ -72,6 +74,9 @@ const AiURLForm = (props: Props) => {
                 </FormItem>
               )}
             />
+            <Button type="submit">
+              <QrCode className="h-4 w-4 mr-2" /> Generate QR Code
+            </Button>
           </div>
         </form>
       </Form>
