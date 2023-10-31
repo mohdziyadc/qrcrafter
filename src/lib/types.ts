@@ -3,7 +3,7 @@ export type QRCodeControlNetRequest = {
   prompt: string;
   qr_conditioning_scale?: number;
   num_inference_steps?: number;
-  guidance_scale?: string;
+  guidance_scale?: number;
   negative_prompt?: string;
 };
 
