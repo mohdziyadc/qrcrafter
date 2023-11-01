@@ -12,6 +12,7 @@ import { CheckIcon, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TabsContent } from "@radix-ui/react-tabs";
 import AiURLForm from "./AiURLForm";
+import { useMutation } from "@tanstack/react-query";
 
 type Props = {};
 
@@ -35,6 +36,7 @@ const DynamicAIQRCodeForm = (props: Props) => {
       tab: "contact",
     },
   ];
+
   return (
     <div className="flex flex-1">
       <Card className=" mt-2 w-full">

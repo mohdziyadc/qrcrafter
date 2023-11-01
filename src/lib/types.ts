@@ -22,5 +22,5 @@ export type QRInputRequest = {
 export type QRInputResponse = {
   image_url: string;
   latency_ms: number;
-  id: string; //uniqueId of generated qrCode
+  token: string; //uniqueId of generated qrCode
 };

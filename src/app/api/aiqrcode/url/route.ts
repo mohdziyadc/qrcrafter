@@ -28,13 +28,13 @@ export async function POST(req: NextRequest) {
         return new NextResponse(error.message, { status: 400 });
       }
     }
-    const { url, prompt } = body;
+    const { prompt } = body;
     const token = getBase64UUID();
     const encodedToken = encodeURIComponent(token);
     const startTime = performance.now();
 
     let imageUrl = await replicateClient.generateQRCode({
-      url: `http:localhost:3000/api/redirect/ai/${encodedToken}`,
+      url: `http://localhost:3000/api/a/${encodedToken}`,
       prompt: prompt,
       qr_conditioning_scale: 2,
       num_inference_steps: 30,
@@ -45,22 +45,9 @@ export async function POST(req: NextRequest) {
     const endTime = performance.now();
     const durationMS = endTime - startTime;
 
-    /**
-     * Add a save button to create this QR code
-     * Rather than saving it everytime
-     *  */
-    // await prismaClient.aiURLQRCode.create({
-    //   data: {
-    //     url: url,
-    //     uniqueToken: token,
-    //     image_url: imageUrl,
-    //     userId: session.user.id,
-    //   },
-    // });
-
     const response: QRInputResponse = {
       image_url: imageUrl,
-      id: token,
+      token: token,
       latency_ms: Math.round(durationMS),
     };
     return new NextResponse(JSON.stringify(response), { status: 200 });
