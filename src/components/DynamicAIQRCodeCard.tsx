@@ -35,17 +35,17 @@ const DynamicAIQRCodeCard = (props: Props) => {
     isLoading,
     isSuccess,
   } = useMutation({
-    mutationFn: async ({ url, imageUrl, token }: saveAiQRCode) => {
+    mutationFn: async ({ url, imageUrl, token, name }: saveAiQRCode) => {
       const params: saveAiQRCode = {
         url: url,
         imageUrl: imageUrl,
         token: token,
+        name: name,
       };
       const response = await axios.post(
         "/api/aiqrcode/url/save",
         JSON.stringify(params)
       );
-      setTimeout(() => {}, 6000);
       return response.data;
     },
     onSuccess: () => {
@@ -54,7 +54,8 @@ const DynamicAIQRCodeCard = (props: Props) => {
         description: "QR Code saved successfully",
       });
     },
-    onError: () => {
+    onError: (e) => {
+      console.log("Error " + e);
       toast({
         title: "Error!",
         description: "An unknown error occurred during this process.",
@@ -93,10 +94,11 @@ const DynamicAIQRCodeCard = (props: Props) => {
                       url: image.user_url,
                       imageUrl: image.image_url,
                       token: image.token,
+                      name: image.qr_name,
                     });
                     setDisableBtn(true);
                   }}
-                  disabled={disableBtn}
+                  disabled={disableBtn && isSuccess}
                 >
                   {isLoading ? (
                     <Loader2 className="h-4 w-4 animate-spin" />

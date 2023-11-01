@@ -10,14 +10,17 @@ export async function POST(req: NextRequest) {
       return new NextResponse("User Unauthorized", { status: 401 });
     }
     const body = (await req.json()) as saveAiQRCode;
+
     await prismaClient.aiURLQRCode.create({
       data: {
         url: body.url,
+        name: body.name,
         uniqueToken: body.token,
-        image_url: body.imageUrl,
         userId: session.user.id,
+        image_url: body.imageUrl,
       },
     });
+
     return new NextResponse("[SUCCESS]", { status: 200 });
   } catch (error) {
     return new NextResponse("[INTERNAL SERVOR ERROR] " + error, {

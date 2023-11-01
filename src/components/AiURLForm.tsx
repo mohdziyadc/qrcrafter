@@ -44,8 +44,12 @@ const AiURLForm = (props: Props) => {
     isLoading,
     isSuccess,
   } = useMutation({
-    mutationFn: async ({ url, prompt }: aiUrlInput) => {
-      const payload: QRInputRequest = { url: url, prompt: prompt };
+    mutationFn: async ({ url, prompt, name }: aiUrlInput) => {
+      const payload: QRInputRequest = {
+        url: url,
+        prompt: prompt,
+        qr_name: name,
+      };
       const response = await axios.post(
         "/api/aiqrcode/url",
         JSON.stringify(payload)
@@ -64,8 +68,8 @@ const AiURLForm = (props: Props) => {
     },
   });
   setLoading(isLoading);
-  const handleSubmit = ({ url, prompt }: aiUrlInput) => {
-    getAiQrCode({ url, prompt });
+  const handleSubmit = ({ url, prompt, name }: aiUrlInput) => {
+    getAiQrCode({ url, prompt, name });
   };
 
   return (
@@ -73,6 +77,22 @@ const AiURLForm = (props: Props) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <div className="flex flex-col gap-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter a name for the QR Code"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="url"

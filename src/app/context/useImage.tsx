@@ -14,9 +14,15 @@ type ImageContextProps = {
   setImage: Dispatch<SetStateAction<QRInputResponse>>;
 };
 const ImageContext = createContext<ImageContextProps>({
-  image: { image_url: "", latency_ms: 0, token: "", user_url: "" },
+  image: { image_url: "", latency_ms: 0, token: "", user_url: "", qr_name: "" },
   setImage: (): QRInputResponse => {
-    return { image_url: "", latency_ms: 0, token: "", user_url: "" };
+    return {
+      image_url: "",
+      latency_ms: 0,
+      token: "",
+      user_url: "",
+      qr_name: "",
+    };
   },
 });
 
@@ -30,6 +36,7 @@ export const ImageContextProvider = ({ children }: Props) => {
     image_url: "",
     latency_ms: 0,
     token: "",
+    qr_name: "",
   });
 
   return (

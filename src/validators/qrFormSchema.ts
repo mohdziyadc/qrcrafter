@@ -42,6 +42,7 @@ export const dynamicFreeTextFormSchema = z.object({
 });
 
 export const aiUrlFormSchema = z.object({
+  name: z.string().min(1),
   url: z.string().url().min(1),
   prompt: z.string().min(3).max(160),
 });
