@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
         return new NextResponse(error.message, { status: 400 });
       }
     }
-    const { prompt } = body;
+    const { url, prompt } = body;
     const token = getBase64UUID();
     const encodedToken = encodeURIComponent(token);
     const startTime = performance.now();
@@ -46,6 +46,7 @@ export async function POST(req: NextRequest) {
     const durationMS = endTime - startTime;
 
     const response: QRInputResponse = {
+      user_url: url,
       image_url: imageUrl,
       token: token,
       latency_ms: Math.round(durationMS),

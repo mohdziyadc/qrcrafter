@@ -1,12 +1,8 @@
 import { getAuthSession } from "@/lib/auth";
 import { prismaClient } from "@/lib/db";
+import { saveAiQRCode } from "@/lib/types";
 import { NextRequest, NextResponse } from "next/server";
 
-type saveAiQRCode = {
-  url: string;
-  token: string;
-  imageUrl: string;
-};
 export async function POST(req: NextRequest) {
   try {
     const session = await getAuthSession();
