@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { QrCode } from "lucide-react";
+import { Loader2, QrCode } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { QRInputRequest } from "@/lib/types";
@@ -38,7 +38,7 @@ const AiURLForm = (props: Props) => {
   });
   //   const router = useRouter()
   const { loading, setLoading } = useLoading();
-  const { setImage } = useImage();
+  const { image, setImage } = useImage();
   const {
     mutate: getAiQrCode,
     isLoading,
@@ -53,7 +53,7 @@ const AiURLForm = (props: Props) => {
       return response.data;
     },
     onSuccess: (data) => {
-      // setImageURL(data.image_url);
+      setImage(data);
     },
     onError: () => {
       toast({
@@ -63,12 +63,11 @@ const AiURLForm = (props: Props) => {
       });
     },
   });
-
+  setLoading(isLoading);
   const handleSubmit = ({ url, prompt }: aiUrlInput) => {
-    // getAiQrCode({ url, prompt });
-    setLoading(!loading);
-    setImage("let's gooooooo");
+    getAiQrCode({ url, prompt });
   };
+
   return (
     <div>
       <Form {...form}>
@@ -110,8 +109,16 @@ const AiURLForm = (props: Props) => {
                 </FormItem>
               )}
             />
-            <Button type="submit">
-              <QrCode className="h-4 w-4 mr-2" /> Generate QR Code
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : !image.image_url ? (
+                <p className="flex flex-row items-center">
+                  <QrCode className="h-4 w-4 mr-2" /> Generate QR Code
+                </p>
+              ) : (
+                "✨ Regenerate"
+              )}
             </Button>
           </div>
         </form>

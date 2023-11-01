@@ -1,4 +1,5 @@
 "use client";
+import { QRInputResponse } from "@/lib/types";
 import {
   Dispatch,
   ReactNode,
@@ -9,12 +10,14 @@ import {
 } from "react";
 
 type ImageContextProps = {
-  image: string;
-  setImage: Dispatch<SetStateAction<string>>;
+  image: QRInputResponse;
+  setImage: Dispatch<SetStateAction<QRInputResponse>>;
 };
 const ImageContext = createContext<ImageContextProps>({
-  image: "",
-  setImage: (): string => "",
+  image: { image_url: "", latency_ms: 0, token: "" },
+  setImage: (): QRInputResponse => {
+    return { image_url: "", latency_ms: 0, token: "" };
+  },
 });
 
 type Props = {
@@ -22,7 +25,11 @@ type Props = {
 };
 
 export const ImageContextProvider = ({ children }: Props) => {
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageUrl, setImageUrl] = useState<QRInputResponse>({
+    image_url: "",
+    latency_ms: 0,
+    token: "",
+  });
 
   return (
     <ImageContext.Provider value={{ image: imageUrl, setImage: setImageUrl }}>
