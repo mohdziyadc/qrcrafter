@@ -115,6 +115,7 @@ model AiURLQRCode {
   url String @db.VarChar(500)
   uniqueToken String @unique
   image_url String
+  name String
   userId String
   user User @relation("aiUrlCodes",fields: [userId], references: [id])
 
