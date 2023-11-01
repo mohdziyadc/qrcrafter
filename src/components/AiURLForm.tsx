@@ -22,6 +22,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { QRInputRequest } from "@/lib/types";
 import { toast } from "./ui/use-toast";
+import { useLoading } from "@/app/context/useLoading";
 
 type Props = {};
 
@@ -35,6 +36,7 @@ const AiURLForm = (props: Props) => {
     },
   });
   //   const router = useRouter()
+  const { loading, setLoading } = useLoading();
   const {
     mutate: getAiQrCode,
     isLoading,
@@ -61,57 +63,56 @@ const AiURLForm = (props: Props) => {
   });
 
   const handleSubmit = ({ url, prompt }: aiUrlInput) => {
-    getAiQrCode({ url, prompt });
+    // getAiQrCode({ url, prompt });
+    setLoading(!loading);
   };
   return (
-    <div className="mt-4 flex flex-row  items-center">
-      <div>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)}>
-            <div className="flex flex-col gap-4">
-              <FormField
-                control={form.control}
-                name="url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>URL</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://qrcrafter.pro" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      This is what your QR code will link to.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="prompt"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Prompt</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="A flowy lake with clouds in paradise"
-                        className="resize-none"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription className="">
-                      This is what the image in your QR code will look like.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit">
-                <QrCode className="h-4 w-4 mr-2" /> Generate QR Code
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </div>
+    <div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <div className="flex flex-col gap-4">
+            <FormField
+              control={form.control}
+              name="url"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>URL</FormLabel>
+                  <FormControl>
+                    <Input placeholder="https://qrcrafter.pro" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is what your QR code will link to.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="prompt"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Prompt</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="A flowy lake with clouds in paradise"
+                      className="resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription className="">
+                    This is what the image in your QR code will look like.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">
+              <QrCode className="h-4 w-4 mr-2" /> Generate QR Code
+            </Button>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 };
