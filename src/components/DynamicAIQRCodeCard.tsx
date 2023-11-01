@@ -12,7 +12,7 @@ import { saveAiQRCode } from "@/lib/types";
 import axios from "axios";
 import { useToast } from "./ui/use-toast";
 import { Loader2 } from "lucide-react";
-
+import downloadQrCode from "@/lib/downloadQrCode";
 type Props = {};
 
 const DynamicAIQRCodeCard = (props: Props) => {
@@ -45,6 +45,7 @@ const DynamicAIQRCodeCard = (props: Props) => {
         "/api/aiqrcode/url/save",
         JSON.stringify(params)
       );
+      setTimeout(() => {}, 6000);
       return response.data;
     },
     onSuccess: () => {
@@ -103,7 +104,14 @@ const DynamicAIQRCodeCard = (props: Props) => {
                     "Save QR Code"
                   )}
                 </Button>
-                <Button variant={"secondary"}>Download</Button>
+                <Button
+                  variant={"secondary"}
+                  onClick={() => {
+                    downloadQrCode(image.image_url, "aiQrCode");
+                  }}
+                >
+                  Download
+                </Button>
               </div>
               <p className="text-gray-400 text-sm italic text-center mt-2">
                 You should save the QR code if you want to update it later.
