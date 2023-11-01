@@ -23,6 +23,7 @@ import axios from "axios";
 import { QRInputRequest } from "@/lib/types";
 import { toast } from "./ui/use-toast";
 import { useLoading } from "@/app/context/useLoading";
+import { useImage } from "@/app/context/useImage";
 
 type Props = {};
 
@@ -37,6 +38,7 @@ const AiURLForm = (props: Props) => {
   });
   //   const router = useRouter()
   const { loading, setLoading } = useLoading();
+  const { setImage } = useImage();
   const {
     mutate: getAiQrCode,
     isLoading,
@@ -65,6 +67,7 @@ const AiURLForm = (props: Props) => {
   const handleSubmit = ({ url, prompt }: aiUrlInput) => {
     // getAiQrCode({ url, prompt });
     setLoading(!loading);
+    setImage("let's gooooooo");
   };
   return (
     <div>

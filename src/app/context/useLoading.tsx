@@ -8,11 +8,12 @@ import {
   useState,
 } from "react";
 
-interface ContextProps {
+interface LoadingContextProps {
   loading: boolean;
   setLoading: Dispatch<SetStateAction<boolean>>;
 }
-const Context = createContext<ContextProps>({
+
+const LoadingContext = createContext<LoadingContextProps>({
   loading: false,
   setLoading: (): boolean => false,
 });
@@ -24,10 +25,10 @@ export const LoadingContextProvider = ({ children }: Props) => {
   const [loading, setLoading] = useState(false);
 
   return (
-    <Context.Provider value={{ loading, setLoading }}>
+    <LoadingContext.Provider value={{ loading, setLoading }}>
       {children}
-    </Context.Provider>
+    </LoadingContext.Provider>
   );
 };
 
-export const useLoading = () => useContext(Context);
+export const useLoading = () => useContext(LoadingContext);

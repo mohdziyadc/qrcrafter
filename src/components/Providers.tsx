@@ -1,4 +1,5 @@
 "use client";
+import { ImageContextProvider } from "@/app/context/useImage";
 import { LoadingContextProvider } from "@/app/context/useLoading";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
@@ -12,7 +13,9 @@ const queryClient = new QueryClient();
 const Providers = ({ children }: Props) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <LoadingContextProvider>{children}</LoadingContextProvider>
+      <LoadingContextProvider>
+        <ImageContextProvider>{children}</ImageContextProvider>
+      </LoadingContextProvider>
     </QueryClientProvider>
   );
 };
