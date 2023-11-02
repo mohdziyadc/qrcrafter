@@ -45,8 +45,11 @@ const AiMultiUrlForm = (props: Props) => {
               <FormItem className="mb-2">
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter a name for these URLs" {...field} />
+                  <Input placeholder="Enter a name" {...field} />
                 </FormControl>
+                <FormDescription>
+                  This would be the name for the URLs
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}

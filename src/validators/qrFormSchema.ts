@@ -62,3 +62,18 @@ export const aiMultiUrlFormSchema = z.object({
       message: "Prompt must not contain more than 160 character(s)",
     }),
 });
+
+export const aiFreeTextFormSchema = z.object({
+  name: z
+    .string()
+    .min(1, { message: "Name must contain at least 1 character(s)" }),
+  freetext: z
+    .string()
+    .min(1, { message: "Your text must contain at least 1 character(s) " }),
+  prompt: z
+    .string()
+    .min(1, { message: "Prompt must contain atleast 3 character(s)" })
+    .max(160, {
+      message: "Prompt must not contain more than 160 character(s)",
+    }),
+});
