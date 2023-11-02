@@ -46,3 +46,10 @@ export const aiUrlFormSchema = z.object({
   url: z.string().url().min(1),
   prompt: z.string().min(3).max(160),
 });
+
+export const aiMultiUrlFormSchema = z.object({
+  name: z.string().min(1),
+  urls: z.array(z.string().url()),
+  titles: z.array(z.string().min(1)),
+  prompt: z.string().min(3).max(160),
+});
