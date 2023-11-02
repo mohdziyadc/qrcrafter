@@ -15,6 +15,7 @@ import AiURLForm from "./AiURLForm";
 import { useMutation } from "@tanstack/react-query";
 import AiMultiUrlForm from "./AiMultiUrlForm";
 import AiFreeTextForm from "./AiFreeTextForm";
+import AiContactForm from "./AiContactForm";
 
 type Props = {};
 
@@ -93,7 +94,9 @@ const DynamicAIQRCodeForm = (props: Props) => {
             </CardContent>
           </TabsContent>
           <TabsContent value="contact">
-            <CardContent>Contact Form</CardContent>
+            <CardContent>
+              <AiContactForm />
+            </CardContent>
           </TabsContent>
         </Tabs>
       </Card>
