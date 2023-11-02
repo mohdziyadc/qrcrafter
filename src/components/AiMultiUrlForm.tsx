@@ -48,7 +48,7 @@ const AiMultiUrlForm = (props: Props) => {
                   <Input placeholder="Enter a name" {...field} />
                 </FormControl>
                 <FormDescription>
-                  This would be the name for the URLs
+                  This would be the name of the QR code
                 </FormDescription>
                 <FormMessage />
               </FormItem>

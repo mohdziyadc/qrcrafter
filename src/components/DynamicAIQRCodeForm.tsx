@@ -14,6 +14,7 @@ import { TabsContent } from "@radix-ui/react-tabs";
 import AiURLForm from "./AiURLForm";
 import { useMutation } from "@tanstack/react-query";
 import AiMultiUrlForm from "./AiMultiUrlForm";
+import AiFreeTextForm from "./AiFreeTextForm";
 
 type Props = {};
 
@@ -87,7 +88,9 @@ const DynamicAIQRCodeForm = (props: Props) => {
             </CardContent>
           </TabsContent>
           <TabsContent value="freetext">
-            <CardContent>Free Text Form</CardContent>
+            <CardContent>
+              <AiFreeTextForm />
+            </CardContent>
           </TabsContent>
           <TabsContent value="contact">
             <CardContent>Contact Form</CardContent>

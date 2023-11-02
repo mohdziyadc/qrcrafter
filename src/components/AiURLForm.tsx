@@ -84,11 +84,11 @@ const AiURLForm = (props: Props) => {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Enter a name for the QR Code"
-                      {...field}
-                    />
+                    <Input placeholder="Enter a name" {...field} />
                   </FormControl>
+                  <FormDescription>
+                    This would be the name of the QR code
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
