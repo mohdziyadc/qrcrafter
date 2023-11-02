@@ -48,8 +48,17 @@ export const aiUrlFormSchema = z.object({
 });
 
 export const aiMultiUrlFormSchema = z.object({
-  name: z.string().min(1),
-  urls: z.array(z.string().url()),
-  titles: z.array(z.string().min(1)),
-  prompt: z.string().min(3).max(160),
+  name: z
+    .string()
+    .min(1, { message: "Name must contain at least 1 character(s)" }),
+  urls: z.array(z.string().url({ message: "Enter a valid URL" })),
+  titles: z.array(
+    z.string().min(1, { message: "Title must contain at least 1 character(s)" })
+  ),
+  prompt: z
+    .string()
+    .min(3, { message: "Prompt must contain atleast 3 character(s)" })
+    .max(160, {
+      message: "Prompt must not contain more than 160 character(s)",
+    }),
 });
