@@ -72,7 +72,21 @@ export const aiFreeTextFormSchema = z.object({
     .min(1, { message: "Your text must contain at least 1 character(s) " }),
   prompt: z
     .string()
-    .min(1, { message: "Prompt must contain atleast 3 character(s)" })
+    .min(3, { message: "Prompt must contain atleast 3 character(s)" })
+    .max(160, {
+      message: "Prompt must not contain more than 160 character(s)",
+    }),
+});
+
+export const aiContactFormSchema = z.object({
+  first_name: z.string().min(1, { message: "Enter a first name" }),
+  last_name: z.string().min(1, { message: "Enter a last name" }),
+  organisation: z.string().min(1, { message: "Enter an organisation name" }),
+  email: z.string().email({ message: "Enter a valid email" }),
+  phone_number: z.string().regex(phoneRegex, "Invalid Number"),
+  prompt: z
+    .string()
+    .min(3, { message: "Prompt must contain atleast 3 character(s)" })
     .max(160, {
       message: "Prompt must not contain more than 160 character(s)",
     }),
