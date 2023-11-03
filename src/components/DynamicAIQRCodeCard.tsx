@@ -53,6 +53,7 @@ const DynamicAIQRCodeCard = (props: Props) => {
         title: "Success!",
         description: "QR Code saved successfully",
       });
+      setDisableBtn(true);
     },
     onError: (e) => {
       console.log("Error " + e);
@@ -96,7 +97,6 @@ const DynamicAIQRCodeCard = (props: Props) => {
                       token: image.token,
                       name: image.qr_name,
                     });
-                    setDisableBtn(true);
                   }}
                   disabled={disableBtn && isSuccess}
                 >

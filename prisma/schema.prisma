@@ -55,6 +55,7 @@ model User {
   dynamicContact    DynamicContact[]   @relation("dynamicContact")
   aiURLCode AiURLQRCode[] @relation("aiUrlCodes")
   multiUrlAiQr MulitUrlAiQr[] @relation("multiUrlAiQr")
+  aiFreeTextQr AiFreeTextQr[] @relation("aiFreeTextQr")
 }
 
 
@@ -131,4 +132,14 @@ model MulitUrlAiQr {
   image_url String
   userId String
   user User @relation("multiUrlAiQr",fields: [userId], references: [id])
+}
+
+model AiFreeTextQr {
+  id String @id @default(cuid())
+  name String
+  freetext String @db.VarChar(3000)
+  image_url String
+  uniqueToken String @unique
+  userId String
+  user User @relation("aiFreeTextQr", fields: [userId], references: [id])
 }
