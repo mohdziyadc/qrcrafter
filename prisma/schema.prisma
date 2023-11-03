@@ -56,6 +56,7 @@ model User {
   aiURLCode AiURLQRCode[] @relation("aiUrlCodes")
   multiUrlAiQr MulitUrlAiQr[] @relation("multiUrlAiQr")
   aiFreeTextQr AiFreeTextQr[] @relation("aiFreeTextQr")
+  aiContactQr AiContactQr[] @relation("aiContactQr")
 }
 
 
@@ -142,4 +143,17 @@ model AiFreeTextQr {
   uniqueToken String @unique
   userId String
   user User @relation("aiFreeTextQr", fields: [userId], references: [id])
+}
+
+model AiContactQr {
+  id String @id @default(cuid())
+  first_name String
+  last_name String
+  organisation String
+  email String
+  phone_number String
+  image_url String
+  uniqueToken String @unique
+  userId String
+  user User @relation("aiContactQr", fields: [userId], references: [id])
 }
