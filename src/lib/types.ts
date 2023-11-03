@@ -37,3 +37,25 @@ export type saveAiQRCode = {
   token: string;
   imageUrl: string;
 };
+
+/**
+ * Our system has multiple responses. Mainly:
+ * 1. Ai URL QR Code
+ * 2. Ai Multi URL QR Code
+ * 3. Ai FreeText Qr Code
+ * 4. Ai Contact QR Code
+ * So I think its better to create each response type in order to avoid coupling.
+ */
+type AiMultiUrlQrInputResponse = {
+  user_urls: string[];
+  user_titles: string[];
+};
+
+/**
+ * TODO:
+ * 1. Create a base type of QRInputResponse with image_url, token, latency_ms
+ * 2. Create different types of AiQR's
+ * 3. In the api/aiqrcode/type/route.ts => use the union of these two types as each POST request's response
+ * 4. Change the image context hook according to the different types. (This would be scalable and less coupled)
+ *
+ */
