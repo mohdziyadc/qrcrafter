@@ -10,6 +10,7 @@ export async function POST(req: NextRequest) {
       return new NextResponse("User Unauthorized", { status: 401 });
     }
     const body = (await req.json()) as AiMultiUrlResponse;
+
     await prismaClient.mulitUrlAiQr.create({
       data: {
         name: body.name,
@@ -20,6 +21,7 @@ export async function POST(req: NextRequest) {
         uniqueToken: body.token,
       },
     });
+
     return new NextResponse("[SUCCESS]", { status: 200 });
   } catch (error) {
     return new NextResponse("[INTERNAL SERVOR ERROR] " + error, {

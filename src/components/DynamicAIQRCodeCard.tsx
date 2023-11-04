@@ -40,7 +40,7 @@ const DynamicAIQRCodeCard = (props: Props) => {
       | AiContactResponse
       | AiFreeTextResponse
   ): response is AiUrlResponse {
-    return (response as AiUrlResponse).user_url !== "";
+    return (response as AiUrlResponse).user_url !== undefined;
   }
 
   function isAiMultiUrlResponse(
@@ -50,7 +50,7 @@ const DynamicAIQRCodeCard = (props: Props) => {
       | AiContactResponse
       | AiFreeTextResponse
   ): response is AiMultiUrlResponse {
-    return (response as AiMultiUrlResponse).user_titles !== null;
+    return (response as AiMultiUrlResponse).user_titles !== undefined;
   }
 
   function isAiFreeTextResponse(
@@ -60,7 +60,7 @@ const DynamicAIQRCodeCard = (props: Props) => {
       | AiContactResponse
       | AiFreeTextResponse
   ): response is AiFreeTextResponse {
-    return (response as AiFreeTextResponse).user_free_text !== null;
+    return (response as AiFreeTextResponse).user_free_text !== undefined;
   }
 
   function isAiContactResponse(
@@ -70,7 +70,7 @@ const DynamicAIQRCodeCard = (props: Props) => {
       | AiContactResponse
       | AiFreeTextResponse
   ): response is AiContactResponse {
-    return (response as AiContactResponse).user_email !== null;
+    return (response as AiContactResponse).user_email !== undefined;
   }
 
   useEffect(() => {
@@ -79,7 +79,7 @@ const DynamicAIQRCodeCard = (props: Props) => {
     }
   }, [image]);
 
-  const { mutate: saveAiUrlQrCode, isSuccess } = useMutation({
+  const { mutate: saveAiUrlQrCode } = useMutation({
     onMutate: () => {
       setLoadingBtn(true);
     },
@@ -113,7 +113,6 @@ const DynamicAIQRCodeCard = (props: Props) => {
         variant: "destructive",
       });
       setLoadingBtn(false);
-      setQuerySuccess(false);
     },
   });
 
@@ -127,14 +126,19 @@ const DynamicAIQRCodeCard = (props: Props) => {
       user_titles,
       image_url,
       token,
+      latency_ms,
     }: AiMultiUrlResponse) => {
-      const response = await axios.post("/api/aiqrcode/multiurl/save", {
-        name: name,
-        user_urls: user_urls,
-        user_titles: user_titles,
-        image_url: image_url,
-        token: token,
-      });
+      const response = await axios.post(
+        "/api/aiqrcode/multiurl/save",
+        JSON.stringify({
+          name: name,
+          user_urls: user_urls,
+          user_titles: user_titles,
+          image_url: image_url,
+          token: token,
+          latency_ms: latency_ms,
+        })
+      );
       return response.data;
     },
     onSuccess: () => {
@@ -159,11 +163,22 @@ const DynamicAIQRCodeCard = (props: Props) => {
 
   const checkTypeAndSave = () => {
     if (isAiUrlResponse(image)) {
+      console.log("AI URL ", image.user_url);
       saveAiUrlQrCode({
         url: image.user_url,
         imageUrl: image.image_url,
         token: image.token,
         name: image.name,
+      });
+    } else if (isAiMultiUrlResponse(image)) {
+      console.log("AI Multi URL");
+      saveMultiUrlAiQr({
+        user_urls: image.user_urls,
+        user_titles: image.user_titles,
+        name: image.name,
+        token: image.token,
+        image_url: image.image_url,
+        latency_ms: image.latency_ms,
       });
     }
   };
