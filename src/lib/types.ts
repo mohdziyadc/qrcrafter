@@ -21,9 +21,7 @@ export type QRInputRequest = {
 };
 
 export type QRInputResponse = {
-  user_url: string; //To access the url from the qr code card component and save it to DB
   image_url: string;
-  qr_name: string;
   latency_ms: number;
   token: string; //uniqueId of generated qrCode
 };
@@ -46,9 +44,27 @@ export type saveAiQRCode = {
  * 4. Ai Contact QR Code
  * So I think its better to create each response type in order to avoid coupling.
  */
-type AiMultiUrlQrInputResponse = {
+export type AiUrlQr = {
+  name: string;
+  user_url: string;
+};
+export type AiMultiUrlQr = {
+  name: string;
   user_urls: string[];
   user_titles: string[];
+};
+
+export type AiFreeTextQr = {
+  name: string;
+  user_free_text: string;
+};
+
+export type AiContactQr = {
+  user_first_name: string;
+  user_last_name: string;
+  user_organisation: string;
+  user_email: string;
+  user_phone_number: string;
 };
 
 /**
@@ -59,3 +75,8 @@ type AiMultiUrlQrInputResponse = {
  * 4. Change the image context hook according to the different types. (This would be scalable and less coupled)
  *
  */
+
+export type AiUrlResponse = QRInputResponse & AiUrlQr;
+export type AiMultiUrlResponse = QRInputResponse & AiMultiUrlQr;
+export type AiFreeTextResponse = QRInputResponse & AiFreeTextQr;
+export type AiContactResponse = QRInputResponse & AiContactQr;

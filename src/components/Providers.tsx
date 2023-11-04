@@ -1,5 +1,5 @@
 "use client";
-import { ImageContextProvider } from "@/app/context/useImage";
+import { ImageContextProvider } from "@/app/context/useAiUrlImage";
 import { LoadingContextProvider } from "@/app/context/useLoading";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";

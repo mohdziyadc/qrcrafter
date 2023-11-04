@@ -1,5 +1,5 @@
 "use client";
-import { useImage } from "@/app/context/useImage";
+import { useAiUrlImage } from "@/app/context/useAiUrlImage";
 import { useLoading } from "@/app/context/useLoading";
 import LoadingSpinner from "@/app/manage/loading";
 import Image from "next/image";
@@ -8,7 +8,14 @@ import { Card, CardContent, CardFooter } from "./ui/card";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { useMutation } from "@tanstack/react-query";
-import { saveAiQRCode } from "@/lib/types";
+import {
+  AiContactResponse,
+  AiFreeTextResponse,
+  AiMultiUrlResponse,
+  AiUrlQr,
+  AiUrlResponse,
+  saveAiQRCode,
+} from "@/lib/types";
 import axios from "axios";
 import { useToast } from "./ui/use-toast";
 import { Loader2 } from "lucide-react";
@@ -17,13 +24,53 @@ type Props = {};
 
 const DynamicAIQRCodeCard = (props: Props) => {
   const { loading } = useLoading();
-  const { image } = useImage();
+  const { image } = useAiUrlImage();
   const { toast } = useToast();
   const [disableBtn, setDisableBtn] = useState(false);
 
   /**
    * After saving the QR Code, should the users be able to regenerate QR?
    */
+  function isAiUrlResponse(
+    response:
+      | AiUrlResponse
+      | AiMultiUrlResponse
+      | AiContactResponse
+      | AiFreeTextResponse
+  ): response is AiUrlResponse {
+    return (response as AiUrlResponse).user_url !== "";
+  }
+
+  function isAiMultiUrlResponse(
+    response:
+      | AiUrlResponse
+      | AiMultiUrlResponse
+      | AiContactResponse
+      | AiFreeTextResponse
+  ): response is AiMultiUrlResponse {
+    return (response as AiMultiUrlResponse).user_titles !== null;
+  }
+
+  function isAiFreeTextResponse(
+    response:
+      | AiUrlResponse
+      | AiMultiUrlResponse
+      | AiContactResponse
+      | AiFreeTextResponse
+  ): response is AiFreeTextResponse {
+    return (response as AiFreeTextResponse).user_free_text !== null;
+  }
+
+  function isAiContactResponse(
+    response:
+      | AiUrlResponse
+      | AiMultiUrlResponse
+      | AiContactResponse
+      | AiFreeTextResponse
+  ): response is AiContactResponse {
+    return (response as AiContactResponse).user_email !== null;
+  }
+
   useEffect(() => {
     if (image) {
       setDisableBtn(false);
@@ -65,6 +112,16 @@ const DynamicAIQRCodeCard = (props: Props) => {
     },
   });
 
+  const checkTypeAndSave = () => {
+    if (isAiUrlResponse(image)) {
+      saveQRCode({
+        url: image.user_url,
+        imageUrl: image.image_url,
+        token: image.token,
+        name: image.name,
+      });
+    }
+  };
   return (
     <div className="flex flex-1 justify-center ">
       {loading ? (
@@ -91,12 +148,7 @@ const DynamicAIQRCodeCard = (props: Props) => {
               <div className="flex flex-row mt-4 items-center justify-center gap-2 ">
                 <Button
                   onClick={() => {
-                    saveQRCode({
-                      url: image.user_url,
-                      imageUrl: image.image_url,
-                      token: image.token,
-                      name: image.qr_name,
-                    });
+                    checkTypeAndSave();
                   }}
                   disabled={disableBtn && isSuccess}
                 >
