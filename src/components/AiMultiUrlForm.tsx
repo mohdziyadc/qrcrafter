@@ -19,6 +19,11 @@ import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
 import { Plus, QrCode, Trash } from "lucide-react";
 import { Textarea } from "./ui/textarea";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { useImage } from "@/app/context/useImage";
+import { useLoading } from "@/app/context/useLoading";
+import { useToast } from "./ui/use-toast";
 
 type Props = {};
 
@@ -33,7 +38,40 @@ const AiMultiUrlForm = (props: Props) => {
       prompt: "",
     },
   });
-  const onSubmitHandler = () => {};
+  const { setImage } = useImage();
+  const { setLoading } = useLoading();
+  const { toast } = useToast();
+
+  const { mutate: getAiMultiUrlQrCode, isLoading } = useMutation({
+    mutationFn: async ({ urls, titles, prompt, name }: aiMultiUrlInput) => {
+      const response = await axios.post("/api/aiqrcode/multiurl", {
+        urls: urls,
+        titles: titles,
+        name: name,
+        prompt: prompt,
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      setImage(data);
+      setLoading("success");
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occurred during the process.",
+        variant: "destructive",
+      });
+      setLoading("error");
+    },
+  });
+  const onSubmitHandler = ({ urls, titles, name, prompt }: aiMultiUrlInput) => {
+    getAiMultiUrlQrCode({ urls, titles, name, prompt });
+    setLoading("loading");
+    setTimeout(() => {
+      setLoading("delayed");
+    }, 7000);
+  };
   return (
     <div>
       <Form {...form}>

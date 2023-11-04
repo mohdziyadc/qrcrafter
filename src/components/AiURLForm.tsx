@@ -66,6 +66,7 @@ const AiURLForm = (props: Props) => {
         description: "An unknown error occurred during the process.",
         variant: "destructive",
       });
+      setLoading("error");
     },
   });
 
