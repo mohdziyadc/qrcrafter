@@ -188,7 +188,7 @@ const DynamicAIQRCodeCard = (props: Props) => {
         <div className="flex flex-col justify-center items-center w-full">
           <Loader2 className="h-6 w-6 animate-spin" />
           <p className=" text-primary/70 italic mt-1 animate-pulse">
-            Crafting your magic{" "}
+            Crafting your magic QR Code{" "}
           </p>{" "}
         </div>
       ) : loading === "delayed" ? (
