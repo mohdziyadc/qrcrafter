@@ -17,7 +17,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ScrollArea } from "./ui/scroll-area";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
-import { Plus, QrCode, Trash } from "lucide-react";
+import { Loader2, Plus, QrCode, Trash } from "lucide-react";
 import { Textarea } from "./ui/textarea";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -38,11 +38,16 @@ const AiMultiUrlForm = (props: Props) => {
       prompt: "",
     },
   });
-  const { setImage } = useImage();
+  const { image, setImage } = useImage();
   const { setLoading } = useLoading();
   const { toast } = useToast();
 
-  const { mutate: getAiMultiUrlQrCode, isLoading } = useMutation({
+  const {
+    mutate: getAiMultiUrlQrCode,
+    isLoading,
+    isSuccess,
+    isError,
+  } = useMutation({
     mutationFn: async ({ urls, titles, prompt, name }: aiMultiUrlInput) => {
       const response = await axios.post("/api/aiqrcode/multiurl", {
         urls: urls,
@@ -208,8 +213,16 @@ const AiMultiUrlForm = (props: Props) => {
               );
             }}
           />
-          <Button className="mt-2 w-full" type="submit">
-            <QrCode className="h-4 w-4 mr-2" /> Generate QR Code
+          <Button className="mt-2 w-full" type="submit" disabled={isLoading}>
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : !(isSuccess || isError) ? (
+              <p className="flex flex-row items-center">
+                <QrCode className="h-4 w-4 mr-2" /> Generate QR Code
+              </p>
+            ) : (
+              "✨ Regenerate"
+            )}
           </Button>
         </form>
       </Form>
