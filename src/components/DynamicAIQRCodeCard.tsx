@@ -27,6 +27,8 @@ const DynamicAIQRCodeCard = (props: Props) => {
   const { image } = useImage();
   const { toast } = useToast();
   const [disableBtn, setDisableBtn] = useState(false);
+  const [loadingBtn, setLoadingBtn] = useState(false);
+  const [querySuccess, setQuerySuccess] = useState(false);
 
   /**
    * After saving the QR Code, should the users be able to regenerate QR?
@@ -77,11 +79,10 @@ const DynamicAIQRCodeCard = (props: Props) => {
     }
   }, [image]);
 
-  const {
-    mutate: saveQRCode,
-    isLoading,
-    isSuccess,
-  } = useMutation({
+  const { mutate: saveAiUrlQrCode, isSuccess } = useMutation({
+    onMutate: () => {
+      setLoadingBtn(true);
+    },
     mutationFn: async ({ url, imageUrl, token, name }: saveAiQRCode) => {
       const params: saveAiQRCode = {
         url: url,
@@ -101,6 +102,8 @@ const DynamicAIQRCodeCard = (props: Props) => {
         description: "QR Code saved successfully",
       });
       setDisableBtn(true);
+      setLoadingBtn(false);
+      setQuerySuccess(true);
     },
     onError: (e) => {
       console.log("Error " + e);
@@ -109,12 +112,54 @@ const DynamicAIQRCodeCard = (props: Props) => {
         description: "An unknown error occurred during this process.",
         variant: "destructive",
       });
+      setLoadingBtn(false);
+      setQuerySuccess(false);
+    },
+  });
+
+  const { mutate: saveMultiUrlAiQr } = useMutation({
+    onMutate: () => {
+      setLoadingBtn(true);
+    },
+    mutationFn: async ({
+      name,
+      user_urls,
+      user_titles,
+      image_url,
+      token,
+    }: AiMultiUrlResponse) => {
+      const response = await axios.post("/api/aiqrcode/multiurl/save", {
+        name: name,
+        user_urls: user_urls,
+        user_titles: user_titles,
+        image_url: image_url,
+        token: token,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success!",
+        description: "QR Code saved successfully",
+      });
+      setDisableBtn(true);
+      setLoadingBtn(false);
+      setQuerySuccess(true);
+    },
+    onError: (e) => {
+      console.log("Error " + e);
+      toast({
+        title: "Error!",
+        description: "An unknown error occurred during this process.",
+        variant: "destructive",
+      });
+      setLoadingBtn(false);
     },
   });
 
   const checkTypeAndSave = () => {
     if (isAiUrlResponse(image)) {
-      saveQRCode({
+      saveAiUrlQrCode({
         url: image.user_url,
         imageUrl: image.image_url,
         token: image.token,
@@ -162,9 +207,9 @@ const DynamicAIQRCodeCard = (props: Props) => {
                   onClick={() => {
                     checkTypeAndSave();
                   }}
-                  disabled={disableBtn && isSuccess}
+                  disabled={disableBtn && querySuccess}
                 >
-                  {isLoading ? (
+                  {loadingBtn ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
                     "Save QR Code"
