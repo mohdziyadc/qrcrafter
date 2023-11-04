@@ -1,5 +1,6 @@
 import { getAuthSession } from "@/lib/auth";
 import { replicateClient } from "@/lib/replicate";
+import { AiMultiUrlResponse } from "@/lib/types";
 import { getBase64UUID } from "@/lib/utils";
 import { aiMultiUrlFormSchema } from "@/validators/qrFormSchema";
 import { NextRequest, NextResponse } from "next/server";
@@ -27,6 +28,16 @@ export async function POST(req: NextRequest) {
     });
     const endTime = performance.now();
     const durationMS = endTime - startTime;
+
+    const response: AiMultiUrlResponse = {
+      name: name,
+      user_urls: urls,
+      user_titles: titles,
+      token: token,
+      image_url: imageUrl,
+      latency_ms: Math.round(durationMS),
+    };
+    return new NextResponse(JSON.stringify(response), { status: 200 });
   } catch (error) {
     return new NextResponse("[INTERNAL SERVOR ERROR] " + error, {
       status: 500,

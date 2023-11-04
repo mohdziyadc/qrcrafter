@@ -1,7 +1,6 @@
 import { getAuthSession } from "@/lib/auth";
-import { prismaClient } from "@/lib/db";
 import { replicateClient } from "@/lib/replicate";
-import { AiUrlQr, QRInputRequest, QRInputResponse } from "@/lib/types";
+import { QRInputRequest, AiUrlResponse } from "@/lib/types";
 import { getBase64UUID } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,8 +12,6 @@ const validateRequest = (request: QRInputRequest) => {
     throw new Error("Prompt is required");
   }
 };
-
-type AiUrlReponse = QRInputResponse & AiUrlQr;
 
 export async function POST(req: NextRequest) {
   try {
@@ -47,7 +44,7 @@ export async function POST(req: NextRequest) {
     const endTime = performance.now();
     const durationMS = endTime - startTime;
 
-    const response: AiUrlReponse = {
+    const response: AiUrlResponse = {
       name: qr_name,
       user_url: url,
       image_url: imageUrl,

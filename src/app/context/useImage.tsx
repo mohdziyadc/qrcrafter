@@ -1,9 +1,5 @@
 "use client";
 import {
-  AiContactQr,
-  AiFreeTextQr,
-  AiMultiUrlQr,
-  AiUrlQr,
   AiUrlResponse,
   AiContactResponse,
   AiFreeTextResponse,
