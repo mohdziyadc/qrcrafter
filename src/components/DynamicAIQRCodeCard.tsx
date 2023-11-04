@@ -124,8 +124,20 @@ const DynamicAIQRCodeCard = (props: Props) => {
   };
   return (
     <div className="flex flex-1 justify-center ">
-      {loading ? (
-        <LoadingSpinner component />
+      {loading === "loading" ? (
+        <div className="flex flex-col justify-center items-center w-full">
+          <Loader2 className="h-6 w-6 animate-spin" />
+          <p className=" text-primary/70 italic mt-1 animate-pulse">
+            Crafting your magic{" "}
+          </p>{" "}
+        </div>
+      ) : loading === "delayed" ? (
+        <div className="flex flex-col justify-center items-center w-full">
+          <Loader2 className="h-6 w-6 animate-spin" />
+          <p className=" text-primary/70 italic mt-1 animate-pulse">
+            Finishing up
+          </p>{" "}
+        </div>
       ) : (
         image.image_url && (
           <Card className={"px-6 pt-6 pb-2"}>

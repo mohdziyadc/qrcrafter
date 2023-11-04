@@ -9,20 +9,20 @@ import {
 } from "react";
 
 interface LoadingContextProps {
-  loading: boolean;
-  setLoading: Dispatch<SetStateAction<boolean>>;
+  loading: string;
+  setLoading: Dispatch<SetStateAction<string>>;
 }
 
 const LoadingContext = createContext<LoadingContextProps>({
-  loading: false,
-  setLoading: (): boolean => false,
+  loading: "",
+  setLoading: (): string => "",
 });
 
 type Props = {
   children: ReactNode;
 };
 export const LoadingContextProvider = ({ children }: Props) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState("");
 
   return (
     <LoadingContext.Provider value={{ loading, setLoading }}>

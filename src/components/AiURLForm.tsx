@@ -58,6 +58,7 @@ const AiURLForm = (props: Props) => {
     },
     onSuccess: (data) => {
       setImage(data);
+      setLoading("success");
     },
     onError: () => {
       toast({
@@ -67,9 +68,14 @@ const AiURLForm = (props: Props) => {
       });
     },
   });
-  setLoading(isLoading);
+
   const handleSubmit = ({ url, prompt, name }: aiUrlInput) => {
     getAiQrCode({ url, prompt, name });
+
+    setLoading("loading");
+    setTimeout(() => {
+      setLoading("delayed");
+    }, 7000);
   };
 
   return (
