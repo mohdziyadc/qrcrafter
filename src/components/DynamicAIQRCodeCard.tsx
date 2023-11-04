@@ -1,5 +1,5 @@
 "use client";
-import { useAiUrlImage } from "@/app/context/useAiUrlImage";
+import { useImage } from "@/app/context/useImage";
 import { useLoading } from "@/app/context/useLoading";
 import LoadingSpinner from "@/app/manage/loading";
 import Image from "next/image";
@@ -24,7 +24,7 @@ type Props = {};
 
 const DynamicAIQRCodeCard = (props: Props) => {
   const { loading } = useLoading();
-  const { image } = useAiUrlImage();
+  const { image } = useImage();
   const { toast } = useToast();
   const [disableBtn, setDisableBtn] = useState(false);
 

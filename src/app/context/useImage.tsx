@@ -73,4 +73,4 @@ export const ImageContextProvider = ({ children }: Props) => {
     </ImageContext.Provider>
   );
 };
-export const useAiUrlImage = () => useContext(ImageContext);
+export const useImage = () => useContext(ImageContext);
