@@ -18,7 +18,7 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { Loader2, QrCode } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
+import { isError, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { QRInputRequest } from "@/lib/types";
 import { toast } from "./ui/use-toast";
@@ -43,6 +43,7 @@ const AiURLForm = (props: Props) => {
     mutate: getAiQrCode,
     isLoading,
     isSuccess,
+    isError,
   } = useMutation({
     mutationFn: async ({ url, prompt, name }: aiUrlInput) => {
       const payload: QRInputRequest = {
@@ -139,7 +140,7 @@ const AiURLForm = (props: Props) => {
             <Button type="submit" disabled={isLoading}>
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
-              ) : !image.image_url ? (
+              ) : !(isSuccess || isError) ? (
                 <p className="flex flex-row items-center">
                   <QrCode className="h-4 w-4 mr-2" /> Generate QR Code
                 </p>

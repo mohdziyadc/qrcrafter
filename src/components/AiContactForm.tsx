@@ -16,6 +16,11 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { QrCode } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { useImage } from "@/app/context/useImage";
+import { useToast } from "./ui/use-toast";
+import { useLoading } from "@/app/context/useLoading";
 
 type Props = {};
 
@@ -32,7 +37,54 @@ const AiContactForm = (props: Props) => {
       prompt: "",
     },
   });
-  const onSubmitHandler = () => {};
+
+  const { setImage } = useImage();
+  const { setLoading } = useLoading();
+  const { toast } = useToast();
+  const {
+    mutate: getAiContactQr,
+    isLoading,
+    isSuccess,
+    isError,
+  } = useMutation({
+    mutationFn: async (params: aiContactInput) => {
+      const response = await axios.post("/api/aiqrcode/contact", {
+        first_name: params.first_name,
+        last_name: params.last_name,
+        organisation: params.organisation,
+        email: params.email,
+        phone_number: params.phone_number,
+        prompt: params.prompt,
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      setImage(data);
+      setLoading("success");
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occurred during the process.",
+        variant: "destructive",
+      });
+      setLoading("error");
+    },
+  });
+  const onSubmitHandler = (params: aiContactInput) => {
+    setLoading("loading");
+    getAiContactQr({
+      first_name: params.first_name,
+      last_name: params.last_name,
+      organisation: params.organisation,
+      email: params.email,
+      phone_number: params.phone_number,
+      prompt: params.prompt,
+    });
+    setTimeout(() => {
+      setLoading("delayed");
+    }, 9000);
+  };
   return (
     <div>
       <Form {...form}>
