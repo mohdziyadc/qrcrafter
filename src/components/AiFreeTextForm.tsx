@@ -15,7 +15,12 @@ import {
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { QrCode } from "lucide-react";
+import { Loader2, QrCode } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { useImage } from "@/app/context/useImage";
+import { useLoading } from "@/app/context/useLoading";
+import { useToast } from "./ui/use-toast";
 
 type Props = {};
 
@@ -29,7 +34,44 @@ const AiFreeTextForm = (props: Props) => {
       prompt: "",
     },
   });
-  const onSubmitHandler = () => {};
+  const { setImage } = useImage();
+  const { setLoading } = useLoading();
+  const { toast } = useToast();
+
+  const {
+    mutate: getAiFreeTextQr,
+    isLoading,
+    isSuccess,
+    isError,
+  } = useMutation({
+    mutationFn: async ({ name, freetext, prompt }: aiFreeTextInput) => {
+      const response = await axios.post("/api/aiqrcode/freetext", {
+        name: name,
+        freetext: freetext,
+        prompt: prompt,
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      setImage(data);
+      setLoading("success");
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occurred during the process.",
+        variant: "destructive",
+      });
+      setLoading("error");
+    },
+  });
+  const onSubmitHandler = ({ name, freetext, prompt }: aiFreeTextInput) => {
+    setLoading("loading");
+    getAiFreeTextQr({ name, freetext, prompt });
+    setTimeout(() => {
+      setLoading("delayed");
+    }, 7000);
+  };
   return (
     <div>
       <Form {...form}>
@@ -83,7 +125,15 @@ const AiFreeTextForm = (props: Props) => {
             )}
           />
           <Button className="w-full mt-4">
-            <QrCode className="h-4 w-4 mr-2" /> Generate QR
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : !(isSuccess || isError) ? (
+              <p className="flex flex-row items-center">
+                <QrCode className="h-4 w-4 mr-2" /> Generate QR Code
+              </p>
+            ) : (
+              "✨ Regenerate"
+            )}
           </Button>
         </form>
       </Form>
