@@ -11,6 +11,7 @@ import ContactQrTable from "@/components/ContactQrTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import AiQrCodeTab from "@/components/AiQrCodeTab";
 
 type Props = {};
 
@@ -42,7 +43,9 @@ const Manage = async (props: Props) => {
           <TabsTrigger value="aiqrcode">AI QR</TabsTrigger>
           <TabsTrigger value="dynamic">Dynamic QR</TabsTrigger>
         </TabsList>
-        <TabsContent value="aiqrcode">Ai QR Code Tab</TabsContent>
+        <TabsContent value="aiqrcode">
+          <AiQrCodeTab />
+        </TabsContent>
         <TabsContent value="dynamic">
           <DynamicQRCard
             dynamicURLTable={
