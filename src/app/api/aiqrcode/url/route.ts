@@ -1,4 +1,5 @@
 import { getAuthSession } from "@/lib/auth";
+import { prismaClient } from "@/lib/db";
 import { replicateClient } from "@/lib/replicate";
 import { QRInputRequest, AiUrlResponse } from "@/lib/types";
 import { getBase64UUID } from "@/lib/utils";
@@ -52,6 +53,29 @@ export async function POST(req: NextRequest) {
       latency_ms: Math.round(durationMS),
     };
     return new NextResponse(JSON.stringify(response), { status: 200 });
+  } catch (error) {
+    return new NextResponse("[INTERNAL SERVOR ERROR] " + error, {
+      status: 500,
+    });
+  }
+}
+
+export async function GET() {
+  try {
+    const session = await getAuthSession();
+    if (!session?.user) {
+      return new NextResponse("User Unauthorized", { status: 401 });
+    }
+
+    const qrCodes = await prismaClient.aiURLQRCode.findMany({
+      where: {
+        userId: session.user.id,
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
+    return NextResponse.json({ qrCodes }, { status: 200 });
   } catch (error) {
     return new NextResponse("[INTERNAL SERVOR ERROR] " + error, {
       status: 500,
