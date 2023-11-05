@@ -161,6 +161,43 @@ const DynamicAIQRCodeCard = (props: Props) => {
     },
   });
 
+  const { mutate: saveAiFreeTextQr } = useMutation({
+    onMutate: () => {
+      setLoadingBtn(true);
+    },
+    mutationFn: async (params: AiFreeTextResponse) => {
+      const payload: AiFreeTextResponse = {
+        name: params.name,
+        image_url: params.image_url,
+        user_free_text: params.user_free_text,
+        token: params.token,
+        latency_ms: params.latency_ms,
+      };
+      const response = await axios.post(
+        "/api/aiqrcode/freetext/save",
+        JSON.stringify(payload)
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success!",
+        description: "QR Code saved successfully",
+      });
+      setLoadingBtn(false);
+      setQuerySuccess(true);
+      setDisableBtn(true);
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occurred during this process.",
+        variant: "destructive",
+      });
+      setLoadingBtn(false);
+    },
+  });
+
   const checkTypeAndSave = () => {
     if (isAiUrlResponse(image)) {
       console.log("AI URL ", image.user_url);
@@ -180,6 +217,17 @@ const DynamicAIQRCodeCard = (props: Props) => {
         image_url: image.image_url,
         latency_ms: image.latency_ms,
       });
+    } else if (isAiFreeTextResponse(image)) {
+      console.log("AI FreeText QR Code");
+      saveAiFreeTextQr({
+        name: image.name,
+        image_url: image.image_url,
+        latency_ms: image.latency_ms,
+        token: image.token,
+        user_free_text: image.user_free_text,
+      });
+    } else if (isAiContactResponse(image)) {
+      console.log("AI Contact QR Code");
     }
   };
   return (
