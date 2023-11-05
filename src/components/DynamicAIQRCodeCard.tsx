@@ -1,18 +1,15 @@
 "use client";
 import { useImage } from "@/app/context/useImage";
 import { useLoading } from "@/app/context/useLoading";
-import LoadingSpinner from "@/app/manage/loading";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardFooter } from "./ui/card";
-import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { useMutation } from "@tanstack/react-query";
 import {
   AiContactResponse,
   AiFreeTextResponse,
   AiMultiUrlResponse,
-  AiUrlQr,
   AiUrlResponse,
   saveAiQRCode,
 } from "@/lib/types";
@@ -198,6 +195,10 @@ const DynamicAIQRCodeCard = (props: Props) => {
     },
   });
 
+  /**
+   * We have different types for QR Code. We need to verify which type it is
+   * and call the appropriate mutation to save it to the DB
+   */
   const checkTypeAndSave = () => {
     if (isAiUrlResponse(image)) {
       console.log("AI URL ", image.user_url);
