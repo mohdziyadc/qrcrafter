@@ -195,6 +195,36 @@ const DynamicAIQRCodeCard = (props: Props) => {
     },
   });
 
+  const { mutate: saveAiContactQr } = useMutation({
+    onMutate: () => {
+      setLoadingBtn(true);
+    },
+    mutationFn: async (payload: AiContactResponse) => {
+      const response = await axios.post(
+        "/api/aiqrcode/contact/save",
+        JSON.stringify(payload)
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success!",
+        description: "QR Code saved successfully",
+      });
+      setLoadingBtn(false);
+      setQuerySuccess(true);
+      setDisableBtn(true);
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occurred during this process.",
+        variant: "destructive",
+      });
+      setLoadingBtn(false);
+    },
+  });
+
   /**
    * We have different types for QR Code. We need to verify which type it is
    * and call the appropriate mutation to save it to the DB
@@ -229,6 +259,16 @@ const DynamicAIQRCodeCard = (props: Props) => {
       });
     } else if (isAiContactResponse(image)) {
       console.log("AI Contact QR Code");
+      saveAiContactQr({
+        user_first_name: image.user_first_name,
+        user_last_name: image.user_last_name,
+        user_organisation: image.user_organisation,
+        user_email: image.user_email,
+        user_phone_number: image.user_phone_number,
+        image_url: image.image_url,
+        token: image.token,
+        latency_ms: image.latency_ms,
+      });
     }
   };
   return (

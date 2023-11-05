@@ -15,7 +15,7 @@ import {
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { QrCode } from "lucide-react";
+import { Loader2, QrCode } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useImage } from "@/app/context/useImage";
@@ -175,7 +175,15 @@ const AiContactForm = (props: Props) => {
             }}
           />
           <Button className="w-full mt-4">
-            <QrCode className="h-4 w-4 mr-2" /> Generate QR
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : !(isSuccess || isError) ? (
+              <p className="flex flex-row items-center">
+                <QrCode className="h-4 w-4 mr-2" /> Generate QR Code
+              </p>
+            ) : (
+              "✨ Regenerate"
+            )}
           </Button>
         </form>
       </Form>
