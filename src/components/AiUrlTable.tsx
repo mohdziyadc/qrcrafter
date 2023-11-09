@@ -24,6 +24,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
+import UpdateAiUrlForm from "./UpdateAiUrlForm";
 
 type Props = {};
 
@@ -105,13 +106,13 @@ const AiUrlTable = (props: Props) => {
           <DialogHeader>
             <DialogTitle>Edit QR Code</DialogTitle>
           </DialogHeader>
-          {/* {qrCode && (
-            <UpdateURLForm
+          {qrCode && (
+            <UpdateAiUrlForm
               qrCode={qrCode}
               editDialog={editDialog}
               setEditDialog={setEditDialog}
             />
-          )} */}
+          )}
         </DialogContent>
       </Dialog>
       <AlertDialog open={deleteDialog} onOpenChange={setDeleteDialog}>
