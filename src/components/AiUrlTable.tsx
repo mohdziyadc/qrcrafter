@@ -13,8 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
 import { Edit2, Loader2, Trash2 } from "lucide-react";
-import { Dialog, DialogHeader, DialogTitle } from "./ui/dialog";
-import { DialogContent } from "@radix-ui/react-dialog";
+import { DialogContent, Dialog, DialogHeader, DialogTitle } from "./ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -107,11 +106,11 @@ const AiUrlTable = (props: Props) => {
             <DialogTitle>Edit QR Code</DialogTitle>
           </DialogHeader>
           {/* {qrCode && (
-            // <UpdateURLForm
-            //   qrCode={qrCode}
-            //   editDialog={editDialog}
-            //   setEditDialog={setEditDialog}
-            // />
+            <UpdateURLForm
+              qrCode={qrCode}
+              editDialog={editDialog}
+              setEditDialog={setEditDialog}
+            />
           )} */}
         </DialogContent>
       </Dialog>
