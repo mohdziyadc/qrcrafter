@@ -12,7 +12,19 @@ import { AiURLQRCode } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, Loader2, Trash2 } from "lucide-react";
+import { Dialog, DialogHeader, DialogTitle } from "./ui/dialog";
+import { DialogContent } from "@radix-ui/react-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "./ui/alert-dialog";
 
 type Props = {};
 
@@ -89,6 +101,48 @@ const AiUrlTable = (props: Props) => {
           ))}
         </TableBody>
       </Table>
+      <Dialog open={editDialog} onOpenChange={setEditDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit QR Code</DialogTitle>
+          </DialogHeader>
+          {/* {qrCode && (
+            // <UpdateURLForm
+            //   qrCode={qrCode}
+            //   editDialog={editDialog}
+            //   setEditDialog={setEditDialog}
+            // />
+          )} */}
+        </DialogContent>
+      </Dialog>
+      <AlertDialog open={deleteDialog} onOpenChange={setDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this QR code. This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-500"
+              onClick={() => {
+                // deleteQR(qrCode!.uniqueToken);
+                // if (isSuccess) {
+                //   setDeleteDialog(false);
+                // }
+              }}
+            >
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <p>Delete</p>
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };

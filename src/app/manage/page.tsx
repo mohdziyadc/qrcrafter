@@ -39,7 +39,7 @@ const Manage = async (props: Props) => {
       <h1 className="font-bold text-3xl">Your QR Codes</h1>
       {/* <h3 className="font-semibold text-xl mt-8 mb-4">Dynamic URL QR Codes</h3> */}
       <Tabs defaultValue="aiqrcode">
-        <TabsList className="grid w-2/12 grid-cols-2">
+        <TabsList className="grid md:w-3/12 sm:w-1/2  grid-cols-2">
           <TabsTrigger value="aiqrcode">AI QR</TabsTrigger>
           <TabsTrigger value="dynamic">Dynamic QR</TabsTrigger>
         </TabsList>
