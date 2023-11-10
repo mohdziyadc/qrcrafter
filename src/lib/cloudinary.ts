@@ -16,8 +16,19 @@ const uploadImage = async (imageUrl: string) => {
 
   try {
     const result = await cloudinary.uploader.upload(imageUrl, options);
-    return result.public_id;
+    return result.secure_url;
   } catch (error) {
     throw new Error("[IMAGE UPLOAD ERROR] " + error);
   }
 };
+
+export default uploadImage;
+
+// const getImage = async (publicId: string) => {
+//   try {
+//     const result = await cloudinary.api.resource(publicId)
+
+//   } catch (error) {
+//     throw new Error("[IMAGE FETCH ERROR] " + error);
+//   }
+// };

@@ -1,4 +1,5 @@
 import { getAuthSession } from "@/lib/auth";
+import uploadImage from "@/lib/cloudinary";
 import { prismaClient } from "@/lib/db";
 import { saveAiQRCode } from "@/lib/types";
 import { NextRequest, NextResponse } from "next/server";
@@ -11,13 +12,15 @@ export async function POST(req: NextRequest) {
     }
     const body = (await req.json()) as saveAiQRCode;
 
+    const cloudinaryUrl = await uploadImage(body.imageUrl);
+
     await prismaClient.aiURLQRCode.create({
       data: {
         url: body.url,
         name: body.name,
         uniqueToken: body.token,
         userId: session.user.id,
-        image_url: body.imageUrl,
+        image_url: cloudinaryUrl,
       },
     });
 
