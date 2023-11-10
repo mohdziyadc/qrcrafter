@@ -2,7 +2,7 @@ import { aiUrlFormSchema } from "@/validators/qrFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AiURLQRCode } from "@prisma/client";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
@@ -17,6 +17,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 type Props = {
   qrCode: AiURLQRCode;
@@ -33,17 +34,32 @@ const UpdateAiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
       prompt: "UPDATE FORM - NO PROMPT",
     },
   });
+  const fetchImage = async (imageUrl: string) => {
+    const response = await fetch(imageUrl);
+    const data = await response.blob();
+    return URL.createObjectURL(data);
+  };
+  const { data, isLoading } = useQuery({
+    queryKey: ["imageFetch", qrCode.image_url],
+    queryFn: async () => {
+      const res = await fetchImage(qrCode.image_url);
+      return res;
+    },
+  });
   const onSubmitHandler = () => {};
   return (
     <>
       <div className="flex justify-center items-center mt-2 ">
-        <Image
-          src={qrCode.image_url}
-          alt="saved qr-code"
-          className="border-2 border-black rounded-md"
-          width={200}
-          height={200}
-        />
+        <div className="border-2 border-black rounded-md">
+          {isLoading && (
+            <div className="h-[200px] w-[200px] flex justify-center items-center">
+              <Loader2 className="h-6 w-6 animate-spin" />
+            </div>
+          )}
+          {data && (
+            <Image src={data} alt="saved ai qr-code" width={200} height={200} />
+          )}
+        </div>
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmitHandler)}>

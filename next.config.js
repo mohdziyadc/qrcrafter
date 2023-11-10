@@ -5,6 +5,7 @@ const nextConfig = {
       "lh3.googleusercontent.com",
       "pbxt.replicate.delivery",
       "replicate.delivery",
+      "res.cloudinary.com",
     ],
   },
 };
