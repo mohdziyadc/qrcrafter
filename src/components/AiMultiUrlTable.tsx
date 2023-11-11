@@ -64,7 +64,15 @@ const AiMultiUrlTable = (props: Props) => {
             <TableRow key={qrCode.id}>
               <TableCell>{idx + 1}</TableCell>
               <TableCell>{qrCode.name}</TableCell>
-              <TableCell>{qrCode.titles}</TableCell>
+              <TableCell>
+                {qrCode.titles.map((title, idx, titles) => {
+                  if (idx !== titles.length - 1) {
+                    return `${title}, `;
+                  } else {
+                    return `${title}`;
+                  }
+                })}
+              </TableCell>
               <TableCell>
                 <div className="flex flex-row justify-start items-center">
                   <div
