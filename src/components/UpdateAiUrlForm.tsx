@@ -1,3 +1,4 @@
+"use client";
 import { aiUrlFormSchema } from "@/validators/qrFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AiURLQRCode } from "@prisma/client";
@@ -17,7 +18,9 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { useToast } from "./ui/use-toast";
 
 type Props = {
   qrCode: AiURLQRCode;
@@ -34,11 +37,15 @@ const UpdateAiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
       prompt: "UPDATE FORM - NO PROMPT",
     },
   });
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
   const fetchImage = async (imageUrl: string) => {
     const response = await fetch(imageUrl);
     const data = await response.blob();
     return URL.createObjectURL(data);
   };
+
   const { data, isLoading } = useQuery({
     queryKey: ["imageFetch", qrCode.image_url],
     queryFn: async () => {
@@ -46,7 +53,39 @@ const UpdateAiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
       return res;
     },
   });
-  const onSubmitHandler = () => {};
+
+  const {
+    mutate: updateAiUrlQrCode,
+    isLoading: isUpdating,
+    isSuccess,
+  } = useMutation({
+    mutationFn: async ({ url, name }: updateAiUrlInput) => {
+      const response = await axios.post("/api/aiqrcode/url/update", {
+        uniqueToken: qrCode.uniqueToken,
+        name: name,
+        url: url,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success!",
+        description: "You have successfully updated the QR code",
+      });
+      setEditDialog(false);
+      queryClient.invalidateQueries(["aiUrlQrCodes"]);
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occured during the process.",
+        variant: "destructive",
+      });
+    },
+  });
+  const onSubmitHandler = ({ url, name, prompt }: updateAiUrlInput) => {
+    updateAiUrlQrCode({ url, name, prompt });
+  };
   return (
     <>
       <div className="flex justify-center items-center mt-2 ">
@@ -99,20 +138,19 @@ const UpdateAiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
               type="button"
               onClick={() => setEditDialog(false)}
               className={cn({
-                // hidden: isSuccess,
+                hidden: isSuccess,
               })}
             >
               Cancel
             </Button>
-            <Button type="submit" className="ml-2">
-              {/* {isLoading ? (
+            <Button type="submit" className="ml-2" disabled={isSuccess}>
+              {isUpdating ? (
                 <Loader2 className=" animate-spin" />
               ) : isSuccess ? (
                 <p>Updated</p>
               ) : (
                 <p>Update QR</p>
-              )} */}
-              Update QR
+              )}
             </Button>
           </div>
         </form>

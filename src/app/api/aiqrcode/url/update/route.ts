@@ -1,5 +1,6 @@
 import { getAuthSession } from "@/lib/auth";
 import { prismaClient } from "@/lib/db";
+import { aiUrlFormSchema } from "@/validators/qrFormSchema";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -8,7 +9,8 @@ export async function POST(req: NextRequest) {
     if (!session?.user) {
       return new NextResponse("User Unauthorized", { status: 401 });
     }
-    const { uniqueToken, name, url } = await req.json();
+    const body = await req.json();
+    const { uniqueToken, url, name } = body;
     await prismaClient.aiURLQRCode.update({
       where: {
         uniqueToken: uniqueToken,
