@@ -20,6 +20,8 @@ import {
   AlertDialogTitle,
 } from "./ui/alert-dialog";
 import { MulitUrlAiQr } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 type Props = {};
 
