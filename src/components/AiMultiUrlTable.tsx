@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -22,6 +22,7 @@ import {
 import { MulitUrlAiQr } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import LoadingSpinner from "@/app/manage/loading";
 
 type Props = {};
 
@@ -30,6 +31,23 @@ const AiMultiUrlTable = (props: Props) => {
   const [qrCode, setQrCode] = useState<MulitUrlAiQr>();
   const [editDialog, setEditDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
+
+  const { data, isLoading, isSuccess } = useQuery({
+    queryKey: ["aiMultiUrlQrCodes"],
+    queryFn: async () => {
+      const response = await axios.get("/api/aiqrcode/multiurl");
+      return response.data.qrCodes;
+    },
+  });
+  useEffect(() => {
+    if (isSuccess) {
+      setQrCodes(data);
+    }
+  }, [isSuccess, data]);
+
+  if (isLoading) {
+    return <LoadingSpinner component />;
+  }
   return (
     <>
       <Table>
