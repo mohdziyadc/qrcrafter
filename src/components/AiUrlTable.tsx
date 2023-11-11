@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "./ui/table";
 import { AiURLQRCode } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
 import { Edit2, Loader2, Trash2 } from "lucide-react";
@@ -25,6 +25,7 @@ import {
   AlertDialogTitle,
 } from "./ui/alert-dialog";
 import UpdateAiUrlForm from "./UpdateAiUrlForm";
+import { useToast } from "./ui/use-toast";
 
 type Props = {};
 
@@ -33,12 +34,38 @@ const AiUrlTable = (props: Props) => {
   const [qrCode, setQrCode] = useState<AiURLQRCode>();
   const [editDialog, setEditDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const { data, isLoading, isSuccess, isError } = useQuery({
     queryKey: ["aiUrlQrCodes"],
     queryFn: async () => {
       const response = await axios.get("/api/aiqrcode/url");
       return response.data.qrCodes;
+    },
+  });
+
+  const { mutate: deleteAiUrlQr, isLoading: isDeleting } = useMutation({
+    mutationFn: async (uniqueToken: string) => {
+      const response = await axios.post("/api/aiqrcode/url/delete", {
+        uniqueToken: uniqueToken,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success!",
+        description: "You have deleted the QR code successfully.",
+      });
+      setDeleteDialog(false);
+      queryClient.invalidateQueries(["aiUrlQrCodes"]);
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occurred during the process.",
+        variant: "destructive",
+      });
     },
   });
 
@@ -128,13 +155,10 @@ const AiUrlTable = (props: Props) => {
             <AlertDialogAction
               className="bg-red-500"
               onClick={() => {
-                // deleteQR(qrCode!.uniqueToken);
-                // if (isSuccess) {
-                //   setDeleteDialog(false);
-                // }
+                deleteAiUrlQr(qrCode!.uniqueToken);
               }}
             >
-              {isLoading ? (
+              {isDeleting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <p>Delete</p>
