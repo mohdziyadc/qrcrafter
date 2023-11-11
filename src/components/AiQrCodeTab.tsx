@@ -11,6 +11,7 @@ import {
 import { CheckIcon, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AiUrlTable from "./AiUrlTable";
+import AiMultiUrlTable from "./AiMultiUrlTable";
 
 type Props = {};
 
@@ -78,7 +79,9 @@ const AiQrCodeTab = (props: Props) => {
           </CardContent>
         </TabsContent>
         <TabsContent value="ai_multi_url">
-          <CardContent>AI MULTI URL TAB</CardContent>
+          <CardContent>
+            <AiMultiUrlTable />
+          </CardContent>
         </TabsContent>
         <TabsContent value="ai_freetext">
           <CardContent>AI FREETEXT TAB</CardContent>
