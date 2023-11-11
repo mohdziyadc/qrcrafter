@@ -1,4 +1,5 @@
 import { getAuthSession } from "@/lib/auth";
+import uploadImage from "@/lib/cloudinary";
 import { prismaClient } from "@/lib/db";
 import { AiMultiUrlResponse } from "@/lib/types";
 import { NextRequest, NextResponse } from "next/server";
@@ -11,13 +12,15 @@ export async function POST(req: NextRequest) {
     }
     const body = (await req.json()) as AiMultiUrlResponse;
 
+    const cloudinaryUrl = await uploadImage(body.image_url);
+
     await prismaClient.mulitUrlAiQr.create({
       data: {
         name: body.name,
         urls: body.user_urls,
         titles: body.user_titles,
         userId: session.user.id,
-        image_url: body.image_url,
+        image_url: cloudinaryUrl,
         uniqueToken: body.token,
       },
     });
