@@ -23,6 +23,7 @@ import { MulitUrlAiQr } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
+import UpdateAiMultiUrlForm from "./UpdateAiMultiUrlForm";
 
 type Props = {};
 
@@ -104,13 +105,13 @@ const AiMultiUrlTable = (props: Props) => {
           <DialogHeader>
             <DialogTitle>Edit QR Code</DialogTitle>
           </DialogHeader>
-          {/* {qrCode && (
-          <UpdateAiUrlForm
-            qrCode={qrCode}
-            editDialog={editDialog}
-            setEditDialog={setEditDialog}
-          />
-        )} */}
+          {qrCode && (
+            <UpdateAiMultiUrlForm
+              qrCode={qrCode}
+              editDialog={editDialog}
+              setEditDialog={setEditDialog}
+            />
+          )}
         </DialogContent>
       </Dialog>
       <AlertDialog open={deleteDialog} onOpenChange={setDeleteDialog}>
