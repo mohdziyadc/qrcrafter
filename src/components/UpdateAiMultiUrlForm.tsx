@@ -1,7 +1,7 @@
 import { aiMultiUrlFormSchema } from "@/validators/qrFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MulitUrlAiQr } from "@prisma/client";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
@@ -44,6 +44,7 @@ const UpdateAiMultiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [disableUpdateBtn, setDisableUpdateBtn] = useState(true);
 
   const fetchImageDataUrl = async (imageUrl: string) => {
     const response = await fetch(imageUrl);
@@ -87,7 +88,19 @@ const UpdateAiMultiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
       });
     },
   });
-  const onSubmitHandler = (props: updateAiMultiUrlInput) => {};
+  const onSubmitHandler = (formInputs: updateAiMultiUrlInput) => {
+    updateAiMultiUrlQr(formInputs);
+  };
+
+  // Enable the update button only if the user has changed some input
+  useEffect(() => {
+    if (form.formState.isDirty) {
+      setDisableUpdateBtn(false);
+    } else {
+      setDisableUpdateBtn(true);
+    }
+  }, [form.formState.isDirty]);
+
   return (
     <div>
       <Form {...form}>
@@ -229,20 +242,23 @@ const UpdateAiMultiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
                 type="button"
                 onClick={() => setEditDialog(false)}
                 className={cn({
-                  // hidden: isSuccess,
+                  hidden: isSuccess,
                 })}
               >
                 Cancel
               </Button>
-              <Button type="submit" className="ml-2">
-                {/* {isLoading ? (
-                <Loader2 className=" animate-spin" />
-              ) : isSuccess ? (
-                <p>Updated</p>
-              ) : (
-                <p>Update QR</p>
-              )} */}
-                Update QR
+              <Button
+                type="submit"
+                className="ml-2"
+                disabled={isSuccess || disableUpdateBtn}
+              >
+                {isUpdating ? (
+                  <Loader2 className=" animate-spin" />
+                ) : isSuccess ? (
+                  <p>Updated</p>
+                ) : (
+                  <p>Update QR</p>
+                )}
               </Button>
             </div>
           </form>
