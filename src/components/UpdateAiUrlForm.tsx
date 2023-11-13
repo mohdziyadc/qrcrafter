@@ -40,16 +40,16 @@ const UpdateAiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const fetchImage = async (imageUrl: string) => {
+  const fetchImageDataUrl = async (imageUrl: string) => {
     const response = await fetch(imageUrl);
     const data = await response.blob();
     return URL.createObjectURL(data);
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["imageFetch", qrCode.image_url],
+    queryKey: ["aiUrlImage", qrCode.image_url],
     queryFn: async () => {
-      const res = await fetchImage(qrCode.image_url);
+      const res = await fetchImageDataUrl(qrCode.image_url);
       return res;
     },
   });

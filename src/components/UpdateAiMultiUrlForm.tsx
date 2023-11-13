@@ -18,8 +18,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ScrollArea } from "./ui/scroll-area";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
-import { Plus, Trash } from "lucide-react";
+import { Loader2, Plus, Trash } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 
 type Props = {
   qrCode: MulitUrlAiQr;
@@ -39,18 +40,38 @@ const UpdateAiMultiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
     },
   });
 
+  const fetchImageDataUrl = async (imageUrl: string) => {
+    const response = await fetch(imageUrl);
+    const dataBlob = await response.blob();
+    return URL.createObjectURL(dataBlob);
+  };
+
+  const { data, isLoading: isImageFetching } = useQuery({
+    queryKey: ["aiMultiUrlImage", qrCode.image_url],
+    queryFn: async () => {
+      return await fetchImageDataUrl(qrCode.image_url);
+    },
+  });
   const onSubmitHandler = (props: updateAiMultiUrlInput) => {};
   return (
     <div>
       <Form {...form}>
         <div className="flex justify-center items-center mt-2 ">
-          <Image
-            src={qrCode.image_url}
-            alt="saved qr-code"
-            className="border-2 border-black rounded-md"
-            width={200}
-            height={200}
-          />
+          <div className="border-2 border-black rounded-md">
+            {isImageFetching && (
+              <div className="h-[200px] w-[200px] flex justify-center items-center">
+                <Loader2 className="h-6 w-6 animate-spin" />
+              </div>
+            )}
+            {data && (
+              <Image
+                src={data}
+                alt="saved ai qr-code"
+                width={200}
+                height={200}
+              />
+            )}
+          </div>
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmitHandler)}>
