@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, Loader2, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import {
   AlertDialog,
@@ -20,10 +20,11 @@ import {
   AlertDialogTitle,
 } from "./ui/alert-dialog";
 import { MulitUrlAiQr } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
 import UpdateAiMultiUrlForm from "./UpdateAiMultiUrlForm";
+import { useToast } from "./ui/use-toast";
 
 type Props = {};
 
@@ -38,6 +39,33 @@ const AiMultiUrlTable = (props: Props) => {
     queryFn: async () => {
       const response = await axios.get("/api/aiqrcode/multiurl");
       return response.data.qrCodes;
+    },
+  });
+
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const { mutate: deleteAiMultiUrlQr, isLoading: isDeleting } = useMutation({
+    mutationFn: async (uniqueToken: string) => {
+      const response = await axios.post("/api/aiqrcode/multiurl/delete", {
+        uniqueToken: uniqueToken,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success!",
+        description: "You have deleted the QR code successfully.",
+      });
+      setDeleteDialog(false);
+      queryClient.invalidateQueries(["aiMultiUrlQrCodes"]);
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occured during the process.",
+        variant: "destructive",
+      });
     },
   });
   useEffect(() => {
@@ -127,15 +155,14 @@ const AiMultiUrlTable = (props: Props) => {
             <AlertDialogAction
               className="bg-red-500"
               onClick={() => {
-                //   deleteAiUrlQr(qrCode!.uniqueToken);
+                deleteAiMultiUrlQr(qrCode!.uniqueToken);
               }}
             >
-              {/* {isDeleting ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <p>Delete</p>
-            )} */}
-              Delete
+              {isDeleting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <p>Delete</p>
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
