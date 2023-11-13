@@ -20,7 +20,9 @@ import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
 import { Loader2, Plus, Trash } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { useToast } from "./ui/use-toast";
 
 type Props = {
   qrCode: MulitUrlAiQr;
@@ -40,6 +42,9 @@ const UpdateAiMultiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
     },
   });
 
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
   const fetchImageDataUrl = async (imageUrl: string) => {
     const response = await fetch(imageUrl);
     const dataBlob = await response.blob();
@@ -50,6 +55,36 @@ const UpdateAiMultiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
     queryKey: ["aiMultiUrlImage", qrCode.image_url],
     queryFn: async () => {
       return await fetchImageDataUrl(qrCode.image_url);
+    },
+  });
+
+  const {
+    mutate: updateAiMultiUrlQr,
+    isLoading: isUpdating,
+    isSuccess,
+  } = useMutation({
+    mutationFn: async (params: updateAiMultiUrlInput) => {
+      const response = await axios.post("/api/aiqrcode/multiurl/update", {
+        name: params.name,
+        urls: params.urls,
+        titles: params.titles,
+        uniqueToken: qrCode.uniqueToken,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success!",
+        description: "You have updated the QR code successfully.",
+      });
+      queryClient.invalidateQueries(["aiMultiUrlQrCodes"]);
+      setEditDialog(false);
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occured during the process.",
+      });
     },
   });
   const onSubmitHandler = (props: updateAiMultiUrlInput) => {};
