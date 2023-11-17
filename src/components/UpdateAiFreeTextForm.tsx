@@ -15,11 +15,13 @@ import { AiFreeTextQr } from "@prisma/client";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { Textarea } from "./ui/textarea";
 import { ScrollArea } from "./ui/scroll-area";
+import axios from "axios";
+import { useToast } from "./ui/use-toast";
 type Props = {
   qrCode: AiFreeTextQr;
   editDialog: boolean;
@@ -36,6 +38,8 @@ const UpdateAiFreeTextForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
       prompt: "EMPTY",
     },
   });
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   const fetchImageObjectUrl = async (imageUrl: string) => {
     const response = await fetch(imageUrl);
     const responseBlob = await response.blob();
@@ -47,7 +51,39 @@ const UpdateAiFreeTextForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
       return await fetchImageObjectUrl(qrCode.image_url);
     },
   });
-  function onSubmitHandler() {}
+
+  const {
+    mutate: updateAiFreeTextQr,
+    isLoading: isUpdating,
+    isSuccess,
+  } = useMutation({
+    mutationFn: async (params: updateFreetextInput) => {
+      const response = await axios.post("/api/aiqrcode/freetext/update", {
+        name: params.name,
+        freetext: params.freetext,
+        uniqueToken: qrCode.uniqueToken,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success!",
+        description: "You have successfully updated this QR code.",
+      });
+      queryClient.invalidateQueries(["aiFreeTextQrCodes"]);
+      setEditDialog(false);
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occured during the process.",
+        variant: "destructive",
+      });
+    },
+  });
+  function onSubmitHandler(params: updateFreetextInput) {
+    updateAiFreeTextQr(params);
+  }
 
   return (
     <>
@@ -108,15 +144,14 @@ const UpdateAiFreeTextForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
             >
               Cancel
             </Button>
-            <Button type="submit" className="ml-2">
-              {/* {isUpdating ? (
+            <Button type="submit" className="ml-2" disabled={isSuccess}>
+              {isUpdating ? (
                 <Loader2 className=" animate-spin" />
               ) : isSuccess ? (
                 <p>Updated</p>
               ) : (
                 <p>Update QR</p>
-              )} */}
-              Update QR
+              )}
             </Button>
           </div>
         </form>
