@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -23,6 +23,7 @@ import {
 } from "./ui/alert-dialog";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import LoadingSpinner from "@/app/manage/loading";
 
 type Props = {};
 
@@ -32,13 +33,37 @@ const AiFreeTextTable = (props: Props) => {
   const [editDialog, setEditDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
 
-  //   const {} = useQuery({
-  //     queryKey: ["aiFreeTextQrCodes"],
-  //     queryFn: async () => {
-  //       const response = await axios.get("/api/aiqrcode/freetext");
-  //       return response.data.qrCodes;
-  //     },
-  //   });
+  const {
+    data,
+    isLoading: fetchingQr,
+    isError,
+    isSuccess: fetchSuccess,
+  } = useQuery({
+    queryKey: ["aiFreeTextQrCodes"],
+    queryFn: async () => {
+      const response = await axios.get("/api/aiqrcode/freetext");
+      return response.data.qrCodes;
+    },
+  });
+
+  useEffect(() => {
+    if (fetchSuccess) {
+      setQrCodes(data);
+    }
+  }, [data, fetchSuccess]);
+
+  if (fetchingQr) {
+    return (
+      <div>
+        <LoadingSpinner component />
+      </div>
+    );
+  }
+  if (isError) {
+    return (
+      <div>An unknown error occured during the process. Please try again</div>
+    );
+  }
   return (
     <div>
       {qrCodes.length == 0 ? (
@@ -54,44 +79,44 @@ const AiFreeTextTable = (props: Props) => {
               <TableHead>Text</TableHead>
               <TableHead>Edit</TableHead>
             </TableRow>
-            <TableBody>
-              {qrCodes.map((qrCode, idx) => (
-                <TableRow key={qrCode.id}>
-                  <TableCell>{idx + 1}</TableCell>
-                  <TableCell>{qrCode.name}</TableCell>
-                  <TableCell>
-                    {qrCode.freetext.length > 80 ? (
-                      <p>{qrCode.freetext.slice(0, 80)}...</p>
-                    ) : (
-                      <p>{qrCode.freetext}</p>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-row justify-start items-center">
-                      <div
-                        className="hover:bg-secondary-foreground/10 rounded-md w-fit p-2"
-                        onClick={() => {
-                          setEditDialog(true);
-                          setQrCode(qrCode);
-                        }}
-                      >
-                        <Edit2 className="h-4 w-4 " />
-                      </div>
-                      <div
-                        className="ml-1 text-red-500 hover:bg-secondary-foreground/10 w-fit p-2 rounded-md"
-                        onClick={() => {
-                          setQrCode(qrCode);
-                          setDeleteDialog(true);
-                        }}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </div>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
           </TableHeader>
+          <TableBody>
+            {qrCodes.map((qrCode, idx) => (
+              <TableRow key={qrCode.id}>
+                <TableCell>{idx + 1}</TableCell>
+                <TableCell>{qrCode.name}</TableCell>
+                <TableCell>
+                  {qrCode.freetext.length > 80 ? (
+                    <p>{qrCode.freetext.slice(0, 80)}...</p>
+                  ) : (
+                    <p>{qrCode.freetext}</p>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <div className="flex flex-row justify-start items-center">
+                    <div
+                      className="hover:bg-secondary-foreground/10 rounded-md w-fit p-2"
+                      onClick={() => {
+                        setEditDialog(true);
+                        setQrCode(qrCode);
+                      }}
+                    >
+                      <Edit2 className="h-4 w-4 " />
+                    </div>
+                    <div
+                      className="ml-1 text-red-500 hover:bg-secondary-foreground/10 w-fit p-2 rounded-md"
+                      onClick={() => {
+                        setQrCode(qrCode);
+                        setDeleteDialog(true);
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </div>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
         </Table>
       )}
 

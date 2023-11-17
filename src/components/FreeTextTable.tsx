@@ -88,7 +88,7 @@ const FreeTextTable = (props: Props) => {
     return <div>Unknown Error Occured. Please refresh the page</div>;
   }
   return (
-    <div>
+    <>
       <Table>
         <TableHeader>
           <TableRow>
@@ -178,7 +178,7 @@ const FreeTextTable = (props: Props) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </>
   );
 };
 
