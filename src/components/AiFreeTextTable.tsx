@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, Loader2, Trash2 } from "lucide-react";
 import { AiFreeTextQr } from "@prisma/client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import {
@@ -21,10 +21,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
 import UpdateAiFreeTextForm from "./UpdateAiFreeTextForm";
+import { useToast } from "./ui/use-toast";
 
 type Props = {};
 
@@ -44,6 +45,32 @@ const AiFreeTextTable = (props: Props) => {
     queryFn: async () => {
       const response = await axios.get("/api/aiqrcode/freetext");
       return response.data.qrCodes;
+    },
+  });
+
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const { mutate: deleteAiFreeTextQr, isLoading: isDeleting } = useMutation({
+    mutationFn: async (uniqueToken: string) => {
+      const response = await axios.post("/api/aiqrcode/freetext/delete", {
+        uniqueToken: uniqueToken,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success!",
+        description: "You have successfully deleted the QR code.",
+      });
+      queryClient.invalidateQueries(["aiFreeTextQrCodes"]);
+      setDeleteDialog(false);
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occurred during the process",
+      });
     },
   });
 
@@ -148,15 +175,14 @@ const AiFreeTextTable = (props: Props) => {
             <AlertDialogAction
               className="bg-red-500"
               onClick={() => {
-                // deleteAiMultiUrlQr(qrCode!.uniqueToken);
+                deleteAiFreeTextQr(qrCode!.uniqueToken);
               }}
             >
-              {/* {isDeleting ? (
+              {isDeleting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <p>Delete</p>
-              )} */}
-              Delete
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
