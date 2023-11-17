@@ -1,4 +1,5 @@
 import { getAuthSession } from "@/lib/auth";
+import uploadImage from "@/lib/cloudinary";
 import { prismaClient } from "@/lib/db";
 import { AiFreeTextResponse } from "@/lib/types";
 import { NextRequest, NextResponse } from "next/server";
@@ -11,12 +12,14 @@ export async function POST(req: NextRequest) {
     }
     const body = (await req.json()) as AiFreeTextResponse;
 
+    const cloudinaryUrl = await uploadImage(body.image_url);
+
     await prismaClient.aiFreeTextQr.create({
       data: {
         name: body.name,
         uniqueToken: body.token,
         freetext: body.user_free_text,
-        image_url: body.image_url,
+        image_url: cloudinaryUrl,
         userId: session.user.id,
       },
     });
