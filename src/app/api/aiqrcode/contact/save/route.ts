@@ -1,4 +1,5 @@
 import { getAuthSession } from "@/lib/auth";
+import uploadImage from "@/lib/cloudinary";
 import { prismaClient } from "@/lib/db";
 import { AiContactResponse } from "@/lib/types";
 import { NextRequest, NextResponse } from "next/server";
@@ -10,6 +11,7 @@ export async function POST(req: NextRequest) {
       return new NextResponse("User Unauthorized", { status: 401 });
     }
     const body = (await req.json()) as AiContactResponse;
+    const cloudinaryUrl = await uploadImage(body.image_url);
     await prismaClient.aiContactQr.create({
       data: {
         first_name: body.user_first_name,
@@ -19,7 +21,7 @@ export async function POST(req: NextRequest) {
         phone_number: body.user_phone_number,
         uniqueToken: body.token,
         userId: session.user.id,
-        image_url: body.image_url,
+        image_url: cloudinaryUrl,
       },
     });
     return new NextResponse("[SUCCESS]", { status: 200 });
