@@ -21,6 +21,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 type Props = {};
 
@@ -29,6 +31,14 @@ const AiFreeTextTable = (props: Props) => {
   const [qrCode, setQrCode] = useState<AiFreeTextQr>();
   const [editDialog, setEditDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
+
+  //   const {} = useQuery({
+  //     queryKey: ["aiFreeTextQrCodes"],
+  //     queryFn: async () => {
+  //       const response = await axios.get("/api/aiqrcode/freetext");
+  //       return response.data.qrCodes;
+  //     },
+  //   });
   return (
     <div>
       {qrCodes.length == 0 ? (
