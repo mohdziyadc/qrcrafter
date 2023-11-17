@@ -53,6 +53,9 @@ export async function GET() {
       where: {
         userId: session.user.id,
       },
+      orderBy: {
+        id: "asc",
+      },
     });
     return NextResponse.json({ qrCodes }, { status: 200 });
   } catch (error) {

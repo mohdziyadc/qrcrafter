@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -30,6 +30,7 @@ type Props = {
 
 type updateFreetextInput = z.infer<typeof aiFreeTextFormSchema>;
 const UpdateAiFreeTextForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
+  const [disableUpdateBtn, setDisableUpdateBtn] = useState(false);
   const form = useForm<updateFreetextInput>({
     resolver: zodResolver(aiFreeTextFormSchema),
     defaultValues: {
@@ -85,6 +86,14 @@ const UpdateAiFreeTextForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
     updateAiFreeTextQr(params);
   }
 
+  useEffect(() => {
+    if (!form.formState.isDirty) {
+      setDisableUpdateBtn(true);
+    } else {
+      setDisableUpdateBtn(false);
+    }
+  }, [form.formState.isDirty]);
+
   return (
     <>
       <div className="flex justify-center items-center mt-2 ">
@@ -139,12 +148,16 @@ const UpdateAiFreeTextForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
               type="button"
               onClick={() => setEditDialog(false)}
               className={cn({
-                // hidden: isSuccess,
+                hidden: isSuccess,
               })}
             >
               Cancel
             </Button>
-            <Button type="submit" className="ml-2" disabled={isSuccess}>
+            <Button
+              type="submit"
+              className="ml-2"
+              disabled={isSuccess || disableUpdateBtn}
+            >
               {isUpdating ? (
                 <Loader2 className=" animate-spin" />
               ) : isSuccess ? (
