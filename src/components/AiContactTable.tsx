@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, Loader2, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import {
   AlertDialog,
@@ -22,10 +22,11 @@ import {
 } from "./ui/alert-dialog";
 import { AiContactQr } from "@prisma/client";
 import NoQrFound from "./NoQrFound";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
 import UpdateAiContactForm from "./UpdateAiContactForm";
+import { useToast } from "./ui/use-toast";
 
 type Props = {};
 
@@ -35,11 +36,42 @@ const AiContactTable = (props: Props) => {
   const [editDialog, setEditDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
 
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
   const { data, isLoading, isError, isSuccess } = useQuery({
     queryKey: ["aiContactQrCodes"],
     queryFn: async () => {
       const response = await axios.get("/api/aiqrcode/contact");
       return response.data.qrCodes;
+    },
+  });
+
+  const {
+    mutate: deleteAiContactQr,
+    isLoading: isDeleting,
+    isSuccess: isDeleted,
+  } = useMutation({
+    mutationFn: async (uniqueToken: string) => {
+      const response = await axios.post("/api/aiqrcode/contact/delete", {
+        uniqueToken: uniqueToken,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["aiContactQrCodes"]);
+      toast({
+        title: "Success!",
+        description: "You have successfully deleted the QR code",
+      });
+      setDeleteDialog(false);
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An error occurred during the process.",
+        variant: "destructive",
+      });
     },
   });
 
@@ -135,18 +167,17 @@ const AiContactTable = (props: Props) => {
                   <AlertDialogAction
                     className="bg-red-500"
                     onClick={() => {
-                      // deleteQR(qrCode!.uniqueToken);
-                      // if (isDeleted) {
-                      //   setDeleteDialog(false);
-                      // }
+                      deleteAiContactQr(qrCode!.uniqueToken);
+                      if (isDeleted) {
+                        setDeleteDialog(false);
+                      }
                     }}
                   >
-                    {/* {isDeleting ? (
+                    {isDeleting ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
                       <p>Delete</p>
-                    )} */}
-                    Delete
+                    )}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
