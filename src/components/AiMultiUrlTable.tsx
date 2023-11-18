@@ -25,6 +25,7 @@ import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
 import UpdateAiMultiUrlForm from "./UpdateAiMultiUrlForm";
 import { useToast } from "./ui/use-toast";
+import NoQrFound from "./NoQrFound";
 
 type Props = {};
 
@@ -78,96 +79,105 @@ const AiMultiUrlTable = (props: Props) => {
     return <LoadingSpinner component />;
   }
   return (
-    <>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>S.No</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Titles</TableHead>
-            <TableHead>Edit</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {qrCodes.map((qrCode, idx) => (
-            <TableRow key={qrCode.id}>
-              <TableCell>{idx + 1}</TableCell>
-              <TableCell>{qrCode.name}</TableCell>
-              <TableCell>
-                {qrCode.titles.map((title, idx, titles) => {
-                  if (idx !== titles.length - 1) {
-                    return `${title}, `;
-                  } else {
-                    return `${title}`;
-                  }
-                })}
-              </TableCell>
-              <TableCell>
-                <div className="flex flex-row justify-start items-center">
-                  <div
-                    className="hover:bg-secondary-foreground/10 rounded-md w-fit p-2"
-                    onClick={() => {
-                      setEditDialog(true);
-                      setQrCode(qrCode);
-                    }}
-                  >
-                    <Edit2 className="h-4 w-4 " />
-                  </div>
-                  <div
-                    className="ml-1 text-red-500 hover:bg-secondary-foreground/10 w-fit p-2 rounded-md"
-                    onClick={() => {
-                      setQrCode(qrCode);
-                      setDeleteDialog(true);
-                    }}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </div>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <Dialog open={editDialog} onOpenChange={setEditDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit QR Code</DialogTitle>
-          </DialogHeader>
-          {qrCode && (
-            <UpdateAiMultiUrlForm
-              qrCode={qrCode}
-              editDialog={editDialog}
-              setEditDialog={setEditDialog}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
-      <AlertDialog open={deleteDialog} onOpenChange={setDeleteDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently delete this QR code. This cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-red-500"
-              onClick={() => {
-                deleteAiMultiUrlQr(qrCode!.uniqueToken);
-              }}
-            >
-              {isDeleting ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <p>Delete</p>
+    <div>
+      {qrCodes.length === 0 ? (
+        <>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>S.No</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Titles</TableHead>
+                <TableHead>Edit</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {qrCodes.map((qrCode, idx) => (
+                <TableRow key={qrCode.id}>
+                  <TableCell>{idx + 1}</TableCell>
+                  <TableCell>{qrCode.name}</TableCell>
+                  <TableCell>
+                    {qrCode.titles.map((title, idx, titles) => {
+                      if (idx !== titles.length - 1) {
+                        return `${title}, `;
+                      } else {
+                        return `${title}`;
+                      }
+                    })}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-row justify-start items-center">
+                      <div
+                        className="hover:bg-secondary-foreground/10 rounded-md w-fit p-2"
+                        onClick={() => {
+                          setEditDialog(true);
+                          setQrCode(qrCode);
+                        }}
+                      >
+                        <Edit2 className="h-4 w-4 " />
+                      </div>
+                      <div
+                        className="ml-1 text-red-500 hover:bg-secondary-foreground/10 w-fit p-2 rounded-md"
+                        onClick={() => {
+                          setQrCode(qrCode);
+                          setDeleteDialog(true);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </div>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <Dialog open={editDialog} onOpenChange={setEditDialog}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Edit QR Code</DialogTitle>
+              </DialogHeader>
+              {qrCode && (
+                <UpdateAiMultiUrlForm
+                  qrCode={qrCode}
+                  editDialog={editDialog}
+                  setEditDialog={setEditDialog}
+                />
               )}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
+            </DialogContent>
+          </Dialog>
+          <AlertDialog open={deleteDialog} onOpenChange={setDeleteDialog}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will permanently delete this QR code. This cannot be
+                  undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-red-500"
+                  onClick={() => {
+                    deleteAiMultiUrlQr(qrCode!.uniqueToken);
+                  }}
+                >
+                  {isDeleting ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <p>Delete</p>
+                  )}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </>
+      ) : (
+        <div className="flex justify-center items-center">
+          <NoQrFound qrType="Multi URL" />
+        </div>
+      )}
+    </div>
   );
 };
 

@@ -26,6 +26,7 @@ import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
 import UpdateAiFreeTextForm from "./UpdateAiFreeTextForm";
 import { useToast } from "./ui/use-toast";
+import NoQrFound from "./NoQrFound";
 
 type Props = {};
 
@@ -94,9 +95,9 @@ const AiFreeTextTable = (props: Props) => {
   }
   return (
     <div>
-      {qrCodes.length == 0 ? (
-        <div className="flex justify-center items-center mt-2 ">
-          <p>No free text QR Codes to show. Click here to create one.</p>
+      {qrCodes.length !== 0 ? (
+        <div className="flex justify-center items-center ">
+          <NoQrFound qrType="Free Text" />
         </div>
       ) : (
         <Table>

@@ -21,6 +21,7 @@ import {
   AlertDialogTitle,
 } from "./ui/alert-dialog";
 import { AiContactQr } from "@prisma/client";
+import NoQrFound from "./NoQrFound";
 
 type Props = {};
 
@@ -124,7 +125,7 @@ const AiContactTable = (props: Props) => {
           </>
         ) : (
           <div className="flex justify-center items-center">
-            <p>No Contact QR Codes found</p>
+            <NoQrFound qrType="Contact" />
           </div>
         )}
       </div>
