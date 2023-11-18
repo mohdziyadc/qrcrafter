@@ -17,7 +17,9 @@ import {
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { useToast } from "./ui/use-toast";
 
 type Props = {
   qrCode: AiContactQr;
@@ -38,6 +40,8 @@ const UpdateAiContactForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
       prompt: "EMPTY",
     },
   });
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   const fetchImageObjectUrl = async (imageUrl: string) => {
     const response = await fetch(imageUrl);
     const data = await response.blob();
@@ -50,7 +54,42 @@ const UpdateAiContactForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
       return await fetchImageObjectUrl(qrCode.image_url);
     },
   });
-  const onSubmitHandler = () => {};
+
+  const {
+    mutate: updateAiContactQr,
+    isLoading,
+    isSuccess,
+  } = useMutation({
+    mutationFn: async (params: updateAiContactInput) => {
+      const response = await axios.post("/api/aiqrcode/contact/update", {
+        first_name: params.first_name,
+        last_name: params.last_name,
+        organisation: params.organisation,
+        email: params.email,
+        phone_number: params.phone_number,
+        uniqueToken: qrCode.uniqueToken,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["aiContactQrCodes"]);
+      toast({
+        title: "Success!",
+        description: "You have successfully updated the QR code.",
+      });
+      setEditDialog(false);
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occurred during the process.",
+        variant: "destructive",
+      });
+    },
+  });
+  const onSubmitHandler = (params: updateAiContactInput) => {
+    updateAiContactQr(params);
+  };
   return (
     <div>
       <div className="flex flex-col justify-center items-center mt-2 w-full ">
@@ -155,14 +194,13 @@ const UpdateAiContactForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
                 Cancel
               </Button>
               <Button type="submit" className="ml-2">
-                {/* {isLoading ? (
+                {isLoading ? (
                   <Loader2 className=" animate-spin" />
                 ) : isSuccess ? (
                   <p>Updated</p>
                 ) : (
                   <p>Update QR</p>
-                )} */}
-                Update QR
+                )}
               </Button>
             </div>
           </form>
