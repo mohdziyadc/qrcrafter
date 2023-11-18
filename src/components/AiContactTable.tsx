@@ -25,6 +25,7 @@ import NoQrFound from "./NoQrFound";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
+import UpdateAiContactForm from "./UpdateAiContactForm";
 
 type Props = {};
 
@@ -111,13 +112,13 @@ const AiContactTable = (props: Props) => {
                 <DialogHeader>
                   <DialogTitle>Edit QR Code</DialogTitle>
                 </DialogHeader>
-                {/* {qrCode && (
-                  <UpdateContactForm
+                {qrCode && (
+                  <UpdateAiContactForm
                     qrCode={qrCode}
                     editDialog={editDialog}
                     setEditDialog={setEditDialog}
                   />
-                )} */}
+                )}
               </DialogContent>
             </Dialog>
             <AlertDialog open={deleteDialog} onOpenChange={setDeleteDialog}>
