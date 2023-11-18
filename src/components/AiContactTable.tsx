@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -22,6 +22,9 @@ import {
 } from "./ui/alert-dialog";
 import { AiContactQr } from "@prisma/client";
 import NoQrFound from "./NoQrFound";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import LoadingSpinner from "@/app/manage/loading";
 
 type Props = {};
 
@@ -30,6 +33,31 @@ const AiContactTable = (props: Props) => {
   const [qrCode, setQrCode] = useState<AiContactQr>();
   const [editDialog, setEditDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
+
+  const { data, isLoading, isError, isSuccess } = useQuery({
+    queryKey: ["aiContactQrCodes"],
+    queryFn: async () => {
+      const response = await axios.get("/api/aiqrcode/contact");
+      return response.data.qrCodes;
+    },
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      setQrCodes(data);
+    }
+  }, [isSuccess, data]);
+
+  if (isLoading) {
+    return (
+      <div>
+        <LoadingSpinner component />
+      </div>
+    );
+  }
+  if (isError) {
+    return <div>An unknown error occured. Please Try again</div>;
+  }
 
   return (
     <div>
