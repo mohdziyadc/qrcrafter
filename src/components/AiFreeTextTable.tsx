@@ -95,7 +95,7 @@ const AiFreeTextTable = (props: Props) => {
   }
   return (
     <div>
-      {qrCodes.length !== 0 ? (
+      {qrCodes.length === 0 ? (
         <div className="flex justify-center items-center ">
           <NoQrFound qrType="Free Text" />
         </div>
