@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AiContactQr } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
@@ -42,6 +42,8 @@ const UpdateAiContactForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
   });
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [disableUpdateBtn, setDisableUpdateBtn] = useState(false);
+
   const fetchImageObjectUrl = async (imageUrl: string) => {
     const response = await fetch(imageUrl);
     const data = await response.blob();
@@ -90,6 +92,14 @@ const UpdateAiContactForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
   const onSubmitHandler = (params: updateAiContactInput) => {
     updateAiContactQr(params);
   };
+
+  useEffect(() => {
+    if (!form.formState.isDirty) {
+      setDisableUpdateBtn(true);
+    } else {
+      setDisableUpdateBtn(false);
+    }
+  }, [form.formState.isDirty]);
   return (
     <div>
       <div className="flex flex-col justify-center items-center mt-2 w-full ">
@@ -193,7 +203,11 @@ const UpdateAiContactForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
               >
                 Cancel
               </Button>
-              <Button type="submit" className="ml-2">
+              <Button
+                type="submit"
+                className="ml-2"
+                disabled={isSuccess || disableUpdateBtn}
+              >
                 {isLoading ? (
                   <Loader2 className=" animate-spin" />
                 ) : isSuccess ? (
