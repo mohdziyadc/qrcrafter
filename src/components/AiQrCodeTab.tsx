@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import AiUrlTable from "./AiUrlTable";
 import AiMultiUrlTable from "./AiMultiUrlTable";
 import AiFreeTextTable from "./AiFreeTextTable";
+import AiContactTable from "./AiContactTable";
 
 type Props = {};
 
@@ -90,7 +91,9 @@ const AiQrCodeTab = (props: Props) => {
           </CardContent>
         </TabsContent>
         <TabsContent value="ai_contact">
-          <CardContent>AI CONTACT TAB</CardContent>
+          <CardContent>
+            <AiContactTable />
+          </CardContent>
         </TabsContent>
       </Tabs>
     </Card>
