@@ -75,8 +75,11 @@ const AiURLForm = (props: Props) => {
     getAiQrCode({ url, prompt, name });
 
     setLoading("loading");
+    //handle the case when it loads before 7 seconds
     setTimeout(() => {
-      setLoading("delayed");
+      if (loading === "loading") {
+        setLoading("delayed");
+      }
     }, 7000);
   };
 
