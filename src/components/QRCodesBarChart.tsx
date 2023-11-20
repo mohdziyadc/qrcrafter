@@ -1,81 +1,96 @@
-import React from "react";
-import { ResponsiveContainer, BarChart, XAxis, YAxis, Bar } from "recharts";
+"use client";
+import React, { useState } from "react";
+import {
+  ResponsiveContainer,
+  BarChart,
+  XAxis,
+  YAxis,
+  Bar,
+  Tooltip,
+} from "recharts";
 
 type Props = {};
 
 const data = [
   {
     name: "Yeezy",
-    scans: 96,
+    Scans: 96,
   },
   {
     name: "Feb",
-    scans: 12,
+    Scans: 12,
   },
   {
     name: "Mar",
-    scans: 26,
+    Scans: 26,
   },
   {
     name: "Apr",
-    scans: 76,
+    Scans: 76,
   },
   {
     name: "May",
-    scans: 45,
+    Scans: 45,
   },
   {
     name: "Jun",
-    scans: 32,
+    Scans: 32,
   },
   {
     name: "Jul",
-    scans: 51,
+    Scans: 51,
   },
   {
     name: "Aug",
-    scans: 20,
+    Scans: 20,
   },
   {
     name: "Sep",
-    scans: 27,
+    Scans: 27,
   },
   {
     name: "Oct",
-    scans: 66,
+    Scans: 66,
   },
   {
     name: "Nov",
-    scans: 30,
+    Scans: 30,
   },
   {
     name: "Dec",
-    scans: 17,
+    Scans: 17,
   },
 ];
 
 const QRCodesBarChart = (props: Props) => {
+  const [tooltip, setTooltip] = useState(false);
   return (
-    <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={data}>
-        <XAxis
-          dataKey="name"
-          stroke="#888888"
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-        />
-        <YAxis
-          stroke="#888888"
-          dataKey="scans"
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-          tickFormatter={(value) => `${value}`}
-        />
-        <Bar dataKey="scans" fill="#adfa1d" radius={[4, 4, 0, 0]} />
-      </BarChart>
-    </ResponsiveContainer>
+    <>
+      <ResponsiveContainer width="100%" height={350}>
+        <BarChart data={data}>
+          <XAxis
+            dataKey="name"
+            stroke="#888888"
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
+          />
+          <YAxis
+            stroke="#888888"
+            dataKey="Scans"
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={(value) => `${value}`}
+          />
+          <Tooltip
+            wrapperClassName="rounded-md font-semibold"
+            itemStyle={{ color: "#0013de" }}
+          />
+          <Bar dataKey="Scans" fill="#adfa1d" radius={[4, 4, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </>
   );
 };
 
