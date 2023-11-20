@@ -2,6 +2,7 @@
 import React from "react";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
+import OverviewTab from "./OverviewTab";
 
 type Props = {};
 
@@ -13,7 +14,9 @@ const TabsView = (props: Props) => {
         <TabsTrigger value="analytics">Analytics</TabsTrigger>
         <TabsTrigger value="reports">Reports</TabsTrigger>
       </TabsList>
-      <TabsContent value="overview">Overview Tab</TabsContent>
+      <TabsContent value="overview">
+        <OverviewTab />
+      </TabsContent>
       <TabsContent value="analytics">Analytics Tab</TabsContent>
       <TabsContent value="reports">Reports Tab</TabsContent>
     </Tabs>
