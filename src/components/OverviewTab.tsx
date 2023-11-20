@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "./ui/card";
 import { LineChartIcon, QrCodeIcon } from "lucide-react";
+import QRCodesBarChart from "./QRCodesBarChart";
 
 type Props = {};
 
@@ -39,17 +40,22 @@ const OverviewTab = (props: Props) => {
           </CardContent>
         </Card>
       </div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 mt-2 ">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 mt-2 w-[90vw]">
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle>Overview</CardTitle>
+            <CardTitle>QR Charts</CardTitle>
+            <CardDescription>
+              Showing top 10 QR codes with their scans
+            </CardDescription>
           </CardHeader>
-          <CardContent className="pl-2">{/* <Overview /> */}</CardContent>
+
+          <CardContent className="pl-2">
+            <QRCodesBarChart />
+          </CardContent>
         </Card>
         <Card className="col-span-3">
           <CardHeader>
-            <CardTitle>Recent Sales</CardTitle>
-            <CardDescription>You made 265 sales this month.</CardDescription>
+            <CardTitle>Recent Scans</CardTitle>
           </CardHeader>
           <CardContent>{/* <RecentSales /> */}</CardContent>
         </Card>
