@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useRef } from "react";
 import {
   Form,
   FormControl,
@@ -39,6 +39,11 @@ const AiURLForm = (props: Props) => {
   //   const router = useRouter()
   const { loading, setLoading } = useLoading();
   const { image, setImage } = useImage();
+
+  //creating a reference object - a workaround to access state in setTimeout
+  const loadingRef = useRef(loading);
+  loadingRef.current = loading;
+
   const {
     mutate: getAiQrCode,
     isLoading,
@@ -76,8 +81,10 @@ const AiURLForm = (props: Props) => {
 
     setLoading("loading");
     //handle the case when it loads before 7 seconds
+    console.log(`Loading State before timeout: ${loading} `);
+
     setTimeout(() => {
-      if (loading === "loading") {
+      if (loadingRef.current === "loading") {
         setLoading("delayed");
       }
     }, 7000);
