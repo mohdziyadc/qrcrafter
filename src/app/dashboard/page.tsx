@@ -26,12 +26,8 @@ const Dashboard = async (props: Props) => {
           <UserAccountNav user={session.user} />
         </div>
       </div>
-      <div className="mx-6 my-4 grid grid-cols-2 ">
+      <div className="mx-6 my-4 grid grid-cols-1 ">
         <TabsView />
-        <div className="flex flex-row justify-end ">
-          <ManageQRCodeButton />
-          <CreateQRNav />
-        </div>
       </div>
     </div>
   );

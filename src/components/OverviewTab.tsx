@@ -10,13 +10,15 @@ import { LineChartIcon, QrCodeIcon } from "lucide-react";
 import QRCodesBarChart from "./QRCodesBarChart";
 import RecentScanCards from "./RecentScanCards";
 import { Button } from "./ui/button";
+import ManageQRCodeButton from "./buttons/ManageQRCodeButton";
+import CreateQRNav from "./CreateQRNav";
 
 type Props = {};
 
 const OverviewTab = (props: Props) => {
   return (
     <>
-      <div className="grid gap-2 md:grid-cols-1 lg:grid-cols-2">
+      <div className="grid gap-2 md:grid-cols-1 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Scans</CardTitle>
@@ -41,8 +43,12 @@ const OverviewTab = (props: Props) => {
             </p>
           </CardContent>
         </Card>
+        <div className="flex flex-row justify-center lg:justify-end col-span-2 ">
+          <ManageQRCodeButton />
+          <CreateQRNav />
+        </div>
       </div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 mt-2 w-[90vw]">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 mt-2 ">
         <Card className="col-span-4">
           <CardHeader>
             <CardTitle>QR Charts</CardTitle>
