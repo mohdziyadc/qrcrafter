@@ -10,7 +10,7 @@ const RecentScanCards = (props: Props) => {
   const data = [
     {
       name: "Yeezy",
-      totalScans: "666",
+      totalScans: "37",
     },
     {
       name: "Ty",
@@ -53,16 +53,12 @@ const RecentScanCards = (props: Props) => {
     <>
       {data.slice(0, 5).map((scan, idx) => (
         <Card
-          className="w-full flex flex-row justify-between items-center p-4 mb-3 hover:bg-green"
+          className="w-full flex flex-row justify-between items-center p-4 mb-3 hover:bg-primary hover:text-primary-foreground hover:cursor-pointer"
           key={idx}
-          onClick={() => {
-            console.log("Scan Clicked");
-          }}
         >
-          <div className="text-xl font-semibold ">{scan.name}</div>
+          <div className="text-xl font-semibold">{scan.name}</div>
           <div className="flex flex-row items-center">
             <div className="text-lg mr-1">{scan.totalScans}</div>
-            <div className="text-xs text-muted-foreground">+1</div>
           </div>
         </Card>
       ))}

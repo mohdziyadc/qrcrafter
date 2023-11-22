@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { LineChartIcon, QrCodeIcon } from "lucide-react";
+import { FlameIcon, LineChartIcon, QrCodeIcon } from "lucide-react";
 import QRCodesBarChart from "./QRCodesBarChart";
 import RecentScanCards from "./RecentScanCards";
 import { Button } from "./ui/button";
@@ -18,7 +18,7 @@ type Props = {};
 const OverviewTab = (props: Props) => {
   return (
     <>
-      <div className="grid gap-2 md:grid-cols-1 lg:grid-cols-4">
+      <div className="grid gap-2 md:grid-cols-1 lg:grid-cols-5">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Scans</CardTitle>
@@ -38,6 +38,18 @@ const OverviewTab = (props: Props) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">Yeezy</div>
+            <p className="text-xs text-muted-foreground">457 total scans</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Hottest QR code
+            </CardTitle>
+            <FlameIcon className="h-6 w-6" color="#e11d48" fill="#e11d48" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">Rodeo</div>
             <p className="text-xs text-muted-foreground">
               +100 scans from last month
             </p>
