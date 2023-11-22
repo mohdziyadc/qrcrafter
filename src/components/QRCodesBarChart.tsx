@@ -8,6 +8,7 @@ import {
   Bar,
   Tooltip,
 } from "recharts";
+import { Button } from "./ui/button";
 
 type Props = {};
 
@@ -87,7 +88,7 @@ const QRCodesBarChart = (props: Props) => {
             wrapperClassName="rounded-md font-semibold"
             itemStyle={{ color: "#0013de" }}
           />
-          <Bar dataKey="Scans" fill="#adfa1d" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Scans" fill="#2563eb" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </>

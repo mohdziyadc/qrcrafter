@@ -8,6 +8,8 @@ import {
 } from "./ui/card";
 import { LineChartIcon, QrCodeIcon } from "lucide-react";
 import QRCodesBarChart from "./QRCodesBarChart";
+import RecentScanCards from "./RecentScanCards";
+import { Button } from "./ui/button";
 
 type Props = {};
 
@@ -57,7 +59,9 @@ const OverviewTab = (props: Props) => {
           <CardHeader>
             <CardTitle>Recent Scans</CardTitle>
           </CardHeader>
-          <CardContent>{/* <RecentSales /> */}</CardContent>
+          <CardContent>
+            <RecentScanCards />
+          </CardContent>
         </Card>
       </div>
     </>
