@@ -53,14 +53,6 @@ const data = [
     name: "Oct",
     Scans: 66,
   },
-  {
-    name: "Nov",
-    Scans: 30,
-  },
-  {
-    name: "Dec",
-    Scans: 17,
-  },
 ];
 
 const QRCodesBarChart = (props: Props) => {

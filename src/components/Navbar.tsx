@@ -14,12 +14,15 @@ const Navbar = async (props: Props) => {
   return (
     <nav className="max-w-full px-6 py-4">
       <div className="flex justify-between items-center">
-        <div className=" flex font-bold text-4xl">QRCoded</div>
-        <div className="flex flex-row text-lg items-center">
-          <div className="mr-6">
+        <div className=" flex font-bold text-4xl">QRCrafter</div>
+        <div className="flex flex-row text-lg justify-center items-center">
+          <div className="mr-5">
             <Link href={"/"}>Home</Link>
           </div>
-          <div className="mr-3">
+          <div className="mr-5">
+            <Link href={"/try"}>Try</Link>
+          </div>
+          <div className="mr-5">
             <Link href={"/pricing"}>Pricing</Link>
           </div>
         </div>

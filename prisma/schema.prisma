@@ -157,3 +157,10 @@ model AiContactQr {
   userId String
   user User @relation("aiContactQr", fields: [userId], references: [id])
 }
+
+model QRCodeAnalytics {
+  id String @id @default(uuid())
+  scanCount Int @default(0)
+  createdAt DateTime 
+  lastScanAt DateTime
+}
