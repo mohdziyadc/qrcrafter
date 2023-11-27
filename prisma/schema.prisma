@@ -65,6 +65,7 @@ model QRCodeAnalytics {
   createdAt DateTime 
   lastScanAt DateTime?
   aiUrlQrCode AiURLQRCode[] @relation("aiUrlAnalytics")
+  aiMultiUrlQrCode MulitUrlAiQr[] @relation("aiMultiUrlAnalytics")
   
 }
 
@@ -143,7 +144,9 @@ model MulitUrlAiQr {
   name String
   image_url String
   userId String
+  qrCodeAnalyticsId String
   user User @relation("multiUrlAiQr",fields: [userId], references: [id])
+  qrCodeAnalytics QRCodeAnalytics @relation("aiMultiUrlAnalytics",fields: [qrCodeAnalyticsId], references: [id])
 }
 
 model AiFreeTextQr {
