@@ -131,7 +131,7 @@ model AiURLQRCode {
   userId String
   qrCodeAnalyticsId String
   user User @relation("aiUrlCodes",fields: [userId], references: [id])
-  qrCodeAnalytics QRCodeAnalytics @relation("aiUrlAnalytics",fields: [qrCodeAnalyticsId], references: [id])
+  qrCodeAnalytics QRCodeAnalytics @relation("aiUrlAnalytics",fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
 
 }
 
