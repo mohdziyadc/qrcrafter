@@ -2,6 +2,7 @@ import { getAuthSession } from "@/lib/auth";
 import uploadImage from "@/lib/cloudinary";
 import { prismaClient } from "@/lib/db";
 import { saveAiQRCode } from "@/lib/types";
+import { QRCodeAnalytics } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -14,6 +15,12 @@ export async function POST(req: NextRequest) {
 
     const cloudinaryUrl = await uploadImage(body.imageUrl);
 
+    const qrCodeAnalytics = await prismaClient.qRCodeAnalytics.create({
+      data: {
+        createdAt: new Date(),
+      },
+    });
+
     await prismaClient.aiURLQRCode.create({
       data: {
         url: body.url,
@@ -21,6 +28,7 @@ export async function POST(req: NextRequest) {
         uniqueToken: body.token,
         userId: session.user.id,
         image_url: cloudinaryUrl,
+        qrCodeAnalyticsId: qrCodeAnalytics!.id,
       },
     });
 

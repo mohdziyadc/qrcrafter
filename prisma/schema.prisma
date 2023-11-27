@@ -59,6 +59,15 @@ model User {
   aiContactQr AiContactQr[] @relation("aiContactQr")
 }
 
+model QRCodeAnalytics {
+  id String @id @default(uuid())
+  scanCount Int @default(0)
+  createdAt DateTime 
+  lastScanAt DateTime?
+  aiUrlQrCode AiURLQRCode[] @relation("aiUrlAnalytics")
+  
+}
+
 
 model MultiURLCode {
   id  String @id @default(cuid())
@@ -120,7 +129,9 @@ model AiURLQRCode {
   image_url String
   name String
   userId String
+  qrCodeAnalyticsId String
   user User @relation("aiUrlCodes",fields: [userId], references: [id])
+  qrCodeAnalytics QRCodeAnalytics @relation("aiUrlAnalytics",fields: [qrCodeAnalyticsId], references: [id])
 
 }
 
@@ -158,9 +169,3 @@ model AiContactQr {
   user User @relation("aiContactQr", fields: [userId], references: [id])
 }
 
-model QRCodeAnalytics {
-  id String @id @default(uuid())
-  scanCount Int @default(0)
-  createdAt DateTime 
-  lastScanAt DateTime
-}

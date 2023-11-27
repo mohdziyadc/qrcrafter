@@ -10,14 +10,13 @@ export async function GET(
   let redirectUrl: string;
 
   try {
-    const session = await getAuthSession();
-    if (!session?.user) {
-      return new NextResponse("[UNAUTHORIZED USER]", { status: 401 });
-    }
     const uniqueToken = params.token;
     const qrCode = await prismaClient.aiURLQRCode.findUnique({
       where: {
         uniqueToken: uniqueToken,
+      },
+      include: {
+        qrCodeAnalytics: true,
       },
     });
     if (!qrCode) {
@@ -25,6 +24,18 @@ export async function GET(
         status: 404,
       });
     }
+
+    await prismaClient.qRCodeAnalytics.update({
+      where: {
+        id: qrCode.qrCodeAnalytics.id,
+      },
+      data: {
+        scanCount: {
+          increment: 1,
+        },
+        lastScanAt: new Date(),
+      },
+    });
 
     if (qrCode.url) {
       redirectUrl = qrCode.url;
