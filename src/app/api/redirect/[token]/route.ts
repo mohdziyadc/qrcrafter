@@ -9,10 +9,10 @@ export async function GET(
 ) {
   let redirectUrl: string;
   try {
-    const session = await getAuthSession();
-    if (!session?.user) {
-      return new NextResponse("User Unauthorized", { status: 401 });
-    }
+    // const session = await getAuthSession();
+    // if (!session?.user) {
+    //   return new NextResponse("User Unauthorized", { status: 401 });
+    // }
     const token = params.token; //decoded URI
     const dynamicUrl = await prismaClient.dynamicURL.findUnique({
       where: {

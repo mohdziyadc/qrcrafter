@@ -1,4 +1,3 @@
-import { getAuthSession } from "@/lib/auth";
 import { prismaClient } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
