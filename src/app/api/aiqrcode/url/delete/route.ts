@@ -15,6 +15,13 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    /**
+     * The relationship b/w AiURLQRCode => QRCodeAnalytics is many to one
+     * It is not possible afaik to enable cascading delete on many to one relationships
+     * So, if we consider the reverse relationship, ie, QRCodeAnalytics => AiURLQRCode, then that is one to many
+     * It's possible to cascade delete by mentioning onDelete property in AiURLQRCode model
+     * So the deletion of QRCodeAnalytics is done below, which would in turn delete the aiUrlQrCode.
+     */
     if (qrCode) {
       await prismaClient.qRCodeAnalytics.delete({
         where: {
