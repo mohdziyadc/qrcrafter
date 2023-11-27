@@ -9,11 +9,22 @@ export async function POST(req: NextRequest) {
       return new NextResponse("[UNAUTHORIZED USER]", { status: 401 });
     }
     const { uniqueToken } = await req.json();
-    await prismaClient.mulitUrlAiQr.delete({
+    const qrCode = await prismaClient.mulitUrlAiQr.findUnique({
       where: {
         uniqueToken: uniqueToken,
       },
     });
+
+    if (qrCode) {
+      await prismaClient.qRCodeAnalytics.delete({
+        where: {
+          id: qrCode.qrCodeAnalyticsId,
+        },
+      });
+    } else {
+      return new NextResponse("[NO QR CODE FOUND]", { status: 404 });
+    }
+
     return new NextResponse("[SUCCESS]", { status: 200 });
   } catch (error) {
     return new NextResponse("[INTERNAL SERVOR ERROR] " + error, {

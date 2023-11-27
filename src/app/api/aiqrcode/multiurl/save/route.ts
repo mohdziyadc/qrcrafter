@@ -14,6 +14,12 @@ export async function POST(req: NextRequest) {
 
     const cloudinaryUrl = await uploadImage(body.image_url);
 
+    const qrCodeAnalytics = await prismaClient.qRCodeAnalytics.create({
+      data: {
+        createdAt: new Date(),
+      },
+    });
+
     await prismaClient.mulitUrlAiQr.create({
       data: {
         name: body.name,
@@ -22,6 +28,7 @@ export async function POST(req: NextRequest) {
         userId: session.user.id,
         image_url: cloudinaryUrl,
         uniqueToken: body.token,
+        qrCodeAnalyticsId: qrCodeAnalytics.id,
       },
     });
 

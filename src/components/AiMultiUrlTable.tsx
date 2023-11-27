@@ -80,7 +80,7 @@ const AiMultiUrlTable = (props: Props) => {
   }
   return (
     <div>
-      {qrCodes.length === 0 ? (
+      {qrCodes.length !== 0 ? (
         <>
           <Table>
             <TableHeader>
