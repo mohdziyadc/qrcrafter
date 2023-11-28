@@ -23,6 +23,17 @@ export async function GET(
     if (dynamicUrl?.url) {
       // console.log(dynamicUrl.url);
       redirectUrl = dynamicUrl.url;
+      await prismaClient.qRCodeAnalytics.update({
+        where: {
+          id: dynamicUrl.qrCodeAnalyticsId,
+        },
+        data: {
+          scanCount: {
+            increment: 1,
+          },
+          lastScanAt: new Date(),
+        },
+      });
     } else {
       return new NextResponse("No URL Found", { status: 400 });
     }
