@@ -1,5 +1,4 @@
 import DownloadButton from "@/components/DownloadButton";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -22,6 +21,26 @@ const DynamicContactQR = async ({ params: { slug } }: Props) => {
   const contactQR = await prismaClient.dynamicContact.findUnique({
     where: {
       uniqueToken: decodedToken,
+    },
+  });
+
+  if (!contactQR) {
+    return (
+      <div>
+        <h1>No QR Code Found</h1>
+      </div>
+    );
+  }
+
+  await prismaClient.qRCodeAnalytics.update({
+    where: {
+      id: contactQR.qrCodeAnalyticsId,
+    },
+    data: {
+      scanCount: {
+        increment: 1,
+      },
+      lastScanAt: new Date(),
     },
   });
 

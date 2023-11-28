@@ -10,9 +10,17 @@ export async function POST(req: Request, res: Response) {
     }
 
     const { uniqueToken } = await req.json();
-    await prismaClient.dynamicContact.delete({
+    const qrCode = await prismaClient.dynamicContact.findUnique({
       where: {
         uniqueToken: uniqueToken,
+      },
+    });
+    if (!qrCode) {
+      return new NextResponse("[NO QR CODE FOUND]", { status: 200 });
+    }
+    await prismaClient.qRCodeAnalytics.delete({
+      where: {
+        id: qrCode.qrCodeAnalyticsId,
       },
     });
     return new NextResponse("[SUCCESS]", { status: 200 });
