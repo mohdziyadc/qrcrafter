@@ -70,6 +70,10 @@ model QRCodeAnalytics {
   aiMultiUrlQrCode MulitUrlAiQr[] @relation("aiMultiUrlAnalytics")
   aiFreetextQr AiFreeTextQr[] @relation("aiFreetextAnalytics")
   aiContactQr AiContactQr[] @relation("aiContactAnalytics")
+  dynamicUrlQr DynamicURL[] @relation("dynamicUrlAnalytics")
+  dynamicMultiUrlQr DynamicMultiURL[] @relation("dynamicMultiUrlAnalytics")
+  dynamicFreetextQr DynamicFreeText[] @relation("dynamicFreetextAnalytics")
+  dynamicContactQr DynamicContact[] @relation("dynamicContactAnalytics")
   user User @relation("qrCodeAnalytics", fields: [userId], references: [id]) //for fetching the top qr codes
   
 }
@@ -91,7 +95,9 @@ model DynamicURL {
   qrCode String @db.VarChar(3000)
   name String 
   userId String
+  qrCodeAnalyticsId String
   user User @relation("dynamicURL",fields: [userId], references: [id])
+  qrCodeAnalytics QRCodeAnalytics @relation("dynamicUrlAnalytics",fields: [qrCodeAnalyticsId], references: [id])
 }
 
 model DynamicMultiURL {
@@ -102,7 +108,9 @@ model DynamicMultiURL {
   name String
   qrCode String @db.VarChar(3000)
   userId String
+  qrCodeAnalyticsId String
   user User @relation("dynamicMultiURL", fields: [userId], references: [id])
+  qrCodeAnalytics QRCodeAnalytics @relation("dynamicMultiUrlAnalytics",fields: [qrCodeAnalyticsId], references: [id])
 }
 
 model DynamicFreeText {
@@ -112,7 +120,9 @@ model DynamicFreeText {
   qrCode String @db.VarChar(3000)
   uniqueToken String @unique
   userId String
+  qrCodeAnalyticsId String
   user User @relation("dynamicFreeText", fields: [userId], references: [id])
+  qrCodeAnalytics QRCodeAnalytics @relation("dynamicFreetextAnalytics",fields: [qrCodeAnalyticsId], references: [id])
 }
 
 model DynamicContact {
@@ -125,7 +135,9 @@ model DynamicContact {
   qrCode String @db.VarChar(3000)
   uniqueToken String @unique
   userId String
+  qrCodeAnalyticsId String
   user User @relation("dynamicContact",fields: [userId], references: [id])
+  qrCodeAnalytics QRCodeAnalytics @relation("dynamicContactAnalytics", fields: [qrCodeAnalyticsId], references: [id])
 }
 
 model AiURLQRCode {

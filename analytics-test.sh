@@ -1,6 +1,6 @@
-num_requests=39
+num_requests=24
 
-endpoint_url="http://localhost:3000/aimulti/X6nuCtgu"
+endpoint_url="http://localhost:3000/aitext/qwLt4nqe"
 
 
 
