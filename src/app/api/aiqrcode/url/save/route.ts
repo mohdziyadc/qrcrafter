@@ -18,6 +18,7 @@ export async function POST(req: NextRequest) {
     const qrCodeAnalytics = await prismaClient.qRCodeAnalytics.create({
       data: {
         createdAt: new Date(),
+        userId: session.user.id,
       },
     });
 

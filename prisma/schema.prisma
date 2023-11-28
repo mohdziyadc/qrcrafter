@@ -57,6 +57,7 @@ model User {
   multiUrlAiQr MulitUrlAiQr[] @relation("multiUrlAiQr")
   aiFreeTextQr AiFreeTextQr[] @relation("aiFreeTextQr")
   aiContactQr AiContactQr[] @relation("aiContactQr")
+  qrCodeAnalytics QRCodeAnalytics[] @relation("qrCodeAnalytics")
 }
 
 model QRCodeAnalytics {
@@ -64,8 +65,10 @@ model QRCodeAnalytics {
   scanCount Int @default(0)
   createdAt DateTime 
   lastScanAt DateTime?
+  userId String
   aiUrlQrCode AiURLQRCode[] @relation("aiUrlAnalytics")
   aiMultiUrlQrCode MulitUrlAiQr[] @relation("aiMultiUrlAnalytics")
+  user User @relation("qrCodeAnalytics", fields: [userId], references: [id]) //for fetching the top qr codes
   
 }
 
