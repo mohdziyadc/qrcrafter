@@ -68,6 +68,7 @@ model QRCodeAnalytics {
   userId String
   aiUrlQrCode AiURLQRCode[] @relation("aiUrlAnalytics")
   aiMultiUrlQrCode MulitUrlAiQr[] @relation("aiMultiUrlAnalytics")
+  aiFreetextQr AiFreeTextQr[] @relation("aiFreetextAnalytics")
   user User @relation("qrCodeAnalytics", fields: [userId], references: [id]) //for fetching the top qr codes
   
 }
@@ -159,7 +160,9 @@ model AiFreeTextQr {
   image_url String
   uniqueToken String @unique
   userId String
+  qrCodeAnalyticsId String
   user User @relation("aiFreeTextQr", fields: [userId], references: [id])
+  qrCodeAnalytics QRCodeAnalytics @relation("aiFreetextAnalytics", fields: [qrCodeAnalyticsId], references: [id])
 }
 
 model AiContactQr {
