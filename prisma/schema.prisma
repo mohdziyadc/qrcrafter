@@ -97,7 +97,7 @@ model DynamicURL {
   userId String
   qrCodeAnalyticsId String
   user User @relation("dynamicURL",fields: [userId], references: [id])
-  qrCodeAnalytics QRCodeAnalytics @relation("dynamicUrlAnalytics",fields: [qrCodeAnalyticsId], references: [id])
+  qrCodeAnalytics QRCodeAnalytics @relation("dynamicUrlAnalytics",fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
 }
 
 model DynamicMultiURL {
@@ -110,7 +110,7 @@ model DynamicMultiURL {
   userId String
   qrCodeAnalyticsId String
   user User @relation("dynamicMultiURL", fields: [userId], references: [id])
-  qrCodeAnalytics QRCodeAnalytics @relation("dynamicMultiUrlAnalytics",fields: [qrCodeAnalyticsId], references: [id])
+  qrCodeAnalytics QRCodeAnalytics @relation("dynamicMultiUrlAnalytics",fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
 }
 
 model DynamicFreeText {
@@ -122,7 +122,7 @@ model DynamicFreeText {
   userId String
   qrCodeAnalyticsId String
   user User @relation("dynamicFreeText", fields: [userId], references: [id])
-  qrCodeAnalytics QRCodeAnalytics @relation("dynamicFreetextAnalytics",fields: [qrCodeAnalyticsId], references: [id])
+  qrCodeAnalytics QRCodeAnalytics @relation("dynamicFreetextAnalytics",fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
 }
 
 model DynamicContact {
@@ -137,7 +137,7 @@ model DynamicContact {
   userId String
   qrCodeAnalyticsId String
   user User @relation("dynamicContact",fields: [userId], references: [id])
-  qrCodeAnalytics QRCodeAnalytics @relation("dynamicContactAnalytics", fields: [qrCodeAnalyticsId], references: [id])
+  qrCodeAnalytics QRCodeAnalytics @relation("dynamicContactAnalytics", fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
 }
 
 model AiURLQRCode {
@@ -163,7 +163,7 @@ model MulitUrlAiQr {
   userId String
   qrCodeAnalyticsId String
   user User @relation("multiUrlAiQr",fields: [userId], references: [id])
-  qrCodeAnalytics QRCodeAnalytics @relation("aiMultiUrlAnalytics",fields: [qrCodeAnalyticsId], references: [id])
+  qrCodeAnalytics QRCodeAnalytics @relation("aiMultiUrlAnalytics",fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
 }
 
 model AiFreeTextQr {
@@ -175,7 +175,7 @@ model AiFreeTextQr {
   userId String
   qrCodeAnalyticsId String
   user User @relation("aiFreeTextQr", fields: [userId], references: [id])
-  qrCodeAnalytics QRCodeAnalytics @relation("aiFreetextAnalytics", fields: [qrCodeAnalyticsId], references: [id])
+  qrCodeAnalytics QRCodeAnalytics @relation("aiFreetextAnalytics", fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
 }
 
 model AiContactQr {
@@ -190,7 +190,7 @@ model AiContactQr {
   userId String
   qrCodeAnalyticsId String
   user User @relation("aiContactQr", fields: [userId], references: [id])
-  qrCodeAnalytics QRCodeAnalytics @relation("aiContactAnalytics", fields: [qrCodeAnalyticsId], references: [id])
+  qrCodeAnalytics QRCodeAnalytics @relation("aiContactAnalytics", fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
 
 }
 

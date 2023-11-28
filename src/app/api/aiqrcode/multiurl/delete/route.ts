@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
         uniqueToken: uniqueToken,
       },
     });
-
+    console.log(qrCode?.qrCodeAnalyticsId);
     if (qrCode) {
       await prismaClient.qRCodeAnalytics.delete({
         where: {
