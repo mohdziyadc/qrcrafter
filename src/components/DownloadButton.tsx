@@ -1,24 +1,47 @@
 "use client";
-import { DynamicContact } from "@prisma/client";
+import { AiContactQr, DynamicContact } from "@prisma/client";
 import React from "react";
 import { Button } from "./ui/button";
 import axios from "axios";
 import { saveAs } from "file-saver";
 
 type Props = {
-  contact: DynamicContact;
+  contact: DynamicContact | AiContactQr;
 };
 
 const DownloadButton = ({ contact }: Props) => {
+  function isDynamicContact(
+    contact: DynamicContact | AiContactQr
+  ): contact is DynamicContact {
+    return (contact as DynamicContact).firstName !== undefined;
+  }
+
+  function isAiContact(
+    contact: DynamicContact | AiContactQr
+  ): contact is AiContactQr {
+    return (contact as AiContactQr).first_name !== undefined;
+  }
   const handleDownload = async () => {
-    try {
-      const response = await axios.post("/api/vCard", {
+    let payload;
+    if (isDynamicContact(contact)) {
+      payload = {
         first_name: contact.firstName,
         last_name: contact.lastName,
         organisation: contact.organisation,
         email: contact.email,
         phone_number: contact.phoneNumber,
-      });
+      };
+    } else if (isAiContact(contact)) {
+      payload = {
+        first_name: contact.first_name,
+        last_name: contact.last_name,
+        organisation: contact.organisation,
+        email: contact.email,
+        phone_number: contact.phone_number,
+      };
+    }
+    try {
+      const response = await axios.post("/api/vCard", JSON.stringify(payload));
       if (response.data) {
         const blob = new Blob([response.data], {
           type: "text/vcard",
