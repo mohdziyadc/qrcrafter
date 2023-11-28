@@ -18,6 +18,14 @@ const MultiQR = async (props: Props) => {
     },
   });
 
+  if (!multiUrlQr) {
+    return (
+      <div>
+        <h1>No QR Code found</h1>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col justify-center items-center h-screen">
       <div className="bg-gray-200 p-10 rounded-md">

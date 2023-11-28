@@ -9,9 +9,17 @@ export async function POST(req: Request, res: Response) {
       return new NextResponse("User Unauthorized", { status: 401 });
     }
     const { uniqueToken } = await req.json();
-    await prismaClient.dynamicMultiURL.delete({
+    const qrCode = await prismaClient.dynamicMultiURL.findUnique({
       where: {
         uniqueToken: uniqueToken,
+      },
+    });
+    if (!qrCode) {
+      return new NextResponse("[No QR Code Found]", { status: 404 });
+    }
+    await prismaClient.qRCodeAnalytics.delete({
+      where: {
+        id: qrCode.qrCodeAnalyticsId,
       },
     });
     return new NextResponse("[SUCCESS]", { status: 200 });

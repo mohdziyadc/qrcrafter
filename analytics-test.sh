@@ -1,6 +1,6 @@
-num_requests=12
+num_requests=17
 
-endpoint_url="http://localhost:3000/api/redirect/s6CWjHZe"
+endpoint_url="http://localhost:3000/dynamicmultiqr/pUOq65Kl"
 
 
 

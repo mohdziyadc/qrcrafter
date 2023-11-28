@@ -17,6 +17,24 @@ const DynamicMultiQR = async (props: Props) => {
       uniqueToken: decodedToken,
     },
   });
+  if (!dynamicMultiUrlQr) {
+    return (
+      <div>
+        <h1>No QR Code found</h1>
+      </div>
+    );
+  }
+  await prismaClient.qRCodeAnalytics.update({
+    where: {
+      id: dynamicMultiUrlQr.qrCodeAnalyticsId,
+    },
+    data: {
+      scanCount: {
+        increment: 1,
+      },
+      lastScanAt: new Date(),
+    },
+  });
   return (
     <div className="flex flex-col justify-center items-center h-screen">
       <div className="bg-gray-200 p-10 rounded-md">
