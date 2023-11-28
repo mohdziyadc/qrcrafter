@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
       data: {
         createdAt: new Date(),
         userId: session.user.id,
+        qrName: body.user_first_name,
       },
     });
     await prismaClient.aiContactQr.create({

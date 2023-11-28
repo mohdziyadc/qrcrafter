@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
       data: {
         createdAt: new Date(),
         userId: session.user.id,
+        qrName: body.name,
       },
     });
 

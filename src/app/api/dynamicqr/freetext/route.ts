@@ -30,6 +30,7 @@ export async function POST(req: Request, res: Response) {
       data: {
         userId: session.user.id,
         createdAt: new Date(),
+        qrName: name,
       },
     });
     await prismaClient.dynamicFreeText.create({
