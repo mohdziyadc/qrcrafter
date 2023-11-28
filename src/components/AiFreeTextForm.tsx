@@ -1,6 +1,6 @@
 import { aiFreeTextFormSchema } from "@/validators/qrFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
@@ -35,8 +35,10 @@ const AiFreeTextForm = (props: Props) => {
     },
   });
   const { setImage } = useImage();
-  const { setLoading } = useLoading();
+  const { loading, setLoading } = useLoading();
   const { toast } = useToast();
+  const loadingRef = useRef(loading);
+  loadingRef.current = loading;
 
   const {
     mutate: getAiFreeTextQr,
@@ -69,7 +71,9 @@ const AiFreeTextForm = (props: Props) => {
     setLoading("loading");
     getAiFreeTextQr({ name, freetext, prompt });
     setTimeout(() => {
-      setLoading("delayed");
+      if (loadingRef.current === "loading") {
+        setLoading("delayed");
+      }
     }, 7000);
   };
   return (

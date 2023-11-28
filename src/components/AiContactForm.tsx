@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { aiContactFormSchema } from "@/validators/qrFormSchema";
@@ -39,8 +39,11 @@ const AiContactForm = (props: Props) => {
   });
 
   const { setImage } = useImage();
-  const { setLoading } = useLoading();
+  const { loading, setLoading } = useLoading();
   const { toast } = useToast();
+  const loadingRef = useRef(loading);
+  loadingRef.current = loading;
+
   const {
     mutate: getAiContactQr,
     isLoading,
@@ -82,8 +85,10 @@ const AiContactForm = (props: Props) => {
       prompt: params.prompt,
     });
     setTimeout(() => {
-      setLoading("delayed");
-    }, 9000);
+      if (loadingRef.current === "loading") {
+        setLoading("delayed");
+      }
+    }, 7000);
   };
   return (
     <div>
