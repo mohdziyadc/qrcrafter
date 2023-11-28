@@ -16,6 +16,24 @@ const FreeTextQR = async (props: Props) => {
       uniqueToken: decodedToken,
     },
   });
+  if (!freeTextQR) {
+    return (
+      <div>
+        <h1>No QR Code Found</h1>
+      </div>
+    );
+  }
+  await prismaClient.qRCodeAnalytics.update({
+    where: {
+      id: freeTextQR.qrCodeAnalyticsId,
+    },
+    data: {
+      scanCount: {
+        increment: 1,
+      },
+      lastScanAt: new Date(),
+    },
+  });
   return freeTextQR ? (
     <div>
       <Card className="m-4 p-4">

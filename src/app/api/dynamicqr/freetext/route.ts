@@ -25,6 +25,13 @@ export async function POST(req: Request, res: Response) {
         },
       }
     );
+
+    const qrCodeAnalytics = await prismaClient.qRCodeAnalytics.create({
+      data: {
+        userId: session.user.id,
+        createdAt: new Date(),
+      },
+    });
     await prismaClient.dynamicFreeText.create({
       data: {
         name: name,
@@ -32,6 +39,7 @@ export async function POST(req: Request, res: Response) {
         userId: session.user.id,
         qrCode: generateQR,
         uniqueToken: base64Uuid,
+        qrCodeAnalyticsId: qrCodeAnalytics.id,
       },
     });
     return NextResponse.json({ qrCode: generateQR }, { status: 200 });

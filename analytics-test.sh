@@ -1,6 +1,6 @@
-num_requests=17
+num_requests=12
 
-endpoint_url="http://localhost:3000/dynamicmultiqr/pUOq65Kl"
+endpoint_url="http://localhost:3000/dynamicfreetext/WbjSfm9q"
 
 
 
