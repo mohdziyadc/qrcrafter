@@ -1,6 +1,6 @@
 import { aiMultiUrlFormSchema } from "@/validators/qrFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import {
@@ -39,8 +39,10 @@ const AiMultiUrlForm = (props: Props) => {
     },
   });
   const { image, setImage } = useImage();
-  const { setLoading } = useLoading();
+  const { loading, setLoading } = useLoading();
   const { toast } = useToast();
+  const loadingRef = useRef(loading);
+  loadingRef.current = loading;
 
   const {
     mutate: getAiMultiUrlQrCode,
@@ -73,8 +75,12 @@ const AiMultiUrlForm = (props: Props) => {
   const onSubmitHandler = ({ urls, titles, name, prompt }: aiMultiUrlInput) => {
     getAiMultiUrlQrCode({ urls, titles, name, prompt });
     setLoading("loading");
+    //handle the case when it loads before 7 seconds
+
     setTimeout(() => {
-      setLoading("delayed");
+      if (loadingRef.current === "loading") {
+        setLoading("delayed");
+      }
     }, 7000);
   };
   return (
