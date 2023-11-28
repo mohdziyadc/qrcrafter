@@ -12,6 +12,13 @@ export async function POST(req: NextRequest) {
     }
     const body = (await req.json()) as AiContactResponse;
     const cloudinaryUrl = await uploadImage(body.image_url);
+
+    const qrCodeAnalytics = await prismaClient.qRCodeAnalytics.create({
+      data: {
+        createdAt: new Date(),
+        userId: session.user.id,
+      },
+    });
     await prismaClient.aiContactQr.create({
       data: {
         first_name: body.user_first_name,
@@ -22,6 +29,7 @@ export async function POST(req: NextRequest) {
         uniqueToken: body.token,
         userId: session.user.id,
         image_url: cloudinaryUrl,
+        qrCodeAnalyticsId: qrCodeAnalytics.id,
       },
     });
     return new NextResponse("[SUCCESS]", { status: 200 });
