@@ -1,17 +1,12 @@
 import LoadingSpinner from "@/app/manage/loading";
-import { QRCodeAnalytics } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 type Props = {};
 
 const TopQRCard = (props: Props) => {
-  const {
-    data,
-    isLoading: isLoadingTopQr,
-    isSuccess,
-  } = useQuery({
+  const { data: topQrCode, isLoading: isLoadingTopQr } = useQuery({
     queryKey: ["qrTopAnalytics"],
     queryFn: async () => {
       const res = await axios.get("/api/analytics/topqr");
@@ -19,12 +14,6 @@ const TopQRCard = (props: Props) => {
     },
     retry: false,
   });
-  const [topQrCode, setTopQrCode] = useState<QRCodeAnalytics>();
-  useEffect(() => {
-    if (isSuccess) {
-      setTopQrCode(data);
-    }
-  }, []);
   return (
     <div>
       {isLoadingTopQr ? (
