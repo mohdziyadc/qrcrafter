@@ -27,17 +27,23 @@ const RecentScanCards = (props: Props) => {
   }
   return (
     <>
-      {data?.map((scan, idx) => (
-        <Card
-          className="w-full flex flex-row justify-between items-center p-4 mb-3 hover:bg-primary hover:text-primary-foreground hover:cursor-pointer"
-          key={idx}
-        >
-          <div className="text-xl font-semibold">{scan.qrName}</div>
-          <div className="flex flex-row items-center">
-            <div className="text-lg mr-1">{scan.scanCount}</div>
-          </div>
-        </Card>
-      ))}
+      {data?.length !== 0 ? (
+        data?.map((scan, idx) => (
+          <Card
+            className="w-full flex flex-row justify-between items-center p-4 mb-3 hover:bg-primary hover:text-primary-foreground hover:cursor-pointer"
+            key={idx}
+          >
+            <div className="text-xl font-semibold">{scan.qrName}</div>
+            <div className="flex flex-row items-center">
+              <div className="text-lg mr-1">{scan.scanCount}</div>
+            </div>
+          </Card>
+        ))
+      ) : (
+        <div className="flex justify-center items-center pt-5 font-semibold">
+          No QR Codes Found
+        </div>
+      )}
     </>
   );
 };

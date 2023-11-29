@@ -29,7 +29,7 @@ const QRCodesBarChart = (props: Props) => {
       </div>
     );
   }
-  return (
+  return data.length !== 0 ? (
     <>
       <ResponsiveContainer width="100%" height={350}>
         <BarChart data={data}>
@@ -56,6 +56,10 @@ const QRCodesBarChart = (props: Props) => {
         </BarChart>
       </ResponsiveContainer>
     </>
+  ) : (
+    <div className="flex justify-center items-center pt-5 font-semibold">
+      No QR Codes Found
+    </div>
   );
 };
 

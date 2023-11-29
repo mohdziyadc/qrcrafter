@@ -40,11 +40,11 @@ const CreateQRNav = (props: Props) => {
           <DropdownMenuItem>
             <Link href={"/aiqrcode"}>AI QR Code</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setIsStaticDialog(true)}>
-            Static QR Code
-          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsDynamicDialog(true)}>
             Dynamic QR Code
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsStaticDialog(true)}>
+            Static QR Code
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

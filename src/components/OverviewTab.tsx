@@ -15,6 +15,7 @@ import CreateQRNav from "./CreateQRNav";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
+import TopQRCard from "./TopQRCard";
 
 type Props = {};
 
@@ -27,13 +28,6 @@ const OverviewTab = (props: Props) => {
     },
   });
 
-  const { data: topQrCode, isLoading: isLoadingTopQr } = useQuery({
-    queryKey: ["qrTopAnalytics"],
-    queryFn: async () => {
-      const res = await axios.get("/api/analytics/topqr");
-      return res.data.topQR;
-    },
-  });
   return (
     <>
       <div className="grid gap-2 md:grid-cols-1 lg:grid-cols-5">
@@ -47,7 +41,7 @@ const OverviewTab = (props: Props) => {
               <div>
                 <LoadingSpinner component />
               </div>
-            ) : (
+            ) : totalScans._sum.scanCount ? (
               <>
                 <div className="text-2xl font-bold">
                   {totalScans._sum.scanCount}
@@ -56,6 +50,10 @@ const OverviewTab = (props: Props) => {
                   +20.1% from last month
                 </p>
               </>
+            ) : (
+              <div className="flex justify-center items-center pt-5 font-semibold">
+                N/A
+              </div>
             )}
           </CardContent>
         </Card>
@@ -65,18 +63,7 @@ const OverviewTab = (props: Props) => {
             <QrCodeIcon className="h-6 w-6" />
           </CardHeader>
           <CardContent>
-            {isLoadingTopQr ? (
-              <div>
-                <LoadingSpinner component />
-              </div>
-            ) : (
-              <>
-                <div className="text-2xl font-bold">{topQrCode.qrName}</div>
-                <p className="text-xs text-muted-foreground">
-                  {topQrCode.scanCount} total scans
-                </p>
-              </>
-            )}
+            <TopQRCard />
           </CardContent>
         </Card>
         <Card>
