@@ -12,10 +12,20 @@ import RecentScanCards from "./RecentScanCards";
 import { Button } from "./ui/button";
 import ManageQRCodeButton from "./buttons/ManageQRCodeButton";
 import CreateQRNav from "./CreateQRNav";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import LoadingSpinner from "@/app/manage/loading";
 
 type Props = {};
 
 const OverviewTab = (props: Props) => {
+  const { data: totalScans, isLoading: isLoadingTotalScans } = useQuery({
+    queryKey: ["qrTotalScanAnalytics"],
+    queryFn: async () => {
+      const res = await axios.get("/api/analytics/totalscans");
+      return res.data.totalScans;
+    },
+  });
   return (
     <>
       <div className="grid gap-2 md:grid-cols-1 lg:grid-cols-5">
@@ -25,10 +35,20 @@ const OverviewTab = (props: Props) => {
             <LineChartIcon className="h-6 w-6" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">666</div>
-            <p className="text-xs text-muted-foreground">
-              +20.1% from last month
-            </p>
+            {isLoadingTotalScans ? (
+              <div>
+                <LoadingSpinner component />
+              </div>
+            ) : (
+              <>
+                <div className="text-2xl font-bold">
+                  {totalScans._sum.scanCount}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  +20.1% from last month
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
         <Card>
