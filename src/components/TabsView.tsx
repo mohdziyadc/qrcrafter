@@ -13,14 +13,14 @@ const TabsView = (props: Props) => {
     <Tabs defaultValue="overview" className="space-y-4 ">
       <TabsList>
         <TabsTrigger value="overview">Overview</TabsTrigger>
-        <TabsTrigger value="analytics">Analytics</TabsTrigger>
-        <TabsTrigger value="reports">Reports</TabsTrigger>
+        {/* <TabsTrigger value="analytics">Analytics</TabsTrigger>
+        <TabsTrigger value="reports">Reports</TabsTrigger> */}
       </TabsList>
       <TabsContent value="overview">
         <OverviewTab />
       </TabsContent>
-      <TabsContent value="analytics">Analytics Tab</TabsContent>
-      <TabsContent value="reports">Reports Tab</TabsContent>
+      {/* <TabsContent value="analytics">Analytics Tab</TabsContent>
+      <TabsContent value="reports">Reports Tab</TabsContent> */}
     </Tabs>
   );
 };

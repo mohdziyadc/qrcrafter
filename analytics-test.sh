@@ -1,6 +1,6 @@
 num_requests=1
 
-endpoint_url="http://localhost:3000/api/a/u%2BmvAda6"
+endpoint_url="http://localhost:3000/api/redirect/gS6gjbHX"
 
 
 
