@@ -17,6 +17,9 @@ export async function GET() {
       },
       take: 1,
     });
+    if (!topQR) {
+      return new NextResponse("[NO QR CODE FOUND]", { status: 404 });
+    }
     return NextResponse.json({ topQR });
   } catch (error) {
     return new NextResponse("[INTERNAL SERVOR ERROR] " + error, {

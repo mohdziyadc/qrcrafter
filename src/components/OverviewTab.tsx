@@ -26,6 +26,14 @@ const OverviewTab = (props: Props) => {
       return res.data.totalScans;
     },
   });
+
+  const { data: topQrCode, isLoading: isLoadingTopQr } = useQuery({
+    queryKey: ["qrTopAnalytics"],
+    queryFn: async () => {
+      const res = await axios.get("/api/analytics/topqr");
+      return res.data.topQR;
+    },
+  });
   return (
     <>
       <div className="grid gap-2 md:grid-cols-1 lg:grid-cols-5">
@@ -57,8 +65,18 @@ const OverviewTab = (props: Props) => {
             <QrCodeIcon className="h-6 w-6" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">Yeezy</div>
-            <p className="text-xs text-muted-foreground">457 total scans</p>
+            {isLoadingTopQr ? (
+              <div>
+                <LoadingSpinner component />
+              </div>
+            ) : (
+              <>
+                <div className="text-2xl font-bold">{topQrCode.qrName}</div>
+                <p className="text-xs text-muted-foreground">
+                  {topQrCode.scanCount} total scans
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
         <Card>
