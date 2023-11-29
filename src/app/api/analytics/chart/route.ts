@@ -15,6 +15,7 @@ export async function GET() {
       orderBy: {
         scanCount: "desc",
       },
+      take: 10,
     });
     return NextResponse.json({ chartData }, { status: 200 });
   } catch (error) {

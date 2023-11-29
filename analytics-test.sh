@@ -1,6 +1,6 @@
-num_requests=45
+num_requests=33
 
-endpoint_url="http://localhost:3000/aimulti/yWfVZr2N"
+endpoint_url="http://localhost:3000/api/redirect/CZFRrfzk"
 
 
 
