@@ -14,49 +14,6 @@ import {
 
 type Props = {};
 
-// const data = [
-//   {
-//     name: "Yeezy",
-//     Scans: 96,
-//   },
-//   {
-//     name: "Feb",
-//     Scans: 12,
-//   },
-//   {
-//     name: "Mar",
-//     Scans: 26,
-//   },
-//   {
-//     name: "Apr",
-//     Scans: 76,
-//   },
-//   {
-//     name: "May",
-//     Scans: 45,
-//   },
-//   {
-//     name: "Jun",
-//     Scans: 32,
-//   },
-//   {
-//     name: "Jul",
-//     Scans: 51,
-//   },
-//   {
-//     name: "Aug",
-//     Scans: 20,
-//   },
-//   {
-//     name: "Sep",
-//     Scans: 27,
-//   },
-//   {
-//     name: "Oct",
-//     Scans: 66,
-//   },
-// ];
-
 const QRCodesBarChart = (props: Props) => {
   const { data, isLoading } = useQuery({
     queryKey: ["qrChartAnalytics"],

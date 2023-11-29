@@ -3,62 +3,38 @@ import React from "react";
 import { Card } from "./ui/card";
 import Link from "next/link";
 import { Button, buttonVariants } from "./ui/button";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import LoadingSpinner from "@/app/manage/loading";
+import { QRCodeAnalytics } from "@prisma/client";
 
 type Props = {};
 
 const RecentScanCards = (props: Props) => {
-  const data = [
-    {
-      name: "Yeezy",
-      totalScans: "37",
+  const { data, isLoading } = useQuery({
+    queryKey: ["qrRecentScanAnalytics"],
+    queryFn: async (): Promise<QRCodeAnalytics[]> => {
+      const res = await axios.get("/api/analytics/recent");
+      return res.data.recentScans;
     },
-    {
-      name: "Ty",
-      totalScans: "101",
-    },
-    {
-      name: "Travis",
-      totalScans: "67",
-    },
-    {
-      name: "Rodeo",
-      totalScans: "112",
-    },
-    {
-      name: "Jack",
-      totalScans: "43",
-    },
-    {
-      name: "Yeezy",
-      totalScans: "666",
-    },
-    {
-      name: "Yeezy",
-      totalScans: "666",
-    },
-    {
-      name: "Yeezy",
-      totalScans: "666",
-    },
-    {
-      name: "Yeezy",
-      totalScans: "666",
-    },
-    {
-      name: "Yeezy",
-      totalScans: "666",
-    },
-  ];
+  });
+  if (isLoading) {
+    return (
+      <div>
+        <LoadingSpinner component />
+      </div>
+    );
+  }
   return (
     <>
-      {data.slice(0, 5).map((scan, idx) => (
+      {data?.map((scan, idx) => (
         <Card
           className="w-full flex flex-row justify-between items-center p-4 mb-3 hover:bg-primary hover:text-primary-foreground hover:cursor-pointer"
           key={idx}
         >
-          <div className="text-xl font-semibold">{scan.name}</div>
+          <div className="text-xl font-semibold">{scan.qrName}</div>
           <div className="flex flex-row items-center">
-            <div className="text-lg mr-1">{scan.totalScans}</div>
+            <div className="text-lg mr-1">{scan.scanCount}</div>
           </div>
         </Card>
       ))}
