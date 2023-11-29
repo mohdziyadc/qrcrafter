@@ -1,6 +1,6 @@
-num_requests=8
+num_requests=45
 
-endpoint_url="http://localhost:3000/dynamiccontact/gZXf2pRF"
+endpoint_url="http://localhost:3000/aimulti/yWfVZr2N"
 
 
 
