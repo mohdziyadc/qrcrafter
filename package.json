@@ -45,7 +45,9 @@
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^9.0.1",
     "vcards-js": "^2.10.0",
-    "zod": "^3.22.2"
+    "zod": "^3.22.2",
+    "@headlessui/react": "^1.7.14",
+    "aos": "^3.0.0-beta.6"
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.6",
@@ -53,6 +55,7 @@
     "@types/qrcode": "^1.5.2",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "@types/aos": "^3.0.4",
     "@types/uuid": "^9.0.5",
     "@types/vcards-js": "^2.10.4",
     "autoprefixer": "latest",
