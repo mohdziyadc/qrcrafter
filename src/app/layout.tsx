@@ -1,4 +1,3 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -13,7 +12,6 @@ export const metadata: Metadata = {
   description: "Create stunning dynamic QR codes",
 };
 
-const queryClient = new QueryClient();
 export default function RootLayout({
   children,
 }: {
