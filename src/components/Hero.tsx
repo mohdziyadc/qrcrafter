@@ -86,7 +86,10 @@ export default function Hero() {
           </div>
 
           {/* Hero image */}
-          <div className="flex-[1] flex justify-center items-stretch">
+          <div
+            className="flex-[1] flex justify-center items-stretch"
+            data-aos="zoom-y-out"
+          >
             <Image
               src={HeroImage}
               alt="hero_image"
@@ -95,6 +98,22 @@ export default function Hero() {
               className="rounded-lg"
             />
           </div>
+        </div>
+        <div className="-mt-5 flex justify-center items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="96"
+            height="220"
+            viewBox="0 0 118 566"
+            fill="none"
+          >
+            <path
+              d="M97.2699 3.56288C72.3218 35.934 61.9886 61.32 64.6022 102.175C66.9624 139.07 85.2817 178.896 98.7298 212.991C115.38 255.204 129.371 338.431 79.4869 364.12C40.7533 384.066 -6.57109 356.221 5.27499 310.72C9.84189 293.179 32.9567 283.71 49.2651 291.123C66.8795 299.129 75.7786 323.917 80.1409 341.094C91.8565 387.227 49.0466 418.947 42.2387 461.03C35.8784 500.347 53.9948 529.098 78.3073 558.303C80.3899 560.805 66.8378 559.767 63.4547 559.833C51.0524 560.074 56.6051 562.447 65.9824 562.264C72.0134 562.147 84.8978 565.074 81.3138 557.005C78.728 551.183 77.9286 538.856 77.8004 532.269"
+              stroke="#808080"
+              stroke-width="6.49254"
+              stroke-linecap="round"
+            />
+          </svg>
         </div>
       </div>
     </section>
