@@ -58,7 +58,7 @@ const Features = (props: Props) => {
               </div>
             </div>
             <div className="flex flex-col">
-              <Card className="w-full mb-2">
+              <Card className="w-full mb-2" data-aos="zoom-y-out">
                 <CardContent>
                   <div className="flex flex-col p-4">
                     <div className="font-bold text-xl">Dynamic AI QR Codes</div>
@@ -71,7 +71,7 @@ const Features = (props: Props) => {
                   </div>
                 </CardContent>
               </Card>
-              <Card className="w-full mb-2">
+              <Card className="w-full mb-2" data-aos="zoom-y-out">
                 <CardContent>
                   <div className="flex flex-col p-4">
                     <div className="font-bold text-xl">Dynamic QR Codes</div>
@@ -84,7 +84,7 @@ const Features = (props: Props) => {
                   </div>
                 </CardContent>
               </Card>
-              <Card className="w-full mb-2">
+              <Card className="w-full mb-2" data-aos="zoom-y-out">
                 <CardContent>
                   <div className="flex flex-col p-4">
                     <div className="font-bold text-xl">Static QR Codes</div>
