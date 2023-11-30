@@ -1,3 +1,4 @@
+import Demo from "@/components/Demo";
 import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
 import QRForm from "@/components/QRForm";
@@ -18,6 +19,7 @@ export default async function Home() {
         </div>
       </div> */}
       <Hero />
+      <Demo />
     </>
   );
 }
