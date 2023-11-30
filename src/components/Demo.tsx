@@ -6,7 +6,7 @@ type Props = {};
 
 const Demo = (props: Props) => {
   return (
-    <section className="relative bg-gray-100">
+    <section className="relative">
       <div className="relative max-w-6xl mx-auto">
         <div className="pt-12 md:pt-20">
           {/* Section header */}

@@ -28,8 +28,8 @@ const Features = (props: Props) => {
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
         <div className="pt-12 md:pt-20">
           {/* Section header */}
-          <div className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
-            <h1 className="text-5xl font-extrabold mb-4">
+          <div className="max-w-5xl mx-auto text-center pb-12 md:pb-16">
+            <h1 className="text-6xl font-extrabold mb-4">
               A complete{" "}
               <span className="bg-clip-text text-transparent  bg-gradient-to-br from-pink-300 via-purple-300 to-indigo-400 ">
                 {" "}
@@ -37,32 +37,64 @@ const Features = (props: Props) => {
               </span>{" "}
               <span className=" underline underline-offset-4">solution</span>.
             </h1>
-            <p className="text-lg line-clamp-2 text-gray-600">
-              QRCrafter is an all-in-one QR Code solution. You can create
-              different types of QR Codes specific to your needs.
+            <p className="text-xl line-clamp-2 text-gray-600">
+              <span className="font-bold">QRCrafter</span> is an all-in-one QR
+              Code solution. You can create different types of QR Codes specific
+              to your needs. Never reprint. You can just change the QR Code
+              data.
             </p>
           </div>
         </div>
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-7">
             <div className="flex flex-col mb-4">
-              <div className="text-3xl font-bold ">
+              <div className="text-4xl font-bold ">
                 Powerful suite of QR Tools
               </div>
-              <div className="text-xl mt-2">
-                QR Crafter offers you a powerful set of QR codes and analytics.
-                Track and manage your QR Codes.
+              <div className="text-xl mt-4">
+                <span className="font-bold">QRCrafter</span> offers you a
+                powerful set of QR codes and analytics. Track and manage your QR
+                Codes.
               </div>
             </div>
             <div className="flex flex-col">
               <Card className="w-full mb-2">
-                <CardContent>Dynamic AI QR Codes</CardContent>
+                <CardContent>
+                  <div className="flex flex-col p-4">
+                    <div className="font-bold text-xl">Dynamic AI QR Codes</div>
+                    <div className="text-lg mt-2">
+                      Dynamic AI-generated QR codes are beautiful QR codes that
+                      make anybody scan them. Instantly update content, track
+                      engagements, and enhance user experiences. Stay ahead of
+                      the curve using analytics from these QR codes.
+                    </div>
+                  </div>
+                </CardContent>
               </Card>
-              <Card className="w-full">
-                <CardContent>Dynamic QR Codes</CardContent>
+              <Card className="w-full mb-2">
+                <CardContent>
+                  <div className="flex flex-col p-4">
+                    <div className="font-bold text-xl">Dynamic QR Codes</div>
+                    <div className="text-lg mt-2">
+                      Dynamic QR codes empower your brand with versatility. Make
+                      editable QR code that allows real-time content updates.
+                      It&apos;s ideal for promotions or dynamic scenarios. Use
+                      analytics to gain deeper insights to these QR Codes.
+                    </div>
+                  </div>
+                </CardContent>
               </Card>
-              <Card className="w-full">
-                <CardContent>Static QR Codes</CardContent>
+              <Card className="w-full mb-2">
+                <CardContent>
+                  <div className="flex flex-col p-4">
+                    <div className="font-bold text-xl">Static QR Codes</div>
+                    <div className="text-lg mt-2">
+                      Static QR codes store fixed information, like a website
+                      link. They don&apos;t change, providing a consistent,
+                      straightforward means of sharing specific content.
+                    </div>
+                  </div>
+                </CardContent>
               </Card>
             </div>
           </div>
