@@ -41,7 +41,7 @@ export default function Hero() {
         {/* Hero content */}
         <div className="flex flex-col sm:flex-row pt-32 pb-12 md:pt-40 md:pb-20">
           {/* Section header */}
-          <div className="flex-[1] pb-12 md:pb-16">
+          <div className="flex-[1] -mt-16 sm:mt-0  pb-12 md:pb-16">
             <div className="flex flex-col md:justify-start md:items-start justify-center items-center">
               <h1
                 className="text-5xl md:text-6xl font-extrabold leading-tighter tracking-tighter mb-2"
@@ -59,7 +59,7 @@ export default function Hero() {
 
             <div className="max-w-3xl mx-auto">
               <p
-                className="text-xl text-gray-600 mb-8"
+                className="text-xl text-gray-600 mb-8 text-center sm:text-left"
                 data-aos="zoom-y-out"
                 data-aos-delay="150"
               >

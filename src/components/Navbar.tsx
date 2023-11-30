@@ -1,18 +1,31 @@
+"use client";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import SignInButton from "./buttons/SignInButton";
-import { getAuthSession } from "@/lib/auth";
-import { Button } from "./ui/button";
-import { ArrowRightIcon } from "lucide-react";
-import { redirect } from "next/navigation";
 import DashboardButton from "./buttons/DashboardButton";
 import Image from "next/image";
 import LogoImage from "public/qrCrafter-Logo.png";
+import { Menu, X } from "lucide-react";
+import { Button } from "./ui/button";
+import { Card, CardContent } from "./ui/card";
 
-type Props = {};
+type Props = {
+  user:
+    | ({
+        id: string;
+        qrCode: string | null;
+      } & {
+        name?: string | null | undefined;
+        email?: string | null | undefined;
+        image?: string | null | undefined;
+      })
+    | undefined;
+};
 
-const Navbar = async (props: Props) => {
-  const session = await getAuthSession();
+const Navbar = ({ user }: Props) => {
+  const [toggleMenu, setToggleMenu] = useState(false);
+  const handleMenuClick = () => setToggleMenu(!toggleMenu);
+
   return (
     <nav className="max-w-full px-6 py-4 z-10">
       <div className="flex justify-between items-center">
@@ -28,7 +41,7 @@ const Navbar = async (props: Props) => {
           </div>
           <div>QRCrafter</div>
         </div>
-        <div className="flex flex-row text-lg justify-center items-center">
+        <div className=" hidden md:flex flex-row text-lg justify-center items-center">
           <div className="mr-5">
             <Link href={"/"}>Home</Link>
           </div>
@@ -40,10 +53,48 @@ const Navbar = async (props: Props) => {
           </div>
         </div>
 
-        <div className="flex items-center ">
-          {session?.user ? <DashboardButton /> : <SignInButton />}
+        <div className="hidden md:flex items-center ">
+          {user ? <DashboardButton /> : <SignInButton />}
+        </div>
+
+        <div className="md:hidden" onClick={handleMenuClick}>
+          {!toggleMenu ? (
+            <Menu className="w-8 h-8" />
+          ) : (
+            <X className="h-8 w-8" />
+          )}
         </div>
       </div>
+      {toggleMenu && (
+        <div className="fixed  pr-10 z-20  w-full  lg:hidden">
+          <Card className="w-full mt-2">
+            <CardContent>
+              <div className="flex flex-col text-lg items-center justify-center  ">
+                <Link
+                  href="/"
+                  className="py-3 hover:bg-muted text-center rounded-md w-full"
+                >
+                  Home
+                </Link>
+                <Link
+                  href="/pricing"
+                  className="py-3 hover:bg-muted text-center rounded-md w-full"
+                >
+                  Pricing
+                </Link>
+                <Link
+                  href="#"
+                  className="py-3 hover:bg-muted text-center rounded-md w-full"
+                >
+                  Try
+                </Link>
+
+                <Button className="w-full">Sign Up</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </nav>
   );
 };

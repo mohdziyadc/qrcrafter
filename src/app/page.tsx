@@ -1,12 +1,14 @@
 import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
 import QRForm from "@/components/QRForm";
+import { getAuthSession } from "@/lib/auth";
 import Image from "next/image";
 
-export default function Home() {
+export default async function Home() {
+  const session = await getAuthSession();
   return (
     <>
-      <Navbar />
+      <Navbar user={session?.user} />
       {/* <div className="flex flex-col items-center justify-center w-full h-screen">
         <QRForm qrCode={qrCode} setQrCode={setQRCode} />
         <div>
