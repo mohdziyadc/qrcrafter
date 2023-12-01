@@ -78,7 +78,7 @@ const Features = (props: Props) => {
           </div>
         </div>
         <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-6 pb-6">
+          <div className="col-span-6 pb-10">
             <div className="flex flex-col mb-4 ">
               <div className="text-4xl font-bold ">
                 <span className="bg-clip-text text-transparent  bg-gradient-to-br from-red-500  to-pink-300 ">
