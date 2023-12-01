@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   Card,
@@ -6,11 +7,18 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Menubar, MenubarMenu, MenubarTrigger } from "./ui/menubar";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarTrigger,
+} from "./ui/menubar";
 import { Separator } from "./ui/separator";
-import { LineChartIcon, QrCodeIcon } from "lucide-react";
+import { ArrowRight, LineChartIcon, QrCodeIcon } from "lucide-react";
 import Image from "next/image";
 import ChartImage from "public/qrChart_img.png";
+import { Button } from "./ui/button";
 type Props = {};
 
 const Features = (props: Props) => {
@@ -70,7 +78,7 @@ const Features = (props: Props) => {
           </div>
         </div>
         <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-6 pb-12">
+          <div className="col-span-6 pb-6">
             <div className="flex flex-col mb-4 ">
               <div className="text-4xl font-bold ">
                 <span className="bg-clip-text text-transparent  bg-gradient-to-br from-red-500  to-pink-300 ">
@@ -147,12 +155,23 @@ const Features = (props: Props) => {
                         <MenubarTrigger className="flex justify-center">
                           URL QR
                         </MenubarTrigger>
+                        <MenubarContent>
+                          <MenubarItem>
+                            When scanned, this QR code would redirect to a URL.
+                          </MenubarItem>
+                        </MenubarContent>
                       </MenubarMenu>
                       <Separator orientation="vertical" />
                       <MenubarMenu>
                         <MenubarTrigger className="flex justify-center">
                           Multi URL QR
                         </MenubarTrigger>
+                        <MenubarContent>
+                          <MenubarItem>
+                            When scanned, this QR code would show a list of
+                            URLs.
+                          </MenubarItem>
+                        </MenubarContent>
                       </MenubarMenu>
                       <Separator orientation="vertical" />
 
@@ -160,6 +179,12 @@ const Features = (props: Props) => {
                         <MenubarTrigger className="flex justify-center">
                           Free Text QR
                         </MenubarTrigger>
+                        <MenubarContent>
+                          <MenubarItem>
+                            When scanned, this QR code would show the embedded
+                            text.
+                          </MenubarItem>
+                        </MenubarContent>
                       </MenubarMenu>
                       <Separator orientation="vertical" />
 
@@ -167,6 +192,12 @@ const Features = (props: Props) => {
                         <MenubarTrigger className="flex justify-center">
                           Contact QR
                         </MenubarTrigger>
+                        <MenubarContent>
+                          <MenubarItem>
+                            When scanned, this QR code would lead to a
+                            downloadable contact.
+                          </MenubarItem>
+                        </MenubarContent>
                       </MenubarMenu>
                     </Menubar>
                   </div>

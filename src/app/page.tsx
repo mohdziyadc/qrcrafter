@@ -1,5 +1,5 @@
 import Demo from "@/components/Demo";
-import Features from "@/components/Features";
+import Features from "@/components/features";
 import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
 import QRForm from "@/components/QRForm";
