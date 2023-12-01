@@ -1,5 +1,7 @@
 import React from "react";
 import { Card, CardContent } from "./ui/card";
+import { Menubar, MenubarMenu, MenubarTrigger } from "./ui/menubar";
+import { Separator } from "./ui/separator";
 
 type Props = {};
 
@@ -25,7 +27,7 @@ const Features = (props: Props) => {
         </div>
       </div>
       <div className="absolute left-0 right-0 m-auto w-px p-px h-20 bg-gray-200 transform -translate-y-1/2 sm:hidden"></div>
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         <div className="pt-12 md:pt-20">
           {/* Section header */}
           <div className="max-w-5xl mx-auto text-center pb-12 md:pb-16">
@@ -46,8 +48,8 @@ const Features = (props: Props) => {
           </div>
         </div>
         <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-7">
-            <div className="flex flex-col mb-4">
+          <div className="col-span-6 pb-12">
+            <div className="flex flex-col mb-4 ">
               <div className="text-4xl font-bold ">
                 Powerful suite of QR Tools
               </div>
@@ -98,7 +100,54 @@ const Features = (props: Props) => {
               </Card>
             </div>
           </div>
-          <div className="cols-span-5"> Boiii</div>
+          <div className="col-span-6 flex flex-col">
+            <Card className="w-full flex-[1] bg-primary" data-aos="zoom-y-out">
+              <CardContent>
+                <div className="flex flex-col ">
+                  <div className="mt-4 text-xl font-semibold text-primary-foreground ">
+                    Various Types of QR Codes
+                  </div>
+                  <div className="text-lg mt-2 text-primary-foreground">
+                    Choose the type of QR Code specific to your needs.
+                  </div>
+                  <div>
+                    <Menubar className="flex flex-row justify-evenly mt-6">
+                      <MenubarMenu>
+                        <MenubarTrigger className="flex justify-center">
+                          URL QR
+                        </MenubarTrigger>
+                      </MenubarMenu>
+                      <Separator orientation="vertical" />
+                      <MenubarMenu>
+                        <MenubarTrigger className="flex justify-center">
+                          Multi URL QR
+                        </MenubarTrigger>
+                      </MenubarMenu>
+                      <Separator orientation="vertical" />
+
+                      <MenubarMenu>
+                        <MenubarTrigger className="flex justify-center">
+                          Free Text QR
+                        </MenubarTrigger>
+                      </MenubarMenu>
+                      <Separator orientation="vertical" />
+
+                      <MenubarMenu>
+                        <MenubarTrigger className="flex justify-center">
+                          Contact QR
+                        </MenubarTrigger>
+                      </MenubarMenu>
+                    </Menubar>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <div className="flex-[3.5] mt-4">
+              <Card className="w-full">
+                <CardContent>Powerful Analytics</CardContent>
+              </Card>
+            </div>
+          </div>
         </div>
       </div>
     </section>
