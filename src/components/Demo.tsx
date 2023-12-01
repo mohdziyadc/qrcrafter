@@ -43,7 +43,7 @@ const Demo = (props: Props) => {
           </g>
         </svg>
       </div>
-      <div className="absolute left-0 right-0 m-auto  transform sm:-translate-y-1/3 sm:block hidden ">
+      <div className="absolute left-0 right-0 m-auto  transform sm:-translate-y-1/4 sm:block hidden ">
         <div className="-mt-5 flex justify-center items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +88,7 @@ const Demo = (props: Props) => {
         videoHeight={1080}
       /> */}
       <div
-        className="flex justify-center items-center pb-8 px-6 rounded-lg "
+        className="flex justify-center items-center pb-20 px-6 rounded-lg "
         data-aos="zoom-y-out"
       >
         <ReactPlayer
@@ -100,8 +100,8 @@ const Demo = (props: Props) => {
           style={{ border: 1, borderRadius: 5 }}
         />
       </div>
-      <div className="flex justify-center items-center mb-4 ">
-        <Button className=" w-1/6 mb-4">
+      <div className="absolute left-1/2 transform -translate-x-1/2 translate-y-1/2 bottom-0 z-10 ">
+        <Button className=" sm:w-[200px] w-[250px] mb-16">
           <div className="flex justify-between items-center">
             <div>Get QRCrafter</div>
             <div className="ml-4 -mr-4">

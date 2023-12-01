@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import {
@@ -64,7 +65,7 @@ const UseCase = (props: Props) => {
             </p>
           </div>
         </div>
-        <div className="grid sm:grid-cols-3 grid-cols-1 px-6 pb-10 gap-4">
+        <div className="grid sm:grid-cols-3 grid-cols-1 px-6 pb-20 gap-4">
           <div>
             <Card>
               <CardHeader>
@@ -105,7 +106,7 @@ const UseCase = (props: Props) => {
                 </div>
               </CardHeader>
               <CardContent>
-                Craft dynamic QR codes for clients’ marketing collateral,
+                Craft dynamic QR codes for client&apos;s marketing collateral,
                 enabling real-time campaign adjustments, A/B testing, and
                 personalized content delivery. Provide measurable and dynamic
                 marketing solutions.
@@ -162,16 +163,16 @@ const UseCase = (props: Props) => {
             </Card>
           </div>
         </div>
-        <div className="flex justify-center items-center pb-4 ">
-          <Button className=" sm:w-1/6 w-1/2 mb-4">
-            <div className="flex justify-between items-center">
-              <div>Get QRCrafter</div>
-              <div className="ml-4 -mr-4">
-                <ArrowRight className="w-6 h-6" />
-              </div>
+      </div>
+      <div className=" absolute left-1/2 transform -translate-x-1/2 bottom-0   z-10">
+        <Button className=" sm:w-[200px] w-[250px] mb-4">
+          <div className="flex justify-between items-center">
+            <div>Get QRCrafter</div>
+            <div className="ml-4 -mr-4">
+              <ArrowRight className="w-6 h-6" />
             </div>
-          </Button>
-        </div>
+          </div>
+        </Button>
       </div>
     </section>
   );
