@@ -9,7 +9,7 @@ type Props = {};
 const Demo = (props: Props) => {
   return (
     <section className="relative">
-      {/* Illustration behind hero content */}
+      {/* Illustration behind Demo content */}
       <div
         className="absolute left-1/2 transform -translate-x-1/2 bottom-0 pointer-events-none -z-10 hidden sm:block"
         aria-hidden="true"
