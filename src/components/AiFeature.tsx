@@ -1,4 +1,6 @@
+import Image from "next/image";
 import React from "react";
+import ScreenShot from "public/qrcrafter_ss.png";
 
 type Props = {};
 
@@ -29,20 +31,29 @@ const AiFeature = (props: Props) => {
           {/* Section header */}
           <div className="max-w-5xl mx-auto text-center pb-12 md:pb-16">
             <h1 className="text-6xl font-extrabold mb-4">
-              A complete{" "}
-              <span className="bg-clip-text text-transparent  bg-gradient-to-br from-pink-600 via-purple-300 to-indigo-500 ">
+              Let your
+              <span className="bg-clip-text text-transparent  bg-gradient-to-br from-orange-600  to-yellow-400 ">
                 {" "}
-                QR Code
+                imagination
               </span>{" "}
-              <span className=" underline underline-offset-4">solution</span>.
+              run wild
             </h1>
             <p className="text-xl line-clamp-2 text-gray-600">
-              <span className="font-bold">QRCrafter</span> is an all-in-one QR
-              Code solution. You can create different types of QR Codes specific
-              to your needs. Never reprint. You can just change the QR Code
-              data.
+              <span className="font-bold">QRCrafter</span> lets you create QR
+              Codes with a prompt of your choice. Let the AI generate your QR
+              Code with the prompt. No templates. Leave it your imagination to
+              create beautiful and authentic QR codes.
             </p>
           </div>
+        </div>
+        <div className="pb-10 mb-8">
+          <Image
+            src={ScreenShot}
+            alt="qrcrafter-ss"
+            objectFit="contain"
+            data-aos="zoom-y-out"
+            className="rounded-lg"
+          />
         </div>
       </div>
     </section>
