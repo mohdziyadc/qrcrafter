@@ -39,10 +39,10 @@ const AiFeature = (props: Props) => {
               run wild
             </h1>
             <p className="text-xl line-clamp-2 text-gray-600">
-              <span className="font-bold">QRCrafter</span> lets you create QR
-              Codes with a prompt of your choice. Let the AI generate your QR
-              Code with the prompt. No templates. Leave it your imagination to
-              create beautiful and authentic QR codes.
+              <span className="font-bold">QRCrafter</span> lets you create
+              dynamic QR Codes with a prompt of your choice. Let the AI generate
+              your QR Code with the prompt. No templates. Leave it your
+              imagination to create beautiful and authentic QR codes.
             </p>
           </div>
         </div>

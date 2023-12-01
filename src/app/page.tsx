@@ -5,6 +5,7 @@ import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
 import Pricing from "@/components/Pricing";
 import QRForm from "@/components/QRForm";
+import UseCase from "@/components/UseCase";
 import { getAuthSession } from "@/lib/auth";
 import Image from "next/image";
 
@@ -25,7 +26,8 @@ export default async function Home() {
       <AiFeature />
       <Features />
       <Demo />
-      <Pricing />
+      <UseCase />
+      {/* <Pricing /> */}
     </>
   );
 }
