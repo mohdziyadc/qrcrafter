@@ -1,11 +1,33 @@
 import React from "react";
-import { Card, CardContent } from "./ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 import { Menubar, MenubarMenu, MenubarTrigger } from "./ui/menubar";
 import { Separator } from "./ui/separator";
-
+import { LineChartIcon, QrCodeIcon } from "lucide-react";
+import Image from "next/image";
+import ChartImage from "public/qrChart_img.png";
 type Props = {};
 
 const Features = (props: Props) => {
+  const recentScans = [
+    {
+      qrName: "Xmas Promo",
+      scanCount: "67",
+    },
+    {
+      qrName: "Offers",
+      scanCount: "91",
+    },
+    {
+      qrName: "Cute Shoes",
+      scanCount: "32",
+    },
+  ];
   return (
     <section className="relative bg-gray-100">
       <div className="absolute left-0 right-0 m-auto  transform sm:-translate-y-3/4 sm:block hidden ">
@@ -33,7 +55,7 @@ const Features = (props: Props) => {
           <div className="max-w-5xl mx-auto text-center pb-12 md:pb-16">
             <h1 className="text-6xl font-extrabold mb-4">
               A complete{" "}
-              <span className="bg-clip-text text-transparent  bg-gradient-to-br from-pink-300 via-purple-300 to-indigo-400 ">
+              <span className="bg-clip-text text-transparent  bg-gradient-to-br from-pink-600 via-purple-300 to-indigo-500 ">
                 {" "}
                 QR Code
               </span>{" "}
@@ -51,7 +73,10 @@ const Features = (props: Props) => {
           <div className="col-span-6 pb-12">
             <div className="flex flex-col mb-4 ">
               <div className="text-4xl font-bold ">
-                Powerful suite of QR Tools
+                <span className="bg-clip-text text-transparent  bg-gradient-to-br from-red-500  to-pink-300 ">
+                  Powerful
+                </span>{" "}
+                suite of QR Tools
               </div>
               <div className="text-xl mt-4">
                 <span className="font-bold">QRCrafter</span> offers you a
@@ -60,7 +85,10 @@ const Features = (props: Props) => {
               </div>
             </div>
             <div className="flex flex-col">
-              <Card className="w-full mb-2" data-aos="zoom-y-out">
+              <Card
+                className="w-full mb-2 bg-primary text-secondary"
+                data-aos="zoom-y-out"
+              >
                 <CardContent>
                   <div className="flex flex-col p-4">
                     <div className="font-bold text-xl">Dynamic AI QR Codes</div>
@@ -101,7 +129,10 @@ const Features = (props: Props) => {
             </div>
           </div>
           <div className="col-span-6 flex flex-col">
-            <Card className="w-full flex-[1] bg-primary" data-aos="zoom-y-out">
+            <Card
+              className="w-full flex-[1] bg-secondary-foreground/80"
+              data-aos="zoom-y-out"
+            >
               <CardContent>
                 <div className="flex flex-col ">
                   <div className="mt-4 text-xl font-semibold text-primary-foreground ">
@@ -143,8 +174,99 @@ const Features = (props: Props) => {
               </CardContent>
             </Card>
             <div className="flex-[3.5] mt-4">
-              <Card className="w-full">
-                <CardContent>Powerful Analytics</CardContent>
+              <Card className="w-full bg-secondary-foreground">
+                <CardContent>
+                  <div className="flex flex-col">
+                    <div className="mt-4 text-xl font-semibold text-primary-foreground">
+                      Powerful Analytics
+                    </div>
+                    <div className="text-lg mt-2 text-primary-foreground">
+                      Get insights from your QR Codes.
+                    </div>
+                    <div className="grid grid-rows-1 gap-2 mt-4">
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                              <CardTitle className="text-sm font-medium">
+                                Top QR code
+                              </CardTitle>
+                              <QrCodeIcon className="h-6 w-6" />
+                            </CardHeader>
+                            <CardContent>
+                              <div className="text-2xl font-bold">
+                                Sale Promo
+                              </div>
+                              <p className="text-xs text-muted-foreground">
+                                767 total scans
+                              </p>
+                            </CardContent>
+                          </Card>
+                        </div>
+                        <div>
+                          <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                              <CardTitle className="text-sm font-medium">
+                                Total Scans
+                              </CardTitle>
+                              <LineChartIcon className="h-6 w-6" />
+                            </CardHeader>
+                            <CardContent>
+                              <div className="text-2xl font-bold">1901</div>
+                              <p className="text-xs text-muted-foreground">
+                                Total scan count of all your QR&apos;s.
+                              </p>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-3 gap-2">
+                        <div className="col-span-1">
+                          <Card>
+                            <CardHeader>
+                              <CardTitle>Recent Scans</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              {recentScans.map((scan, idx) => (
+                                <Card
+                                  className="w-full flex flex-row justify-between items-center p-3.5 mb-2 hover:bg-primary hover:text-primary-foreground hover:cursor-pointer"
+                                  key={idx}
+                                >
+                                  <div className="text-xs font-semibold">
+                                    {scan.qrName}
+                                  </div>
+                                  <div className="flex flex-row items-center">
+                                    <div className="text-xs mr-1">
+                                      {scan.scanCount}
+                                    </div>
+                                  </div>
+                                </Card>
+                              ))}
+                            </CardContent>
+                          </Card>
+                        </div>
+                        <div className="col-span-2">
+                          <Card>
+                            <CardHeader>
+                              <CardTitle>QR Charts</CardTitle>
+                              <CardDescription>
+                                Showing top 10 QR codes with their scans
+                              </CardDescription>
+                            </CardHeader>
+
+                            <CardContent>
+                              <Image
+                                src={ChartImage}
+                                alt="chart"
+                                objectFit="contain"
+                              />
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
               </Card>
             </div>
           </div>
