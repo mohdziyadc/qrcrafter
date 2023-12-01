@@ -1,3 +1,4 @@
+import AiFeature from "@/components/AiFeature";
 import Demo from "@/components/Demo";
 import Features from "@/components/features";
 import Hero from "@/components/Hero";
@@ -21,6 +22,7 @@ export default async function Home() {
         </div>
       </div> */}
       <Hero />
+      <AiFeature />
       <Features />
       <Demo />
       <Pricing />
