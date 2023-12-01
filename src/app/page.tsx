@@ -25,8 +25,8 @@ export default async function Home() {
       <Hero />
       <AiFeature />
       <Features />
-      <Demo />
       <UseCase />
+      <Demo />
       {/* <Pricing /> */}
     </>
   );

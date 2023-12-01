@@ -1,12 +1,22 @@
 import React from "react";
-import { Card, CardContent } from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import {
+  ArrowRight,
+  BadgeDollarSignIcon,
+  BuildingIcon,
+  CalendarDaysIcon,
+  PlaneIcon,
+  ShoppingCartIcon,
+  UtensilsCrossedIcon,
+} from "lucide-react";
+import { Button } from "./ui/button";
 
 type Props = {};
 
 const UseCase = (props: Props) => {
   return (
     <section className="relative bg-gray-100">
-      <div className="absolute left-0 right-0 m-auto  transform sm:-translate-y-1/3 sm:block hidden ">
+      <div className="absolute left-0 right-0 m-auto  transform sm:-translate-y-1/2 sm:block hidden ">
         <div className="-mt-5 flex justify-center items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -49,46 +59,118 @@ const UseCase = (props: Props) => {
               content after scanning a QR code?
             </p>
             <p className="text-xl text-gray-600">
-              Well, now you know. Just imagine if it was{" "}
+              Just imagine if it was{" "}
               <span className="font-bold">beautiful</span> to look at.
             </p>
           </div>
         </div>
-        <div className="grid grid-rows-2 gap-2">
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <Card>
-                <CardContent>We Off</CardContent>
-              </Card>
-            </div>
-            <div>
-              <Card>
-                <CardContent>The Grid</CardContent>
-              </Card>
-            </div>
-            <div>
-              <Card>
-                <CardContent>Grid Grid</CardContent>
-              </Card>
-            </div>
+        <div className="grid sm:grid-cols-3 grid-cols-1 px-6 pb-10 gap-4">
+          <div>
+            <Card>
+              <CardHeader>
+                <div className="flex flex-row">
+                  <ShoppingCartIcon className="w-6 h-6 mr-2" />
+                  <CardTitle>Retail & E-Commerce</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                Embed dynamic QR codes on product tags for real-time promotions,
+                discounts, or product information updates. Drive customer
+                engagement and boost sales through targeted and adaptive
+                marketing campaigns.
+              </CardContent>
+            </Card>
           </div>
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <Card>
-                <CardContent>This for </CardContent>
-              </Card>
-            </div>
-            <div>
-              <Card>
-                <CardContent>My Kid</CardContent>
-              </Card>
-            </div>
-            <div>
-              <Card>
-                <CardContent>Kid Kid</CardContent>
-              </Card>
-            </div>
+          <div>
+            <Card>
+              <CardHeader>
+                <div className="flex flex-row">
+                  <CalendarDaysIcon className="w-6 h-6 mr-2" />
+                  <CardTitle>Events & Conferences</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                Create dynamic QR codes for event tickets or badges with updated
+                schedules, speaker details, or last-minute changes. Enhance
+                attendee experience and streamline event management.
+              </CardContent>
+            </Card>
           </div>
+          <div>
+            <Card>
+              <CardHeader>
+                <div className="flex flex-row">
+                  <BadgeDollarSignIcon className="w-6 h-6 mr-2" />
+                  <CardTitle>Marketing Agencies</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                Craft dynamic QR codes for clients’ marketing collateral,
+                enabling real-time campaign adjustments, A/B testing, and
+                personalized content delivery. Provide measurable and dynamic
+                marketing solutions.
+              </CardContent>
+            </Card>
+          </div>
+
+          <div>
+            <Card>
+              <CardHeader>
+                <div className="flex flex-row">
+                  <PlaneIcon className="w-6 h-6 mr-2" />
+                  <CardTitle>Travel & Tourism</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                Generate dynamic QR codes for travel itineraries with real-time
+                updates on flight details, hotel information, or local
+                attractions. Enhance the travel experience and provide
+                flexibility.
+              </CardContent>
+            </Card>
+          </div>
+          <div>
+            <Card>
+              <CardHeader>
+                <div className="flex flex-row">
+                  <UtensilsCrossedIcon className="w-6 h-6 mr-2" />
+                  <CardTitle>Restaurants & Hospitality</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                Generate dynamic QR codes for menus, allowing quick updates for
+                specials, pricing changes, or seasonal offerings. Improve
+                customer experience and operational efficiency with beautiful QR
+                codes.
+              </CardContent>
+            </Card>
+          </div>
+          <div>
+            <Card>
+              <CardHeader>
+                <div className="flex flex-row">
+                  <BuildingIcon className="w-6 h-6 mr-2" />
+                  <CardTitle>Real Estate</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                Integrate dynamic QR codes in property listings for instant
+                updates on open house details, pricing changes, or virtual
+                tours. Streamline communication with potential buyers and
+                sellers.
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+        <div className="flex justify-center items-center pb-4 ">
+          <Button className=" sm:w-1/6 w-1/2 mb-4">
+            <div className="flex justify-between items-center">
+              <div>Get QRCrafter</div>
+              <div className="ml-4 -mr-4">
+                <ArrowRight className="w-6 h-6" />
+              </div>
+            </div>
+          </Button>
         </div>
       </div>
     </section>
