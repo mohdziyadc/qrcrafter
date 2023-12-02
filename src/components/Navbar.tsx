@@ -51,7 +51,16 @@ const Navbar = forwardRef<HTMLElement, Props>(({ user }: Props, ref) => {
             <Link href={"/try"}>Try</Link>
           </div>
           <div className="mr-5">
-            <Link href={"/pricing"}>Pricing</Link>
+            <p
+              className="hover:cursor-pointer"
+              onClick={() =>
+                pricingRef.current.scrollIntoView({
+                  behavior: "smooth",
+                })
+              }
+            >
+              Pricing
+            </p>
           </div>
         </div>
 
