@@ -68,10 +68,10 @@ const Pricing = (props: Props) => {
         </p>
       </div>
       <div className="grid sm:grid-cols-2 grid-cols-1 p-6 gap-4 max-w-5xl m-auto">
-        <div>
+        <div data-aos="zoom-y-out">
           <QRCrafterPlusCard />
         </div>
-        <div>
+        <div data-aos="zoom-y-out">
           <QRCrafterProCard />
         </div>
       </div>

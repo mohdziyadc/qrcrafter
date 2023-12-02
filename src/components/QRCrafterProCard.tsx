@@ -9,6 +9,7 @@ import {
 import { Button } from "./ui/button";
 import { Check, MoveRightIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Badge } from "./ui/badge";
 
 type Props = {};
 
@@ -49,7 +50,10 @@ const QRCrafterProCard = (props: Props) => {
   ];
   return (
     <>
-      <Card>
+      <Badge className="absolute left-1/2 transform -translate-x-1/2 md:-top-4 -top-3 text-md px-6 ">
+        Popular
+      </Badge>
+      <Card className="border-4 border-primary bg-secondary-foreground text-primary-foreground">
         <CardHeader>
           <CardTitle className="text-3xl">QRCrafter Pro</CardTitle>
         </CardHeader>
@@ -85,9 +89,7 @@ const QRCrafterProCard = (props: Props) => {
             <p>Get QRCrafter Pro</p>
             <MoveRightIcon className="h-8 w-8 ml-4" />
           </Button>
-          <p className="text-muted-foreground/80 mt-2">
-            Pay Once. Use for lifetime!
-          </p>
+          <p className=" text-muted/60 mt-2">Pay Once. Use for lifetime!</p>
         </CardFooter>
       </Card>
     </>
