@@ -62,6 +62,11 @@ const Pricing = (props: Props) => {
           </div>
         </div>
       </div>
+      <div className="flex justify-center items-center text-2xl text-gray-600">
+        <p>
+          Limited Time Offer: <span className="font-bold">Lifetime</span> Deals
+        </p>
+      </div>
       <div className="grid sm:grid-cols-2 grid-cols-1 p-6 gap-4 max-w-5xl m-auto">
         <div>
           <QRCrafterPlusCard />

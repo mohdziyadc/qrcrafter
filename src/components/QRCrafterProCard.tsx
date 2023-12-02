@@ -80,11 +80,14 @@ const QRCrafterProCard = (props: Props) => {
             </div>
           </div>
         </CardContent>
-        <CardFooter>
-          <Button className="flex flex-row w-full">
+        <CardFooter className="flex flex-col">
+          <Button className="flex flex-row text-lg py-4 w-full">
             <p>Get QRCrafter Pro</p>
-            <MoveRightIcon className="h-6 w-6 ml-4" />
+            <MoveRightIcon className="h-8 w-8 ml-4" />
           </Button>
+          <p className="text-muted-foreground/80 mt-2">
+            Pay Once. Use for lifetime!
+          </p>
         </CardFooter>
       </Card>
     </>
