@@ -50,10 +50,10 @@ const QRCrafterProCard = (props: Props) => {
   ];
   return (
     <>
-      <Badge className="absolute left-1/2 transform -translate-x-1/2 md:-top-4 -top-3 text-md px-6 ">
-        Popular
-      </Badge>
       <Card className="border-4 border-primary bg-secondary-foreground text-primary-foreground">
+        <div className="flex justify-center items-center -mt-4">
+          <Badge className=" text-md px-6">Popular</Badge>
+        </div>
         <CardHeader>
           <CardTitle className="text-3xl">QRCrafter Pro</CardTitle>
         </CardHeader>

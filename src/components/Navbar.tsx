@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { MutableRefObject, forwardRef, useRef, useState } from "react";
 import SignInButton from "./buttons/SignInButton";
 import DashboardButton from "./buttons/DashboardButton";
 import Image from "next/image";
@@ -22,9 +22,11 @@ type Props = {
     | undefined;
 };
 
-const Navbar = ({ user }: Props) => {
+const Navbar = forwardRef<HTMLElement, Props>(({ user }: Props, ref) => {
   const [toggleMenu, setToggleMenu] = useState(false);
   const handleMenuClick = () => setToggleMenu(!toggleMenu);
+
+  const pricingRef = ref as MutableRefObject<HTMLInputElement>;
 
   return (
     <nav className="max-w-full px-6 py-4 z-10">
@@ -54,7 +56,22 @@ const Navbar = ({ user }: Props) => {
         </div>
 
         <div className="hidden md:flex items-center ">
-          {user ? <DashboardButton /> : <SignInButton />}
+          {user ? (
+            <DashboardButton />
+          ) : (
+            <Button
+              className="text-base"
+              // onClick={() => signIn(undefined, { callbackUrl: "/dashboard" })}
+              onClick={() => {
+                // ref.current.scrollIntoView({ behaviour: "smooth" });
+                // console.log(pricingElement);
+                // pricingElement?.scrollIntoView({ behavior: "smooth" });
+                pricingRef.current.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              Get QRCrafter
+            </Button>
+          )}
         </div>
 
         <div className="md:hidden" onClick={handleMenuClick}>
@@ -97,6 +114,7 @@ const Navbar = ({ user }: Props) => {
       )}
     </nav>
   );
-};
+});
 
+Navbar.displayName = "Navbar";
 export default Navbar;

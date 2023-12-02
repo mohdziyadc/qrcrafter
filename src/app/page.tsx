@@ -2,32 +2,20 @@ import AiFeature from "@/components/AiFeature";
 import Demo from "@/components/Demo";
 import Features from "@/components/features";
 import Hero from "@/components/Hero";
+import LandingPage from "@/components/LandingPage";
 import Navbar from "@/components/Navbar";
 import Pricing from "@/components/Pricing";
 import QRForm from "@/components/QRForm";
 import UseCase from "@/components/UseCase";
 import { getAuthSession } from "@/lib/auth";
 import Image from "next/image";
+import { useRef } from "react";
 
 export default async function Home() {
   const session = await getAuthSession();
   return (
     <>
-      <Navbar user={session?.user} />
-      {/* <div className="flex flex-col items-center justify-center w-full h-screen">
-        <QRForm qrCode={qrCode} setQrCode={setQRCode} />
-        <div>
-          {qrCode && (
-            <Image src={qrCode} alt="qr-code" height={400} width={400} />
-          )}
-        </div>
-      </div> */}
-      <Hero />
-      <AiFeature />
-      <Features />
-      <UseCase />
-      <Demo />
-      <Pricing />
+      <LandingPage user={session?.user} />
     </>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { Button } from "./ui/button";
 import {
   Card,
@@ -13,9 +13,9 @@ import QRCrafterProCard from "./QRCrafterProCard";
 
 type Props = {};
 
-const Pricing = (props: Props) => {
+const Pricing = forwardRef<HTMLElement, Props>((props: Props, ref) => {
   return (
-    <section className="relative bg-gray-100">
+    <section ref={ref} id="pricing" className="relative bg-gray-100">
       <div className="absolute left-0 right-0 m-auto  transform sm:-translate-y-1/3 sm:block hidden ">
         <div className="-mt-5 flex justify-center items-center">
           <svg
@@ -77,6 +77,7 @@ const Pricing = (props: Props) => {
       </div>
     </section>
   );
-};
+});
 
+Pricing.displayName = "Pricing";
 export default Pricing;
