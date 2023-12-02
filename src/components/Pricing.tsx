@@ -1,4 +1,15 @@
 import React from "react";
+import { Button } from "./ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { ArrowRight, MoveRightIcon } from "lucide-react";
+import QRCrafterPlusCard from "./QRCrafterPlusCard";
+import QRCrafterProCard from "./QRCrafterProCard";
 
 type Props = {};
 
@@ -42,10 +53,21 @@ const Pricing = (props: Props) => {
                 Pricing
               </span>
             </h1>
-            <p className="text-xl text-gray-600">
-              Generate beautiful QR Codes with just a few clicks.
+            <p className="text-2xl text-gray-600">
+              <span className="font-bold">Beautiful</span> QR codes,{" "}
+              <span className="font-bold">Sensible</span> Pricing.
+              <span className="font-bold"> Elevate</span> your business with
+              QRCrafter&apos;s pricing plans
             </p>
           </div>
+        </div>
+      </div>
+      <div className="grid sm:grid-cols-2 grid-cols-1 px-6 gap-4 max-w-5xl m-auto">
+        <div>
+          <QRCrafterPlusCard />
+        </div>
+        <div>
+          <QRCrafterProCard />
         </div>
       </div>
     </section>
