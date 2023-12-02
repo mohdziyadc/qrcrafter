@@ -47,7 +47,7 @@ const QRCrafterPlusCard = (props: Props) => {
     },
     {
       check: false,
-      desc: "AI dynamic QR Codes",
+      desc: "Dynamic AI QR Codes",
     },
     {
       check: false,
