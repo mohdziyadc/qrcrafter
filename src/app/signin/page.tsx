@@ -16,8 +16,13 @@ import { signInFormSchema } from "@/validators/qrFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MoveRight } from "lucide-react";
 import React from "react";
+import GoogleLogo from "super-tiny-icons/images/svg/google.svg";
+import TwitterLogo from "super-tiny-icons/images/svg/x.svg";
+import FacebookLogo from "super-tiny-icons/images/svg/facebook.svg";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import Image from "next/image";
+import { signIn } from "next-auth/react";
 
 type Props = {};
 
@@ -34,7 +39,7 @@ const SignIn = (props: Props) => {
   return (
     <div className="flex justify-center items-center bg-secondary-foreground  h-screen">
       <Card className="w-[30%]">
-        <CardHeader className="text-center">
+        <CardHeader className="text-center underline underline-offset-4">
           <CardTitle>Sign In to QRCrafter</CardTitle>
         </CardHeader>
         <CardContent>
@@ -55,7 +60,15 @@ const SignIn = (props: Props) => {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit">
+                  <Button
+                    type="submit"
+                    onClick={() =>
+                      signIn("email", {
+                        email: form.getValues("email"),
+                        callbackUrl: "/",
+                      })
+                    }
+                  >
                     <div className="flex flex-row justify-center items-center gap-6">
                       <p>Get magic link to sign in</p>
                       <div>
@@ -77,14 +90,44 @@ const SignIn = (props: Props) => {
             </div>
           </div>
           <div className="flex flex-col mt-2 gap-2">
-            <Button className="w-full bg-secondary-foreground/95 hover:bg-black">
-              Sign In with Google
+            <Button
+              className="w-full bg-secondary-foreground/95 hover:bg-black"
+              onClick={() => signIn("google", { callbackUrl: "/" })}
+            >
+              <div className="flex flex-row items-center justify-center w-full">
+                <Image
+                  src={GoogleLogo}
+                  alt="google"
+                  className="rounded-lg mr-2"
+                  height={25}
+                  width={25}
+                />
+                <p className="text-md">Sign In with Google</p>
+              </div>
             </Button>
             <Button className="w-full bg-secondary-foreground/95 hover:bg-black">
-              Sign In with Twitter
+              <div className="flex flex-row items-center justify-center w-full">
+                <Image
+                  src={TwitterLogo}
+                  alt="twitter"
+                  className="rounded-lg mr-2"
+                  height={25}
+                  width={25}
+                />
+                <p className="text-md">Sign In with Twitter</p>
+              </div>
             </Button>
             <Button className="w-full bg-secondary-foreground/95 hover:bg-black">
-              Sign In with Facebook
+              <div className="flex flex-row items-center justify-center w-full">
+                <Image
+                  src={FacebookLogo}
+                  alt="facebook"
+                  className="rounded-lg mr-2"
+                  height={25}
+                  width={25}
+                />
+                <p className="text-md">Sign In with Facebook</p>
+              </div>
             </Button>
           </div>
         </CardContent>
