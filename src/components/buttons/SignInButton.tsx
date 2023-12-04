@@ -9,7 +9,12 @@ const SignInButton = (props: Props) => {
   return (
     <Button
       className="text-base"
-      // onClick={() => signIn(undefined, { callbackUrl: "/dashboard" })}
+      onClick={() =>
+        signIn(undefined, {
+          email: "mziyadc@gmail.com",
+          callbackUrl: "/dashboard",
+        })
+      }
     >
       Sign Up
     </Button>

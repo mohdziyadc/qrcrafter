@@ -60,6 +60,14 @@ model User {
   qrCodeAnalytics QRCodeAnalytics[] @relation("qrCodeAnalytics")
 }
 
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 model QRCodeAnalytics {
   id String @id @default(uuid())
   scanCount Int @default(0)
