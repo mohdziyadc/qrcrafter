@@ -91,3 +91,7 @@ export const aiContactFormSchema = z.object({
       message: "Prompt must not contain more than 160 character(s)",
     }),
 });
+
+export const signInFormSchema = z.object({
+  email: z.string().email(),
+});

@@ -12,7 +12,7 @@ const SignInButton = (props: Props) => {
       onClick={() =>
         signIn(undefined, {
           email: "mziyadc@gmail.com",
-          callbackUrl: "/dashboard",
+          callbackUrl: "/",
         })
       }
     >

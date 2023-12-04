@@ -25,7 +25,6 @@ export async function sendVerificationRequest(
   const { host } = new URL(url);
 
   try {
-    console.log("To Email: " + identifier);
     const data = await resend.emails.send({
       from: "onboarding@resend.dev",
       to: [identifier],
