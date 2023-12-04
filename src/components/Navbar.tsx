@@ -68,18 +68,19 @@ const Navbar = forwardRef<HTMLElement, Props>(({ user }: Props, ref) => {
           {user ? (
             <DashboardButton />
           ) : (
-            <Button
-              className="text-base"
-              // onClick={() => signIn(undefined, { callbackUrl: "/dashboard" })}
-              onClick={() => {
-                // ref.current.scrollIntoView({ behaviour: "smooth" });
-                // console.log(pricingElement);
-                // pricingElement?.scrollIntoView({ behavior: "smooth" });
-                pricingRef.current.scrollIntoView({ behavior: "smooth" });
-              }}
-            >
-              Get QRCrafter
-            </Button>
+            // <Button
+            //   className="text-base"
+            //   // onClick={() => signIn(undefined, { callbackUrl: "/dashboard" })}
+            //   onClick={() => {
+            //     // ref.current.scrollIntoView({ behaviour: "smooth" });
+            //     // console.log(pricingElement);
+            //     // pricingElement?.scrollIntoView({ behavior: "smooth" });
+            //     pricingRef.current.scrollIntoView({ behavior: "smooth" });
+            //   }}
+            // >
+            //   Get QRCrafter
+            // </Button>
+            <SignInButton />
           )}
         </div>
 
