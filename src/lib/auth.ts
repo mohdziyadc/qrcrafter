@@ -50,9 +50,6 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  pages: {
-    signIn: "/signin",
-  },
   adapter: PrismaAdapter(prismaClient),
   providers: [
     GoogleProvider({

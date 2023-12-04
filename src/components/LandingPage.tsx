@@ -26,7 +26,7 @@ const LandingPage = ({ user }: Props) => {
 
   return (
     <>
-      <Navbar user={user} ref={pricing} />
+      <Navbar ref={pricing} />
       <Hero />
       <AiFeature />
       <Features />

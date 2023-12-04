@@ -5,28 +5,19 @@ import SignInButton from "./buttons/SignInButton";
 import DashboardButton from "./buttons/DashboardButton";
 import Image from "next/image";
 import LogoImage from "public/qrCrafter-Logo.png";
-import { Menu, X } from "lucide-react";
+import { ArrowRightIcon, Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
+import { signOut, useSession } from "next-auth/react";
 
-type Props = {
-  user:
-    | ({
-        id: string;
-        qrCode: string | null;
-      } & {
-        name?: string | null | undefined;
-        email?: string | null | undefined;
-        image?: string | null | undefined;
-      })
-    | undefined;
-};
+type Props = {};
 
-const Navbar = forwardRef<HTMLElement, Props>(({ user }: Props, ref) => {
+const Navbar = forwardRef<HTMLElement, Props>(({}: Props, ref) => {
   const [toggleMenu, setToggleMenu] = useState(false);
   const handleMenuClick = () => setToggleMenu(!toggleMenu);
 
   const pricingRef = ref as MutableRefObject<HTMLInputElement>;
+  const { data: session } = useSession();
 
   return (
     <nav className="max-w-full px-6 py-4 z-10">
@@ -65,9 +56,21 @@ const Navbar = forwardRef<HTMLElement, Props>(({ user }: Props, ref) => {
         </div>
 
         <div className="hidden md:flex items-center ">
-          {user ? (
-            <DashboardButton />
+          {session?.user ? (
+            <div className="flex flex-row gap-2">
+              <Button variant={"outline"} onClick={() => signOut()}>
+                Sign Out
+              </Button>
+              <Button
+                onClick={() =>
+                  pricingRef.current.scrollIntoView({ behavior: "smooth" })
+                }
+              >
+                Get QRCrafter <ArrowRightIcon className="ml-2 w-4 h-4" />
+              </Button>
+            </div>
           ) : (
+            // <DashboardButton />
             // <Button
             //   className="text-base"
             //   // onClick={() => signIn(undefined, { callbackUrl: "/dashboard" })}

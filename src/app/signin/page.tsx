@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -23,6 +24,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
+import QRCrafterLogo from "public/qrCrafter-Logo.png";
 
 type Props = {};
 
@@ -37,10 +39,21 @@ const SignIn = (props: Props) => {
 
   const submitHandler = () => {};
   return (
-    <div className="flex justify-center items-center bg-secondary-foreground  h-screen">
-      <Card className="md:w-[30%] ">
-        <CardHeader className="text-center underline underline-offset-4">
-          <CardTitle>Sign In to QRCrafter</CardTitle>
+    <div className="flex justify-center items-center bg-secondary-foreground h-screen">
+      <Card className="md:w-[30%] border-4  border-primary">
+        <CardHeader className="mb-4">
+          <CardTitle className="flex flex-row items-center justify-center">
+            <Image
+              src={QRCrafterLogo}
+              alt="logo"
+              width={45}
+              height={45}
+              className="rounded-lg mr-2"
+            />
+            <p className="text-3xl text-secondary-foreground font-bold">
+              QRCrafter
+            </p>
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div>
@@ -52,10 +65,11 @@ const SignIn = (props: Props) => {
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>E-mail</FormLabel>
+                        <FormLabel>Sign in with E-mail</FormLabel>
                         <FormControl>
                           <Input placeholder="Enter your email" {...field} />
                         </FormControl>
+                        <FormDescription>Password-less Login</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
