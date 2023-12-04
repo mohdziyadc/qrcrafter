@@ -1,13 +1,36 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { signInFormSchema } from "@/validators/qrFormSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { MoveRight } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
+import * as z from "zod";
 
 type Props = {};
 
+type signInForm = z.infer<typeof signInFormSchema>;
 const SignIn = (props: Props) => {
-  const form = useForm({});
+  const form = useForm<signInForm>({
+    resolver: zodResolver(signInFormSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
+
+  const submitHandler = () => {};
   return (
     <div className="flex justify-center items-center bg-secondary-foreground  h-screen">
       <Card className="w-[30%]">
@@ -15,7 +38,55 @@ const SignIn = (props: Props) => {
           <CardTitle>Sign In to QRCrafter</CardTitle>
         </CardHeader>
         <CardContent>
-          <div></div>
+          <div>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(submitHandler)}>
+                <div className="flex flex-col gap-4">
+                  <FormField
+                    name="email"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>E-mail</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter your email" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit">
+                    <div className="flex flex-row justify-center items-center gap-6">
+                      <p>Get magic link to sign in</p>
+                      <div>
+                        <MoveRight className="h-6 w-6" />
+                      </div>
+                    </div>
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </div>
+          <div className="flex justify-center item-center mt-2">
+            <div className="flex-[1] flex items-center">
+              <Separator />
+            </div>
+            <div className="text-center mx-2 text-muted-foreground">OR</div>
+            <div className="flex-[1] flex items-center">
+              <Separator />
+            </div>
+          </div>
+          <div className="flex flex-col mt-2 gap-2">
+            <Button className="w-full bg-secondary-foreground/95 hover:bg-black">
+              Sign In with Google
+            </Button>
+            <Button className="w-full bg-secondary-foreground/95 hover:bg-black">
+              Sign In with Twitter
+            </Button>
+            <Button className="w-full bg-secondary-foreground/95 hover:bg-black">
+              Sign In with Facebook
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
