@@ -63,8 +63,8 @@ export default function Hero() {
                 data-aos="zoom-y-out"
                 data-aos-delay="150"
               >
-                Create beautiful dynamic AI generated QR Codes to level up your
-                marketing game.
+                Create beautiful <span className="font-bold">dynamic AI</span>{" "}
+                generated QR Codes to level up your marketing game.
               </p>
               <div
                 className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-start"
