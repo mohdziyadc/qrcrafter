@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { SessionProvider } from "next-auth/react";
 
 type Props = {
   children: React.ReactNode;
@@ -23,9 +24,11 @@ const Providers = ({ children }: Props) => {
   });
   return (
     <QueryClientProvider client={queryClient}>
-      <LoadingContextProvider>
-        <ImageContextProvider>{children}</ImageContextProvider>
-      </LoadingContextProvider>
+      <SessionProvider>
+        <LoadingContextProvider>
+          <ImageContextProvider>{children}</ImageContextProvider>
+        </LoadingContextProvider>
+      </SessionProvider>
     </QueryClientProvider>
   );
 };

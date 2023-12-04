@@ -10,10 +10,12 @@ import { Button } from "./ui/button";
 import { Check, MoveRightIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "./ui/badge";
+import { redirect, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 type Props = {};
 
-const QRCrafterProCard = (props: Props) => {
+const QRCrafterProCard = ({}: Props) => {
   const features = [
     {
       check: true,
@@ -48,6 +50,16 @@ const QRCrafterProCard = (props: Props) => {
       desc: "Lifetime Updates",
     },
   ];
+
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const paymentBtnHandler = async () => {
+    if (!session?.user) {
+      router.push("/signin");
+    }
+    console.log("Stripe Checkout");
+  };
   return (
     <>
       <Card className="border-4 border-primary bg-secondary-foreground text-primary-foreground">
@@ -85,7 +97,10 @@ const QRCrafterProCard = (props: Props) => {
           </div>
         </CardContent>
         <CardFooter className="flex flex-col">
-          <Button className="flex flex-row text-lg py-4 w-full">
+          <Button
+            className="flex flex-row text-lg py-4 w-full"
+            onClick={paymentBtnHandler}
+          >
             <p>Get QRCrafter Pro</p>
             <MoveRightIcon className="h-8 w-8 ml-4" />
           </Button>

@@ -13,7 +13,7 @@ import QRCrafterProCard from "./QRCrafterProCard";
 
 type Props = {};
 
-const Pricing = forwardRef<HTMLElement, Props>((props: Props, ref) => {
+const Pricing = forwardRef<HTMLElement, Props>(({}: Props, ref) => {
   return (
     <section ref={ref} id="pricing" className="relative bg-gray-100">
       <div className="absolute left-0 right-0 m-auto  transform sm:-translate-y-1/3 sm:block hidden ">

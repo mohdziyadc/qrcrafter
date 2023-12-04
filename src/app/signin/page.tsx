@@ -38,7 +38,7 @@ const SignIn = (props: Props) => {
   const submitHandler = () => {};
   return (
     <div className="flex justify-center items-center bg-secondary-foreground  h-screen">
-      <Card className="w-[30%]">
+      <Card className="md:w-[30%] ">
         <CardHeader className="text-center underline underline-offset-4">
           <CardTitle>Sign In to QRCrafter</CardTitle>
         </CardHeader>
