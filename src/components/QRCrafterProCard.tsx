@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -7,11 +7,12 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Button } from "./ui/button";
-import { Check, MoveRightIcon } from "lucide-react";
+import { Check, Loader2, MoveRightIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "./ui/badge";
 import { redirect, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import axios from "axios";
 
 type Props = {};
 
@@ -50,7 +51,7 @@ const QRCrafterProCard = ({}: Props) => {
       desc: "Lifetime Updates",
     },
   ];
-
+  const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -58,7 +59,16 @@ const QRCrafterProCard = ({}: Props) => {
     if (!session?.user) {
       router.push("/signin");
     }
-    console.log("Stripe Checkout");
+    try {
+      setLoading(true);
+      const response = await axios.get("/api/stripe/pro");
+      window.location.href = response.data.url;
+    } catch (error) {
+      console.log(error);
+      throw new Error("STRIPE REQUEST ERROR " + error);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <>
@@ -101,8 +111,14 @@ const QRCrafterProCard = ({}: Props) => {
             className="flex flex-row text-lg py-4 w-full"
             onClick={paymentBtnHandler}
           >
-            <p>Get QRCrafter Pro</p>
-            <MoveRightIcon className="h-8 w-8 ml-4" />
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <>
+                <p>Get QRCrafter Pro</p>
+                <MoveRightIcon className="h-8 w-8 ml-4" />
+              </>
+            )}
           </Button>
           <p className=" text-muted/60 mt-2">Pay Once. Use for lifetime!</p>
         </CardFooter>
