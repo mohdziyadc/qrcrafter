@@ -39,14 +39,16 @@ export async function GET() {
       mode: "payment",
       billing_address_collection: "auto",
       customer_email: session.user.email ?? "",
+      customer_creation: "always",
       line_items: [
         {
-          price: "price_1OK2muSDbs1XkZpzd5HUjRxg",
+          price: process.env.QRCRAFTER_PRO_ID as string,
           quantity: 1,
         },
       ],
       metadata: {
         userId: session.user.id,
+        product: "QRCrafter PRO",
       },
     });
     return NextResponse.json({ url: checkoutSession.url });
