@@ -25,6 +25,10 @@ export async function POST(req: NextRequest) {
     const customer = await stripe.customers.retrieve(
       session.customer as string
     );
+    const sessionWithLineItems = await stripe.checkout.sessions.retrieve(
+      session.id,
+      { expand: ["line_items"] }
+    );
     if (!session.metadata?.userId) {
       return new NextResponse("[WEBHOOK ERROR] No User ID found");
     }
@@ -33,6 +37,7 @@ export async function POST(req: NextRequest) {
         data: {
           userId: session.metadata.userId,
           stripeCustomerId: customer.id,
+          stripePriceId: sessionWithLineItems.line_items?.data[0].price?.id,
         },
       });
     }
