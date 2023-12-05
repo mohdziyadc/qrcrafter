@@ -1,6 +1,12 @@
 "use client";
 import Link from "next/link";
-import React, { MutableRefObject, forwardRef, useRef, useState } from "react";
+import React, {
+  MutableRefObject,
+  forwardRef,
+  startTransition,
+  useRef,
+  useState,
+} from "react";
 import SignInButton from "./buttons/SignInButton";
 import DashboardButton from "./buttons/DashboardButton";
 import Image from "next/image";
@@ -9,15 +15,20 @@ import { ArrowRightIcon, Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { signOut, useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
 
-type Props = {};
+type Props = {
+  isPaid: boolean;
+};
 
-const Navbar = forwardRef<HTMLElement, Props>(({}: Props, ref) => {
+const Navbar = forwardRef<HTMLElement, Props>(({ isPaid }: Props, ref) => {
   const [toggleMenu, setToggleMenu] = useState(false);
   const handleMenuClick = () => setToggleMenu(!toggleMenu);
 
   const pricingRef = ref as MutableRefObject<HTMLInputElement>;
   const { data: session } = useSession();
+
+  console.log("isPaid " + isPaid);
 
   return (
     <nav className="max-w-full px-6 py-4 z-10">
@@ -57,18 +68,22 @@ const Navbar = forwardRef<HTMLElement, Props>(({}: Props, ref) => {
 
         <div className="hidden md:flex items-center ">
           {session?.user ? (
-            <div className="flex flex-row gap-2">
-              <Button variant={"outline"} onClick={() => signOut()}>
-                Sign Out
-              </Button>
-              <Button
-                onClick={() =>
-                  pricingRef.current.scrollIntoView({ behavior: "smooth" })
-                }
-              >
-                Get QRCrafter <ArrowRightIcon className="ml-2 w-4 h-4" />
-              </Button>
-            </div>
+            isPaid ? (
+              <DashboardButton />
+            ) : (
+              <div className="flex flex-row gap-2">
+                <Button variant={"outline"} onClick={() => signOut()}>
+                  Sign Out
+                </Button>
+                <Button
+                  onClick={() =>
+                    pricingRef.current.scrollIntoView({ behavior: "smooth" })
+                  }
+                >
+                  Get QRCrafter <ArrowRightIcon className="ml-2 w-4 h-4" />
+                </Button>
+              </div>
+            )
           ) : (
             // <DashboardButton />
             // <Button

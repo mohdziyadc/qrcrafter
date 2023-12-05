@@ -19,14 +19,15 @@ type Props = {
         image?: string | null | undefined;
       })
     | undefined;
+  isPaid: boolean;
 };
 
-const LandingPage = ({ user }: Props) => {
+const LandingPage = ({ user, isPaid }: Props) => {
   const pricing = useRef<HTMLElement>(null);
 
   return (
     <>
-      <Navbar ref={pricing} />
+      <Navbar ref={pricing} isPaid={isPaid} />
       <Hero />
       <AiFeature />
       <Features />
