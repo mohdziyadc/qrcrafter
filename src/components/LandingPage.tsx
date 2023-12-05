@@ -1,5 +1,5 @@
 "use client";
-import React, { ElementRef, useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import Navbar from "./Navbar";
 import Hero from "./Hero";
 import AiFeature from "./AiFeature";
@@ -9,20 +9,10 @@ import Demo from "./Demo";
 import Pricing from "./Pricing";
 
 type Props = {
-  user:
-    | ({
-        id: string;
-        qrCode: string | null;
-      } & {
-        name?: string | null | undefined;
-        email?: string | null | undefined;
-        image?: string | null | undefined;
-      })
-    | undefined;
   isPaid: boolean;
 };
 
-const LandingPage = ({ user, isPaid }: Props) => {
+const LandingPage = ({ isPaid }: Props) => {
   const pricing = useRef<HTMLElement>(null);
 
   return (
