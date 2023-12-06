@@ -41,6 +41,15 @@ export async function POST(req: NextRequest) {
         },
       });
     }
+    if (session.metadata.product === "QRCrafter Plus") {
+      await prismaClient.plusSubscription.create({
+        data: {
+          userId: session.metadata.userId,
+          stripeCustomerId: customer.id,
+          stripePriceId: sessionWithLineItems.line_items?.data[0].price?.id,
+        },
+      });
+    }
   }
   return new NextResponse(null, { status: 200 });
 }
