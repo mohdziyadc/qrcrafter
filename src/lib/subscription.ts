@@ -17,6 +17,27 @@ export async function checkProSubscription() {
     return false;
   }
 
-  const isValid = proSubscription.stripePriceId;
+  const isValid =
+    proSubscription.stripePriceId && proSubscription.stripeCustomerId;
+  return !!isValid;
+}
+
+export async function checkPlusSubscription() {
+  const session = await getAuthSession();
+  if (!session?.user) {
+    return false;
+  }
+
+  const plusSubscription = await prismaClient.plusSubscription.findUnique({
+    where: {
+      userId: session.user.id,
+    },
+  });
+  if (!plusSubscription) {
+    return false;
+  }
+
+  const isValid =
+    plusSubscription.stripeCustomerId && plusSubscription.stripePriceId;
   return !!isValid;
 }

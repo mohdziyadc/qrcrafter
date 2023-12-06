@@ -1,11 +1,16 @@
 import LandingPage from "@/components/LandingPage";
-import { checkProSubscription } from "@/lib/subscription";
+import {
+  checkPlusSubscription,
+  checkProSubscription,
+} from "@/lib/subscription";
 
 export default async function Home() {
-  const isPaid = await checkProSubscription();
+  const isPro = await checkProSubscription();
+  const isPlus = await checkPlusSubscription();
+
   return (
     <>
-      <LandingPage isPaid={isPaid} />
+      <LandingPage isPaid={isPro || isPlus} />
     </>
   );
 }
