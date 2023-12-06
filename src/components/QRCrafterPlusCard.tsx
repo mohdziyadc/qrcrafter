@@ -64,9 +64,9 @@ const QRCrafterPlusCard = (props: Props) => {
           <div className="flex flex-col">
             <div className="flex flex-row justify-start items-center">
               <div className="text-2xl text-muted-foreground/80 line-through mr-2">
-                $149
+                $99
               </div>
-              <div className="text-4xl ">$99</div>
+              <div className="text-4xl ">$49</div>
             </div>
             <div className="mt-4">
               {features.map((feature, idx) => (

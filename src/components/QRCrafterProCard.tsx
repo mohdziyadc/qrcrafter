@@ -83,9 +83,9 @@ const QRCrafterProCard = ({}: Props) => {
           <div className="flex flex-col">
             <div className="flex flex-row justify-start items-center">
               <div className="text-2xl text-muted-foreground/80 line-through mr-2">
-                $199
+                $149
               </div>
-              <div className="text-4xl ">$149</div>
+              <div className="text-4xl ">$65</div>
             </div>
             <div className="mt-4">
               {features.map((feature, idx) => (
