@@ -68,23 +68,24 @@ const Navbar = forwardRef<HTMLElement, Props>(({ isPaid }: Props, ref) => {
 
         <div className="hidden md:flex items-center ">
           {session?.user ? (
-            isPaid ? (
-              <DashboardButton />
-            ) : (
-              <div className="flex flex-row gap-2">
-                <Button variant={"outline"} onClick={() => signOut()}>
-                  Sign Out
-                </Button>
-                <Button
-                  onClick={() =>
-                    pricingRef.current.scrollIntoView({ behavior: "smooth" })
-                  }
-                >
-                  Get QRCrafter <ArrowRightIcon className="ml-2 w-4 h-4" />
-                </Button>
-              </div>
-            )
+            <DashboardButton />
           ) : (
+            // isPaid ? (
+            //   <DashboardButton />
+            // ) : (
+            //   // <div className="flex flex-row gap-2">
+            //   //   <Button variant={"outline"} onClick={() => signOut()}>
+            //   //     Sign Out
+            //   //   </Button>
+            //   //   <Button
+            //   //     onClick={() =>
+            //   //       pricingRef.current.scrollIntoView({ behavior: "smooth" })
+            //   //     }
+            //   //   >
+            //   //     Get QRCrafter <ArrowRightIcon className="ml-2 w-4 h-4" />
+            //   //   </Button>
+            //   // </div>
+            // )
             // <DashboardButton />
             // <Button
             //   className="text-base"

@@ -23,7 +23,7 @@ const Dashboard = async (props: Props) => {
       <div className="max-w-full px-6 py-4 flex justify-between">
         <div className=" font-bold text-4xl">QRboard</div>
         <div>
-          <UserAccountNav user={session.user} />
+          <UserAccountNav user={session!.user} />
         </div>
       </div>
       <div className="mx-6 my-4 grid grid-cols-1 ">

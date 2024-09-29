@@ -12,6 +12,7 @@ export class ReplicateClient {
   generateQRCode = async (
     request: QRCodeControlNetRequest
   ): Promise<string> => {
+    console.log("Api Key: " + process.env.REPLICATE_API_KEY);
     const output = (await this.replicate.run(
       "zylim0702/qr_code_controlnet:628e604e13cf63d8ec58bd4d238474e8986b054bc5e1326e50995fdbc851c557",
       {
