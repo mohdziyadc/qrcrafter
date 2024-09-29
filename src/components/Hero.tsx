@@ -1,5 +1,5 @@
+import InteractiveQRCode from "./InteractiveQRCode";
 import { Button } from "./ui/button";
-import HeroImage from "public/qrcrafter_hero.png";
 import Image from "next/image";
 // import ModalVideo from '@/components/modal-video'
 
@@ -37,11 +37,11 @@ export default function Hero() {
         </svg>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Hero content */}
-        <div className="flex flex-col sm:flex-row pt-32 pb-12 md:pt-40 md:pb-20">
+        <div className="flex flex-col sm:flex-row pt-32 pb-12 md:pt-20 md:pb-20">
           {/* Section header */}
-          <div className="flex-[1] -mt-16 sm:mt-0  pb-12 md:pb-16">
+          <div className="flex-[1] -mt-16 md:pt-32 sm:mt-0  pb-12 md:pb-16">
             <div className="flex flex-col md:justify-start md:items-start justify-center items-center">
               <h1
                 className="text-5xl md:text-6xl font-extrabold leading-tighter tracking-tighter mb-2"
@@ -87,16 +87,10 @@ export default function Hero() {
 
           {/* Hero image */}
           <div
-            className="flex-[1] flex justify-center items-stretch"
+            className="flex-[1] px-4 flex justify-center cursor-pointer items-stretch"
             data-aos="zoom-y-out"
           >
-            <Image
-              src={HeroImage}
-              alt="hero_image"
-              height={400}
-              width={400}
-              className="rounded-lg"
-            />
+            <InteractiveQRCode />
           </div>
         </div>
       </div>
