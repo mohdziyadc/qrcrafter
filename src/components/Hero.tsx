@@ -35,7 +35,7 @@ export default function Hero() {
     },
   ];
   return (
-    <section className="relative  w-full md:h-screen">
+    <section className="relative  w-full">
       {/* Illustration behind hero content */}
       <div
         className="absolute left-1/2 transform -translate-x-1/2 bottom-0 pointer-events-none -z-10 hidden sm:block"
@@ -131,7 +131,14 @@ export default function Hero() {
                 </DropdownMenu>
               </CardHeader>
               <CardContent>
-                <HomepageForm />
+                <div className="flex flex-row">
+                  <div className="flex-[1] border-2 border-slate-400 h-fit p-4 mr-2 rounded-lg ">
+                    <HomepageForm qrType={type} />
+                  </div>
+                  <div className="flex-[2] flex rounded-md border-dashed h-[48rem] border-blue-600 justify-center items-center border-2 ">
+                    <div>Hello</div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
