@@ -1,9 +1,39 @@
-import InteractiveQRCode from "./InteractiveQRCode";
 import { Button } from "./ui/button";
 import Image from "next/image";
+import { Card, CardContent, CardHeader } from "./ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { Check, ChevronDown } from "lucide-react";
+import { title } from "process";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import HomepageForm from "./HomepageForm";
 // import ModalVideo from '@/components/modal-video'
 
 export default function Hero() {
+  const [type, setType] = useState("url");
+  const dropdownItems = [
+    {
+      title: "URL",
+      item: "url",
+    },
+    {
+      title: "Multi URL",
+      item: "multi_url",
+    },
+    {
+      title: "Contact",
+      item: "contact",
+    },
+    {
+      title: "Free Text",
+      item: "free_text",
+    },
+  ];
   return (
     <section className="relative  w-full md:h-screen">
       {/* Illustration behind hero content */}
@@ -37,63 +67,91 @@ export default function Hero() {
         </svg>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="max-w-8xl mx-auto px-4 sm:px-6">
         {/* Hero content */}
-        <div className="flex flex-col sm:flex-row pt-32 pb-12 md:pt-20 md:pb-20">
+        <div className="flex flex-col pt-6 pb-6 ">
           {/* Section header */}
-          <div className="flex-[1] -mt-16 md:pt-32 sm:mt-0  pb-12 md:pb-16">
-            <div className="flex flex-col md:justify-start md:items-start justify-center items-center">
+          <div className="flex justify-center items-center w-full ">
+            <div className="flex flex-col justify-center items-center">
               <h1
                 className="text-5xl md:text-6xl font-extrabold leading-tighter tracking-tighter mb-2"
                 data-aos="zoom-y-out"
               >
-                No more boring
+                No more boring{" "}
+                <span className="text-5xl pr-2 md:text-6xl font-extrabold leading-tighter tracking-tighter mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
+                  QR Codes
+                </span>
               </h1>
-              <h1
-                data-aos="zoom-y-out"
-                className="text-5xl md:text-6xl font-extrabold leading-tighter tracking-tighter mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400"
-              >
-                QR Codes
-              </h1>
-            </div>
-
-            <div className="max-w-3xl mx-auto">
-              <p
-                className="text-xl text-gray-600 mb-8 text-center sm:text-left"
-                data-aos="zoom-y-out"
-                data-aos-delay="150"
-              >
+              <p className="text-2xl font-light text-slate-700 opacity-70">
                 Create beautiful <span className="font-bold">dynamic AI</span>{" "}
                 generated QR Codes to level up your marketing game.
               </p>
-              <div
-                className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-start"
-                data-aos="zoom-y-out"
-                data-aos-delay="300"
-              >
-                <div>
-                  <Button className=" text-white bg-blue-600 hover:bg-blue-700 w-full mb-4 sm:w-auto sm:mb-0">
-                    Start free trial
-                  </Button>
-                </div>
-                <div>
-                  <Button className="btn text-white bg-gray-900 hover:bg-gray-800 w-full sm:w-auto sm:ml-4">
-                    Learn more
-                  </Button>
-                </div>
-              </div>
             </div>
           </div>
 
           {/* Hero image */}
-          <div
-            className="flex-[1] px-4 flex justify-center cursor-pointer items-stretch"
-            data-aos="zoom-y-out"
-          >
-            <InteractiveQRCode />
+          <div className="w-full mt-4 ">
+            <Card className="border-4 border-dashed">
+              <CardHeader className="flex flex-row items-baseline">
+                <div className="p-2 opacity-75 text-sm">QR Type: </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="bg-muted py-2 text-sm rounded-md outline-none">
+                    <div className="flex flex-row justify-between mx-4">
+                      {
+                        {
+                          url: "URL",
+                          multi_url: "Multi URL",
+                          contact: "Contact",
+                          free_text: "Free text",
+                        }[type]
+                      }
+                      <ChevronDown className="w-4 h-4 ml-3" />
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-12">
+                    {dropdownItems.map((dropdownItem, idx) => (
+                      <DropdownMenuItem
+                        key={idx}
+                        onClick={() => {
+                          setType(dropdownItem.item);
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            type === dropdownItem.item
+                              ? "opacity-100"
+                              : "opacity-0"
+                          )}
+                        />
+                        {dropdownItem.title}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </CardHeader>
+              <CardContent>
+                <HomepageForm />
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
     </section>
   );
 }
+
+/**
+ *   Create beautiful <span className="font-bold">dynamic AI</span>{" "}
+                generated QR Codes to level up your marketing game.
+
+                 <h1
+                className="text-5xl md:text-6xl font-extrabold leading-tighter tracking-tighter mb-2"
+                data-aos="zoom-y-out"
+              >
+                No more boring{" "}
+                <span className="text-5xl pr-2 md:text-6xl font-extrabold leading-tighter tracking-tighter mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
+                  QR Codes
+                </span>
+              </h1>
+ */
