@@ -5,7 +5,7 @@ import {
   aiUrlFormSchema,
 } from "@/validators/qrFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as z from "zod";
 import {
@@ -76,6 +76,20 @@ const HomepageForm = ({ qrType }: Props) => {
   const onSubmitHandler: SubmitHandler<FormInput> = (data) => {
     console.log(`Form Submitted\n${JSON.stringify(data)}`);
   };
+
+  useEffect(() => {
+    const values = form.getValues();
+    Object.keys(values).forEach((key) => {
+      const fieldValue = values[key as keyof typeof values];
+
+      // Handle string and string[] types differently
+      if (Array.isArray(fieldValue)) {
+        form.setValue(key as keyof typeof values, ["", ""]); // Reset string[] to an empty array
+      } else {
+        form.setValue(key as keyof typeof values, ""); // Reset string to an empty string
+      }
+    });
+  }, [form, qrType]);
   return (
     <>
       <div>
