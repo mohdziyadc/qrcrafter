@@ -12,6 +12,10 @@ import { title } from "process";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import HomepageForm from "./HomepageForm";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import NoQrFound from "./NoQrFound";
+import AiUrlTable from "./AiUrlTable";
+import HomePageTable from "./HomePageTable";
 // import ModalVideo from '@/components/modal-video'
 
 export default function Hero() {
@@ -92,54 +96,106 @@ export default function Hero() {
           {/* Hero image */}
           <div className="w-full mt-4 ">
             <Card className="border-4 border-dashed">
-              <CardHeader className="flex flex-row items-baseline">
-                <div className="p-2 opacity-75 text-sm">QR Type: </div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="bg-muted py-2 text-sm rounded-md outline-none">
-                    <div className="flex flex-row justify-between mx-4">
-                      {
-                        {
-                          url: "URL",
-                          multi_url: "Multi URL",
-                          contact: "Contact",
-                          free_text: "Free text",
-                        }[type]
-                      }
-                      <ChevronDown className="w-4 h-4 ml-3" />
+              <Tabs defaultValue="generate" className="w-full">
+                <TabsList className="mt-4 ml-4">
+                  <TabsTrigger value="generate">Craft QR Codes</TabsTrigger>
+                  <TabsTrigger value="get_qr">Your QR Codes</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="generate" className="-mt-2">
+                  <CardHeader className="flex flex-row items-baseline">
+                    <div className="p-2 opacity-75 text-sm">QR Type: </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="bg-muted py-2 text-sm rounded-md outline-none">
+                        <div className="flex flex-row justify-between mx-4">
+                          {
+                            {
+                              url: "URL",
+                              multi_url: "Multi URL",
+                              contact: "Contact",
+                              free_text: "Free text",
+                            }[type]
+                          }
+                          <ChevronDown className="w-4 h-4 ml-3" />
+                        </div>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-12">
+                        {dropdownItems.map((dropdownItem, idx) => (
+                          <DropdownMenuItem
+                            key={idx}
+                            onClick={() => {
+                              setType(dropdownItem.item);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                type === dropdownItem.item
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {dropdownItem.title}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-row">
+                      <div className="flex-[1] border-2 border-slate-400 h-fit p-4 mr-2 rounded-lg ">
+                        <HomepageForm qrType={type} />
+                      </div>
+                      <div className="flex-[2] flex rounded-md border-dashed h-[48rem] border-blue-600 justify-center items-center border-2 ">
+                        <div>Hello</div>
+                      </div>
                     </div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-12">
-                    {dropdownItems.map((dropdownItem, idx) => (
-                      <DropdownMenuItem
-                        key={idx}
-                        onClick={() => {
-                          setType(dropdownItem.item);
-                        }}
-                      >
-                        <Check
-                          className={cn(
-                            "mr-2 h-4 w-4",
-                            type === dropdownItem.item
-                              ? "opacity-100"
-                              : "opacity-0"
-                          )}
-                        />
-                        {dropdownItem.title}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-row">
-                  <div className="flex-[1] border-2 border-slate-400 h-fit p-4 mr-2 rounded-lg ">
-                    <HomepageForm qrType={type} />
-                  </div>
-                  <div className="flex-[2] flex rounded-md border-dashed h-[48rem] border-blue-600 justify-center items-center border-2 ">
-                    <div>Hello</div>
-                  </div>
-                </div>
-              </CardContent>
+                  </CardContent>
+                </TabsContent>
+                <TabsContent value="get_qr">
+                  <CardHeader className="flex flex-row items-baseline -mt-4">
+                    <div className="p-2 opacity-75 text-sm">QR Type: </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="bg-muted py-2 text-sm rounded-md outline-none">
+                        <div className="flex flex-row justify-between mx-4">
+                          {
+                            {
+                              url: "URL",
+                              multi_url: "Multi URL",
+                              contact: "Contact",
+                              free_text: "Free text",
+                            }[type]
+                          }
+                          <ChevronDown className="w-4 h-4 ml-3" />
+                        </div>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-12">
+                        {dropdownItems.map((dropdownItem, idx) => (
+                          <DropdownMenuItem
+                            key={idx}
+                            onClick={() => {
+                              setType(dropdownItem.item);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                type === dropdownItem.item
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {dropdownItem.title}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </CardHeader>
+                  <CardContent>
+                    <HomePageTable qrType={type} />
+                  </CardContent>
+                </TabsContent>
+              </Tabs>
             </Card>
           </div>
         </div>

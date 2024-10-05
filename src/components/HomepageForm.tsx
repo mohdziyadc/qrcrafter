@@ -75,11 +75,13 @@ const HomepageForm = ({ qrType }: Props) => {
 
   const onSubmitHandler: SubmitHandler<FormInput> = (data) => {
     console.log(`Form Submitted\n${JSON.stringify(data)}`);
+    const qrData = { ...data, qrType: qrType };
+    console.log("QR Data " + JSON.stringify(qrData));
   };
 
   useEffect(() => {
     form.reset();
-  }, [form]);
+  }, [form, qrType]);
   return (
     <>
       <div>
