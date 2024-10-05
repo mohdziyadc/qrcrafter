@@ -1,5 +1,3 @@
-import { Button } from "./ui/button";
-import Image from "next/image";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import {
   DropdownMenu,
@@ -16,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import NoQrFound from "./NoQrFound";
 import AiUrlTable from "./AiUrlTable";
 import HomePageTable from "./HomePageTable";
+import DynamicAIQRCodeCard from "./DynamicAIQRCodeCard";
 // import ModalVideo from '@/components/modal-video'
 
 export default function Hero() {
@@ -41,7 +40,7 @@ export default function Hero() {
   return (
     <section className="relative  w-full">
       {/* Illustration behind hero content */}
-      <div
+      {/* <div
         className="absolute left-1/2 transform -translate-x-1/2 bottom-0 pointer-events-none -z-10 hidden sm:block"
         aria-hidden="true"
       >
@@ -69,7 +68,7 @@ export default function Hero() {
             <circle cx="155" cy="443" r="96" />
           </g>
         </svg>
-      </div>
+      </div> */}
 
       <div className="max-w-8xl mx-auto px-4 sm:px-6">
         {/* Hero content */}
@@ -86,19 +85,19 @@ export default function Hero() {
                   QR Codes
                 </span>
               </h1>
-              <p className="text-2xl font-light text-slate-700 opacity-70">
+              <p className="text-2xl font-light text-primary opacity-70">
                 Create beautiful <span className="font-bold">dynamic AI</span>{" "}
-                generated QR Codes to level up your marketing game.
+                generated QR Codes to level up your game.
               </p>
             </div>
           </div>
 
           {/* Hero image */}
           <div className="w-full mt-4 ">
-            <Card className="border-4 border-dashed">
+            <Card className="border-4 border-primary border-dashed">
               <Tabs defaultValue="generate" className="w-full">
                 <TabsList className="mt-4 ml-4">
-                  <TabsTrigger value="generate">Craft QR Codes</TabsTrigger>
+                  <TabsTrigger value="generate">Create AI QR Codes</TabsTrigger>
                   <TabsTrigger value="get_qr">Your QR Codes</TabsTrigger>
                 </TabsList>
 
@@ -147,7 +146,7 @@ export default function Hero() {
                         <HomepageForm qrType={type} />
                       </div>
                       <div className="flex-[2] flex rounded-md border-dashed h-[48rem] border-blue-600 justify-center items-center border-2 ">
-                        <div>Hello</div>
+                        <DynamicAIQRCodeCard />
                       </div>
                     </div>
                   </CardContent>
@@ -191,7 +190,7 @@ export default function Hero() {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="min-h-screen">
                     <HomePageTable qrType={type} />
                   </CardContent>
                 </TabsContent>

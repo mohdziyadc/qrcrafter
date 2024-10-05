@@ -43,7 +43,7 @@ const Navbar = forwardRef<HTMLElement, Props>(({ isPaid }: Props, ref) => {
               className="rounded-lg"
             />
           </div>
-          <div>QRCrafter</div>
+          <div>QRCoded</div>
         </div>
         <div className=" hidden md:flex flex-row text-lg justify-center items-center">
           <div className="mr-5">

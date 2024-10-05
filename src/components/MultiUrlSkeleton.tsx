@@ -34,7 +34,7 @@ const MultiUrlSkeleton = ({ form }: Props) => {
               height: { duration: 0.2 },
             }}
           >
-            <div className="border-2 border-black mb-2 py-2 rounded-md">
+            <div className="border-2 border-secondary mb-2 py-2 rounded-md">
               <FormField
                 control={form.control}
                 key={index}
@@ -86,7 +86,7 @@ const MultiUrlSkeleton = ({ form }: Props) => {
           {/* To make it a normal btn add type attribute. If it isnt added, it will try to submit the form */}
           <Button
             type="button"
-            variant={"secondary"}
+            variant={"outline"}
             className="font-semibold"
             onClick={() => {
               form.setValue("urls", [...form.watch("urls"), ""]); //appending to the units array
@@ -98,7 +98,7 @@ const MultiUrlSkeleton = ({ form }: Props) => {
           </Button>
           <Button
             type="button"
-            variant={"secondary"}
+            variant={"outline"}
             className="font-semibold ml-2"
             onClick={() => {
               form.setValue("urls", form.watch("urls").slice(0, -1)); //removing from the units array

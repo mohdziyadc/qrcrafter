@@ -5,7 +5,7 @@ import {
   aiUrlFormSchema,
 } from "@/validators/qrFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as z from "zod";
 import {
@@ -23,6 +23,10 @@ import MultiUrlSkeleton from "./MultiUrlSkeleton";
 import ContactFormSkeleton from "./ContactFormSkeleton";
 import { Button } from "./ui/button";
 import { QrCode } from "lucide-react";
+import { useLoading } from "@/app/context/useLoading";
+import { useImage } from "@/app/context/useImage";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 type Props = {
   qrType: string;
@@ -42,6 +46,13 @@ export type FormInput = {
   prompt: string;
 };
 const HomepageForm = ({ qrType }: Props) => {
+  const { loading, setLoading } = useLoading();
+  const { setImage } = useImage();
+
+  //creating a reference object - a workaround to access state in setTimeout
+  const loadingRef = useRef(loading);
+  loadingRef.current = loading;
+
   const getSchema = () => {
     switch (qrType) {
       case "url":
@@ -73,10 +84,28 @@ const HomepageForm = ({ qrType }: Props) => {
     },
   });
 
+  //   const {} = useMutation({
+  //     mutationFn: async (data) => {
+  //       const response = await axios.post(
+  //         "/api/aiqrcode/create",
+  //         JSON.stringify(data)
+  //       );
+  //       return response.data;
+  //     },
+  //   });
+
   const onSubmitHandler: SubmitHandler<FormInput> = (data) => {
     console.log(`Form Submitted\n${JSON.stringify(data)}`);
     const qrData = { ...data, qrType: qrType };
     console.log("QR Data " + JSON.stringify(qrData));
+
+    setLoading("loading");
+
+    setTimeout(() => {
+      if (loadingRef.current === "loading") {
+        setLoading("delayed");
+      }
+    }, 3000);
   };
 
   useEffect(() => {
