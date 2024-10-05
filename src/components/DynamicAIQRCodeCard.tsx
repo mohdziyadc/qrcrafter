@@ -271,14 +271,14 @@ const DynamicAIQRCodeCard = (props: Props) => {
       });
     }
   };
-  if (!image.image_url) {
-    return (
-      <div className="text-center">
-        <h1>Nothing to show for now!</h1>
-        <h2>Click on Generate QR Code button</h2>
-      </div>
-    );
-  }
+  // if (!image.image_url) {
+  //   return (
+  //     <div className="text-center">
+  //       <h1>Nothing to show for now!</h1>
+  //       <h2>Click on Generate QR Code button</h2>
+  //     </div>
+  //   );
+  // }
   return (
     <div className="flex flex-1 justify-center ">
       {loading === "loading" ? (
@@ -297,9 +297,9 @@ const DynamicAIQRCodeCard = (props: Props) => {
         </div>
       ) : (
         image.image_url && (
-          <Card className={"px-6 pt-6 pb-2"}>
+          <Card className={"px-6 pt-6 pb-2 bg-background shadow-lg"}>
             <CardContent>
-              <div className="relative flex flex-col justify-center items-center gap-y-2 w-[510px] border border-gray-300 rounded shadow group p-2 mx-auto max-w-full">
+              <div className="relative flex flex-col justify-center items-center gap-y-2 w-[510px] border bg-primary border-gray-300 rounded shadow group p-2 mx-auto max-w-full">
                 <Image
                   src={image.image_url}
                   className="rounded "
@@ -316,6 +316,7 @@ const DynamicAIQRCodeCard = (props: Props) => {
             <CardFooter className="flex flex-col">
               <div className="flex flex-row mt-4 items-center justify-center gap-2 ">
                 <Button
+                  variant={"outline"}
                   onClick={() => {
                     checkTypeAndSave();
                   }}
@@ -328,7 +329,6 @@ const DynamicAIQRCodeCard = (props: Props) => {
                   )}
                 </Button>
                 <Button
-                  variant={"secondary"}
                   onClick={() => {
                     downloadQrCode(image.image_url, "aiQrCode");
                   }}

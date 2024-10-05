@@ -27,6 +27,7 @@ import { useLoading } from "@/app/context/useLoading";
 import { useImage } from "@/app/context/useImage";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { useToast } from "./ui/use-toast";
 
 type Props = {
   qrType: string;
@@ -48,6 +49,7 @@ export type FormInput = {
 const HomepageForm = ({ qrType }: Props) => {
   const { loading, setLoading } = useLoading();
   const { setImage } = useImage();
+  const { toast } = useToast();
 
   //creating a reference object - a workaround to access state in setTimeout
   const loadingRef = useRef(loading);
@@ -84,21 +86,39 @@ const HomepageForm = ({ qrType }: Props) => {
     },
   });
 
-  //   const {} = useMutation({
-  //     mutationFn: async (data) => {
-  //       const response = await axios.post(
-  //         "/api/aiqrcode/create",
-  //         JSON.stringify(data)
-  //       );
-  //       return response.data;
-  //     },
-  //   });
+  const {
+    mutate: getQrCode,
+    isLoading,
+    isSuccess,
+    isError,
+  } = useMutation({
+    mutationFn: async (data: FormInput & { qrType: string }) => {
+      const response = await axios.post(
+        "/api/aiqrcode/create",
+        JSON.stringify(data)
+      );
+      return response.data;
+    },
+    onSuccess: (data) => {
+      setLoading("success");
+      console.log("QR Code generated: " + data.qrCode);
+      setImage(data.qrCode);
+    },
+    onError: (error) => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occurred during the process",
+        variant: "destructive",
+      });
+      console.log(`[MUTATION ERROR] ${error}`);
+    },
+  });
 
   const onSubmitHandler: SubmitHandler<FormInput> = (data) => {
     console.log(`Form Submitted\n${JSON.stringify(data)}`);
     const qrData = { ...data, qrType: qrType };
     console.log("QR Data " + JSON.stringify(qrData));
-
+    getQrCode(qrData);
     setLoading("loading");
 
     setTimeout(() => {
