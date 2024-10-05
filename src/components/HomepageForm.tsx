@@ -61,8 +61,8 @@ const HomepageForm = ({ qrType }: Props) => {
     defaultValues: {
       name: "",
       url: "",
-      urls: ["", ""],
-      titles: ["", ""],
+      urls: [""],
+      titles: [""],
       freeText: "",
       first_name: "",
       last_name: "",
@@ -78,18 +78,8 @@ const HomepageForm = ({ qrType }: Props) => {
   };
 
   useEffect(() => {
-    const values = form.getValues();
-    Object.keys(values).forEach((key) => {
-      const fieldValue = values[key as keyof typeof values];
-
-      // Handle string and string[] types differently
-      if (Array.isArray(fieldValue)) {
-        form.setValue(key as keyof typeof values, ["", ""]); // Reset string[] to an empty array
-      } else {
-        form.setValue(key as keyof typeof values, ""); // Reset string to an empty string
-      }
-    });
-  }, [form, qrType]);
+    form.reset();
+  }, [form]);
   return (
     <>
       <div>
