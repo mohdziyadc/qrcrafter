@@ -271,14 +271,6 @@ const DynamicAIQRCodeCard = (props: Props) => {
       });
     }
   };
-  // if (!image.image_url) {
-  //   return (
-  //     <div className="text-center">
-  //       <h1>Nothing to show for now!</h1>
-  //       <h2>Click on Generate QR Code button</h2>
-  //     </div>
-  //   );
-  // }
   return (
     <div className="flex flex-1 justify-center ">
       {loading === "loading" ? (

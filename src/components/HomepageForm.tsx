@@ -48,7 +48,7 @@ export type FormInput = {
 };
 const HomepageForm = ({ qrType }: Props) => {
   const { loading, setLoading } = useLoading();
-  const { setImage } = useImage();
+  const { image, setImage } = useImage();
   const { toast } = useToast();
 
   //creating a reference object - a workaround to access state in setTimeout
@@ -97,12 +97,13 @@ const HomepageForm = ({ qrType }: Props) => {
         "/api/aiqrcode/create",
         JSON.stringify(data)
       );
+      // console.log("[MUTATION RESPONSE] " + JSON.stringify(response));
       return response.data;
     },
     onSuccess: (data) => {
       setLoading("success");
-      console.log("QR Code generated: " + data.qrCode);
-      setImage(data.qrCode);
+      console.log("Setting Image: " + data);
+      setImage(JSON.parse(data));
     },
     onError: (error) => {
       toast({
@@ -125,7 +126,7 @@ const HomepageForm = ({ qrType }: Props) => {
       if (loadingRef.current === "loading") {
         setLoading("delayed");
       }
-    }, 3000);
+    }, 7000);
   };
 
   useEffect(() => {
