@@ -230,7 +230,6 @@ model AnonymousURLQr {
   anonymousUserId String
   image_url       String
   name            String
-  country String
   uniqueToken     String        @unique
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
@@ -243,7 +242,7 @@ model AnonymousMultiUrlQr {
   titles          String[]
   name            String
   image_url       String
-  uniqueToke      String        @unique
+  uniqueToken      String        @unique
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   anonymousUserId String
@@ -270,7 +269,7 @@ model AnonymousFreetextQr {
   id              String        @id @default(cuid())
   name            String
   image_url       String
-  free_text       String[]      @db.VarChar(5000)
+  free_text       String      @db.VarChar(3000)
   uniqueToken     String        @unique
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt

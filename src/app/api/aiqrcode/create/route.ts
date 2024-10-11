@@ -14,14 +14,38 @@ import {
   AiUrlResponse,
 } from "@/lib/types";
 import { replicateClient } from "@/lib/replicate";
+import { prismaClient } from "@/lib/db";
+import { error } from "console";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { qrType } = body;
+    const { qrType, browserFingerprint } = body;
 
     const token = getBase64UUID();
     const encodedToken = encodeURIComponent(token);
+
+    let anonymousUser = await prismaClient.anonymousUser.findUnique({
+      where: {
+        browserFingerprint: browserFingerprint,
+      },
+    });
+
+    if (!anonymousUser) {
+      anonymousUser = await prismaClient.anonymousUser.create({
+        data: {
+          browserFingerprint: browserFingerprint,
+        },
+      });
+    }
+
+    // Limit to 5
+    if (anonymousUser.numQrCodes >= 5) {
+      return NextResponse.json(
+        { error: "AI QR Code limit reached >= 5" },
+        { status: 429 }
+      );
+    }
 
     let response:
       | AiUrlResponse
@@ -32,13 +56,47 @@ export async function POST(req: NextRequest) {
     switch (qrType) {
       case "url":
         response = await getUrlQrCode(body, encodedToken);
+        if (response) {
+          await prismaClient.anonymousURLQr.create({
+            data: {
+              url: response.user_url,
+              image_url: response.image_url,
+              name: response.name,
+              anonymousUserId: anonymousUser.id,
+              uniqueToken: encodedToken,
+            },
+          });
+        }
         break;
       //must add this break statement in order to avoid multiple api calls during execution
       case "multi_url":
         response = await getMultiUrlQrCode(body, encodedToken);
+        if (response) {
+          await prismaClient.anonymousMultiUrlQr.create({
+            data: {
+              name: response.name,
+              urls: response.user_urls,
+              titles: response.user_titles,
+              anonymousUserId: anonymousUser.id,
+              uniqueToken: encodedToken,
+              image_url: response.image_url,
+            },
+          });
+        }
         break;
       case "free_text":
         response = await getFreeTextQrCode(body, encodedToken);
+        if (response) {
+          await prismaClient.anonymousFreetextQr.create({
+            data: {
+              name: response.name,
+              free_text: response.user_free_text,
+              image_url: response.image_url,
+              anonymousUserId: anonymousUser.id,
+              uniqueToken: encodedToken,
+            },
+          });
+        }
         break;
       // case "contact":
       //   response = await getContactQrCode(body, encodedToken);
@@ -46,7 +104,6 @@ export async function POST(req: NextRequest) {
         response = await getUrlQrCode(body, encodedToken);
         return;
     }
-    console.log(JSON.stringify(response));
     return NextResponse.json(JSON.stringify(response), { status: 200 });
   } catch (error) {
     console.log("INTERNAL SERVOR ERROR " + JSON.stringify(error));
