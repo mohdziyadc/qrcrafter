@@ -221,3 +221,23 @@ model PlusSubscription {
   stripePriceId String? @map(name:"stripe_price_id")
   stripeCurrentPeriodEnd DateTime? @map(name:"stripe_current_period_end") 
 }
+
+model AnonymousUser {
+  id String @id @default(cuid())
+  browserFingerprint String @unique
+  numQrCodes Int @default(0)
+  lastGeneratedAt DateTime @default(now())
+  anonymousURLQrCodes AnonymousURLQrCode[]
+}
+
+model AnonymousURLQrCode {
+  id String @id @default(cuid())
+  url String @db.VarChar(500)
+  anonymousUserId String
+  image_url String
+  name String
+  uniqueToken String @unique
+  anonymousUser AnonymousUser @relation(fields: [anonymousUserId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
