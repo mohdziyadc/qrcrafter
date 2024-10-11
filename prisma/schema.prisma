@@ -1,32 +1,27 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
-
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -38,27 +33,27 @@ model Session {
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId], name:"userId")
+  @@index([userId], map: "userId")
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  multiUrlQrCodes   MultiURLCode[] @relation("multiURLCodes")
-  dynamicURL       DynamicURL[] @relation("dynamicURL")
-  dynamicMultiURL   DynamicMultiURL[] @relation("dynamicMultiURL")
-  dynamicFreeText    DynamicFreeText[]  @relation("dynamicFreeText")
-  dynamicContact    DynamicContact[]   @relation("dynamicContact")
-  aiURLCode AiURLQRCode[] @relation("aiUrlCodes")
-  multiUrlAiQr MulitUrlAiQr[] @relation("multiUrlAiQr")
-  aiFreeTextQr AiFreeTextQr[] @relation("aiFreeTextQr")
-  aiContactQr AiContactQr[] @relation("aiContactQr")
+  id              String            @id @default(cuid())
+  name            String?
+  email           String?           @unique
+  emailVerified   DateTime?
+  image           String?
+  accounts        Account[]
+  aiContactQr     AiContactQr[]     @relation("aiContactQr")
+  aiFreeTextQr    AiFreeTextQr[]    @relation("aiFreeTextQr")
+  aiURLCode       AiURLQRCode[]     @relation("aiUrlCodes")
+  dynamicContact  DynamicContact[]  @relation("dynamicContact")
+  dynamicFreeText DynamicFreeText[] @relation("dynamicFreeText")
+  dynamicMultiURL DynamicMultiURL[] @relation("dynamicMultiURL")
+  dynamicURL      DynamicURL[]      @relation("dynamicURL")
+  multiUrlAiQr    MulitUrlAiQr[]    @relation("multiUrlAiQr")
+  multiUrlQrCodes MultiURLCode[]    @relation("multiURLCodes")
   qrCodeAnalytics QRCodeAnalytics[] @relation("qrCodeAnalytics")
+  sessions        Session[]
 }
 
 model VerificationToken {
@@ -70,174 +65,215 @@ model VerificationToken {
 }
 
 model QRCodeAnalytics {
-  id String @id @default(uuid())
-  scanCount Int @default(0)
-  qrName String
-  createdAt DateTime 
-  lastScanAt DateTime?
-  userId String
-  aiUrlQrCode AiURLQRCode? @relation("aiUrlAnalytics")
-  aiMultiUrlQrCode MulitUrlAiQr? @relation("aiMultiUrlAnalytics")
-  aiFreetextQr AiFreeTextQr? @relation("aiFreetextAnalytics")
-  aiContactQr AiContactQr? @relation("aiContactAnalytics")
-  dynamicUrlQr DynamicURL? @relation("dynamicUrlAnalytics")
-  dynamicMultiUrlQr DynamicMultiURL? @relation("dynamicMultiUrlAnalytics")
+  id                String           @id @default(uuid())
+  scanCount         Int              @default(0)
+  createdAt         DateTime
+  lastScanAt        DateTime?
+  userId            String
+  qrName            String
+  aiContactQr       AiContactQr?     @relation("aiContactAnalytics")
+  aiFreetextQr      AiFreeTextQr?    @relation("aiFreetextAnalytics")
+  aiUrlQrCode       AiURLQRCode?     @relation("aiUrlAnalytics")
+  dynamicContactQr  DynamicContact?  @relation("dynamicContactAnalytics")
   dynamicFreetextQr DynamicFreeText? @relation("dynamicFreetextAnalytics")
-  dynamicContactQr DynamicContact? @relation("dynamicContactAnalytics")
-  user User @relation("qrCodeAnalytics", fields: [userId], references: [id]) //for fetching the top qr codes
-  
+  dynamicMultiUrlQr DynamicMultiURL? @relation("dynamicMultiUrlAnalytics")
+  dynamicUrlQr      DynamicURL?      @relation("dynamicUrlAnalytics")
+  aiMultiUrlQrCode  MulitUrlAiQr?    @relation("aiMultiUrlAnalytics")
+  user              User             @relation("qrCodeAnalytics", fields: [userId], references: [id])
 }
 
-
 model MultiURLCode {
-  id  String @id @default(cuid())
-  qrCode String @db.VarChar(3000)
-  urls String[]
+  id     String   @id @default(cuid())
+  qrCode String   @db.VarChar(3000)
+  urls   String[]
   titles String[]
   userId String
-  user User @relation("multiURLCodes",fields:[userId], references:[id])
+  user   User     @relation("multiURLCodes", fields: [userId], references: [id])
 }
 
 model DynamicURL {
-  id String @id @default(cuid())
-  url String @db.VarChar(500)
-  uniqueToken String @unique
-  qrCode String @db.VarChar(3000)
-  name String 
-  userId String
-  qrCodeAnalyticsId String @unique
-  user User @relation("dynamicURL",fields: [userId], references: [id])
-  qrCodeAnalytics QRCodeAnalytics @relation("dynamicUrlAnalytics",fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
+  id                String          @id @default(cuid())
+  url               String          @db.VarChar(500)
+  uniqueToken       String          @unique
+  qrCode            String          @db.VarChar(3000)
+  name              String
+  userId            String
+  qrCodeAnalyticsId String          @unique
+  qrCodeAnalytics   QRCodeAnalytics @relation("dynamicUrlAnalytics", fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
+  user              User            @relation("dynamicURL", fields: [userId], references: [id])
 }
 
 model DynamicMultiURL {
-  id String @id @default(cuid())
-  urls String[]
-  titles String[]
-  uniqueToken String @unique
-  name String
-  qrCode String @db.VarChar(3000)
-  userId String
-  qrCodeAnalyticsId String @unique
-  user User @relation("dynamicMultiURL", fields: [userId], references: [id])
-  qrCodeAnalytics QRCodeAnalytics @relation("dynamicMultiUrlAnalytics",fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
+  id                String          @id @default(cuid())
+  urls              String[]
+  titles            String[]
+  uniqueToken       String          @unique
+  name              String
+  qrCode            String          @db.VarChar(3000)
+  userId            String
+  qrCodeAnalyticsId String          @unique
+  qrCodeAnalytics   QRCodeAnalytics @relation("dynamicMultiUrlAnalytics", fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
+  user              User            @relation("dynamicMultiURL", fields: [userId], references: [id])
 }
 
 model DynamicFreeText {
-  id String @id @default(cuid())
-  name String
-  freetext String @db.VarChar(5000)
-  qrCode String @db.VarChar(3000)
-  uniqueToken String @unique
-  userId String
-  qrCodeAnalyticsId String @unique
-  user User @relation("dynamicFreeText", fields: [userId], references: [id])
-  qrCodeAnalytics QRCodeAnalytics @relation("dynamicFreetextAnalytics",fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
+  id                String          @id @default(cuid())
+  name              String
+  freetext          String          @db.VarChar(5000)
+  qrCode            String          @db.VarChar(3000)
+  uniqueToken       String          @unique
+  userId            String
+  qrCodeAnalyticsId String          @unique
+  qrCodeAnalytics   QRCodeAnalytics @relation("dynamicFreetextAnalytics", fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
+  user              User            @relation("dynamicFreeText", fields: [userId], references: [id])
 }
 
 model DynamicContact {
-  id String @id @default(cuid())
-  firstName String
-  lastName String
-  organisation String
-  email String
-  phoneNumber String
-  qrCode String @db.VarChar(3000)
-  uniqueToken String @unique
-  userId String
-  qrCodeAnalyticsId String @unique
-  user User @relation("dynamicContact",fields: [userId], references: [id])
-  qrCodeAnalytics QRCodeAnalytics @relation("dynamicContactAnalytics", fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
+  id                String          @id @default(cuid())
+  firstName         String
+  lastName          String
+  organisation      String
+  email             String
+  phoneNumber       String
+  qrCode            String          @db.VarChar(3000)
+  uniqueToken       String          @unique
+  userId            String
+  qrCodeAnalyticsId String          @unique
+  qrCodeAnalytics   QRCodeAnalytics @relation("dynamicContactAnalytics", fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
+  user              User            @relation("dynamicContact", fields: [userId], references: [id])
 }
 
 model AiURLQRCode {
-  id String @id @default(cuid())
-  url String @db.VarChar(500)
-  uniqueToken String @unique
-  image_url String
-  name String
-  userId String
-  qrCodeAnalyticsId String @unique
-  user User @relation("aiUrlCodes",fields: [userId], references: [id])
-  qrCodeAnalytics QRCodeAnalytics @relation("aiUrlAnalytics",fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
-
+  id                String          @id @default(cuid())
+  url               String          @db.VarChar(500)
+  uniqueToken       String          @unique
+  image_url         String
+  name              String
+  userId            String
+  qrCodeAnalyticsId String          @unique
+  qrCodeAnalytics   QRCodeAnalytics @relation("aiUrlAnalytics", fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
+  user              User            @relation("aiUrlCodes", fields: [userId], references: [id])
 }
 
 model MulitUrlAiQr {
-  id String @id @default(cuid())
-  urls String[]
-  titles String[]
-  uniqueToken String @unique
-  name String
-  image_url String
-  userId String
-  qrCodeAnalyticsId String @unique
-  user User @relation("multiUrlAiQr",fields: [userId], references: [id])
-  qrCodeAnalytics QRCodeAnalytics @relation("aiMultiUrlAnalytics",fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
+  id                String          @id @default(cuid())
+  urls              String[]
+  titles            String[]
+  uniqueToken       String          @unique
+  name              String
+  image_url         String
+  userId            String
+  qrCodeAnalyticsId String          @unique
+  qrCodeAnalytics   QRCodeAnalytics @relation("aiMultiUrlAnalytics", fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
+  user              User            @relation("multiUrlAiQr", fields: [userId], references: [id])
 }
 
 model AiFreeTextQr {
-  id String @id @default(cuid())
-  name String
-  freetext String @db.VarChar(3000)
-  image_url String
-  uniqueToken String @unique
-  userId String
-  qrCodeAnalyticsId String @unique
-  user User @relation("aiFreeTextQr", fields: [userId], references: [id])
-  qrCodeAnalytics QRCodeAnalytics @relation("aiFreetextAnalytics", fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
+  id                String          @id @default(cuid())
+  name              String
+  freetext          String          @db.VarChar(3000)
+  image_url         String
+  uniqueToken       String          @unique
+  userId            String
+  qrCodeAnalyticsId String          @unique
+  qrCodeAnalytics   QRCodeAnalytics @relation("aiFreetextAnalytics", fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
+  user              User            @relation("aiFreeTextQr", fields: [userId], references: [id])
 }
 
 model AiContactQr {
-  id String @id @default(cuid())
-  first_name String
-  last_name String
-  organisation String
-  email String
-  phone_number String
-  image_url String
-  uniqueToken String @unique
-  userId String
-  qrCodeAnalyticsId String @unique
-  user User @relation("aiContactQr", fields: [userId], references: [id])
-  qrCodeAnalytics QRCodeAnalytics @relation("aiContactAnalytics", fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
-
+  id                String          @id @default(cuid())
+  first_name        String
+  last_name         String
+  organisation      String
+  email             String
+  phone_number      String
+  image_url         String
+  uniqueToken       String          @unique
+  userId            String
+  qrCodeAnalyticsId String          @unique
+  qrCodeAnalytics   QRCodeAnalytics @relation("aiContactAnalytics", fields: [qrCodeAnalyticsId], references: [id], onDelete: Cascade)
+  user              User            @relation("aiContactQr", fields: [userId], references: [id])
 }
 
 model ProSubscription {
-  id String @id @default(cuid())
-  userId String @unique
-  stripeCustomerId String @unique @map(name: "stripe_customer_id")
-  stripeSubscriptionId String? @unique @map(name:"stripe_subscription_id")
-  stripePriceId String? @map(name:"stripe_price_id")
-  stripeCurrentPeriodEnd DateTime? @map(name:"stripe_current_period_end")  
+  id                     String    @id @default(cuid())
+  userId                 String    @unique
+  stripeCustomerId       String    @unique @map("stripe_customer_id")
+  stripeSubscriptionId   String?   @unique @map("stripe_subscription_id")
+  stripePriceId          String?   @map("stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @map("stripe_current_period_end")
 }
 
 model PlusSubscription {
-  id String @id @default(cuid())
-  userId String @unique
-  stripeCustomerId String @unique @map(name: "stripe_customer_id")
-  stripeSubscriptionId String? @unique @map(name:"stripe_subscription_id")
-  stripePriceId String? @map(name:"stripe_price_id")
-  stripeCurrentPeriodEnd DateTime? @map(name:"stripe_current_period_end") 
+  id                     String    @id @default(cuid())
+  userId                 String    @unique
+  stripeCustomerId       String    @unique @map("stripe_customer_id")
+  stripeSubscriptionId   String?   @unique @map("stripe_subscription_id")
+  stripePriceId          String?   @map("stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @map("stripe_current_period_end")
 }
 
 model AnonymousUser {
-  id String @id @default(cuid())
-  browserFingerprint String @unique
-  numQrCodes Int @default(0)
-  lastGeneratedAt DateTime @default(now())
-  anonymousURLQrCodes AnonymousURLQrCode[]
+  id                       String                @id @default(cuid())
+  browserFingerprint       String                @unique
+  numQrCodes               Int                   @default(0)
+  lastGeneratedAt          DateTime              @default(now())
+  anonymousContactQrCodes  AnonymousContactQr[]
+  anonymousFreetextQrCodes AnonymousFreetextQr[]
+  anonymousMultiUrlQrCodes AnonymousMultiUrlQr[]
+  anonymousURLQrCodes      AnonymousURLQr[]
 }
 
-model AnonymousURLQrCode {
-  id String @id @default(cuid())
-  url String @db.VarChar(500)
+model AnonymousURLQr {
+  id              String        @id @default(cuid())
+  url             String        @db.VarChar(500)
   anonymousUserId String
-  image_url String
-  name String
-  uniqueToken String @unique
-  anonymousUser AnonymousUser @relation(fields: [anonymousUserId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  image_url       String
+  name            String
+  country String
+  uniqueToken     String        @unique
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  anonymousUser   AnonymousUser @relation(fields: [anonymousUserId], references: [id])
+}
+
+model AnonymousMultiUrlQr {
+  id              String        @id @default(cuid())
+  urls            String[]
+  titles          String[]
+  name            String
+  image_url       String
+  uniqueToke      String        @unique
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  anonymousUserId String
+  anonymousUser   AnonymousUser @relation(fields: [anonymousUserId], references: [id])
+}
+
+model AnonymousContactQr {
+  id              String        @id @default(cuid())
+  name            String
+  first_name      String
+  last_name       String
+  organisation    String
+  email           String
+  phone_number    String
+  image_url       String
+  uniqueToken     String        @unique
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  anonymousUserId String
+  anonymousUser   AnonymousUser @relation(fields: [anonymousUserId], references: [id])
+}
+
+model AnonymousFreetextQr {
+  id              String        @id @default(cuid())
+  name            String
+  image_url       String
+  free_text       String[]      @db.VarChar(5000)
+  uniqueToken     String        @unique
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  anonymousUserId String
+  anonymousUser   AnonymousUser @relation(fields: [anonymousUserId], references: [id])
 }
