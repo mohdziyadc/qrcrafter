@@ -7,7 +7,7 @@ import {
 } from "./ui/dropdown-menu";
 import { Check, ChevronDown } from "lucide-react";
 import { title } from "process";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import HomepageForm from "./HomepageForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
@@ -15,6 +15,12 @@ import NoQrFound from "./NoQrFound";
 import AiUrlTable from "./AiUrlTable";
 import HomePageTable from "./HomePageTable";
 import DynamicAIQRCodeCard from "./DynamicAIQRCodeCard";
+import dynamic from "next/dynamic";
+import { getFingerprintClient } from "@/lib/fingerprint";
+const ClientJS = dynamic(() => import("../components/ClientJS"), {
+  ssr: false,
+});
+
 // import ModalVideo from '@/components/modal-video'
 
 export default function Hero() {
@@ -37,10 +43,21 @@ export default function Hero() {
       item: "free_text",
     },
   ];
+  const [fingerprint, setFingerprint] = useState<string>();
+
+  // useEffect(() => {
+  //   const fpClient = getFingerprintClient();
+  //   if (fpClient) {
+  //     setFingerprint(fpClient.getFingerprint());
+  //   }
+  // }, []);
+
   return (
-    <section className="relative  w-full">
-      {/* Illustration behind hero content */}
-      {/* <div
+    <>
+      <ClientJS setFingerprint={setFingerprint} />
+      <section className="relative  w-full">
+        {/* Illustration behind hero content */}
+        {/* <div
         className="absolute left-1/2 transform -translate-x-1/2 bottom-0 pointer-events-none -z-10 hidden sm:block"
         aria-hidden="true"
       >
@@ -70,136 +87,140 @@ export default function Hero() {
         </svg>
       </div> */}
 
-      <div className="max-w-8xl mx-auto px-4 sm:px-6">
-        {/* Hero content */}
-        <div className="flex flex-col pt-6 pb-6 ">
-          {/* Section header */}
-          <div className="flex justify-center items-center w-full ">
-            <div className="flex flex-col justify-center items-center">
-              <h1
-                className="text-5xl md:text-6xl font-extrabold leading-tighter tracking-tighter mb-2"
-                data-aos="zoom-y-out"
-              >
-                No more boring{" "}
-                <span className="text-5xl pr-2 md:text-6xl font-extrabold leading-tighter tracking-tighter mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
-                  QR Codes
-                </span>
-              </h1>
-              <p className="text-2xl font-light text-primary opacity-70">
-                Create beautiful <span className="font-bold">dynamic AI</span>{" "}
-                generated QR Codes to level up your game.
-              </p>
+        <div className="max-w-8xl mx-auto px-4 sm:px-6">
+          {/* Hero content */}
+          <div className="flex flex-col pt-6 pb-6 ">
+            {/* Section header */}
+            <div className="flex justify-center items-center w-full ">
+              <div className="flex flex-col justify-center items-center">
+                <h1
+                  className="text-5xl md:text-6xl font-extrabold leading-tighter tracking-tighter mb-2"
+                  data-aos="zoom-y-out"
+                >
+                  No more boring{" "}
+                  <span className="text-5xl pr-2 md:text-6xl font-extrabold leading-tighter tracking-tighter mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
+                    QR Codes
+                  </span>
+                </h1>
+                <p className="text-2xl font-light text-primary opacity-70">
+                  Create beautiful <span className="font-bold">dynamic AI</span>{" "}
+                  generated QR Codes to level up your game.
+                </p>
+                <p>Fingerprint Hash: {fingerprint}</p>
+              </div>
+            </div>
+
+            {/* Hero image */}
+            <div className="w-full mt-4 ">
+              <Card className="border-4 border-primary border-dashed">
+                <Tabs defaultValue="generate" className="w-full">
+                  <TabsList className="mt-4 ml-4">
+                    <TabsTrigger value="generate">
+                      Create AI QR Codes
+                    </TabsTrigger>
+                    <TabsTrigger value="get_qr">Your QR Codes</TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="generate" className="-mt-2">
+                    <CardHeader className="flex flex-row items-baseline">
+                      <div className="p-2 opacity-75 text-sm">QR Type: </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger className="bg-muted py-2 text-sm rounded-md outline-none">
+                          <div className="flex flex-row justify-between mx-4">
+                            {
+                              {
+                                url: "URL",
+                                multi_url: "Multi URL",
+                                contact: "Contact",
+                                free_text: "Free text",
+                              }[type]
+                            }
+                            <ChevronDown className="w-4 h-4 ml-3" />
+                          </div>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-12">
+                          {dropdownItems.map((dropdownItem, idx) => (
+                            <DropdownMenuItem
+                              key={idx}
+                              onClick={() => {
+                                setType(dropdownItem.item);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  type === dropdownItem.item
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {dropdownItem.title}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex flex-row">
+                        <div className="flex-[1] border-2 border-slate-400 h-fit p-4 mr-2 rounded-lg ">
+                          <HomepageForm qrType={type} />
+                        </div>
+                        <div className="flex-[2] flex rounded-md border-dashed h-[48rem] border-blue-600 justify-center items-center border-2 ">
+                          <DynamicAIQRCodeCard />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </TabsContent>
+                  <TabsContent value="get_qr">
+                    <CardHeader className="flex flex-row items-baseline -mt-4">
+                      <div className="p-2 opacity-75 text-sm">QR Type: </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger className="bg-muted py-2 text-sm rounded-md outline-none">
+                          <div className="flex flex-row justify-between mx-4">
+                            {
+                              {
+                                url: "URL",
+                                multi_url: "Multi URL",
+                                contact: "Contact",
+                                free_text: "Free text",
+                              }[type]
+                            }
+                            <ChevronDown className="w-4 h-4 ml-3" />
+                          </div>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-12">
+                          {dropdownItems.map((dropdownItem, idx) => (
+                            <DropdownMenuItem
+                              key={idx}
+                              onClick={() => {
+                                setType(dropdownItem.item);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  type === dropdownItem.item
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
+                              {dropdownItem.title}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </CardHeader>
+                    <CardContent className="min-h-screen">
+                      <HomePageTable qrType={type} />
+                    </CardContent>
+                  </TabsContent>
+                </Tabs>
+              </Card>
             </div>
           </div>
-
-          {/* Hero image */}
-          <div className="w-full mt-4 ">
-            <Card className="border-4 border-primary border-dashed">
-              <Tabs defaultValue="generate" className="w-full">
-                <TabsList className="mt-4 ml-4">
-                  <TabsTrigger value="generate">Create AI QR Codes</TabsTrigger>
-                  <TabsTrigger value="get_qr">Your QR Codes</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="generate" className="-mt-2">
-                  <CardHeader className="flex flex-row items-baseline">
-                    <div className="p-2 opacity-75 text-sm">QR Type: </div>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger className="bg-muted py-2 text-sm rounded-md outline-none">
-                        <div className="flex flex-row justify-between mx-4">
-                          {
-                            {
-                              url: "URL",
-                              multi_url: "Multi URL",
-                              contact: "Contact",
-                              free_text: "Free text",
-                            }[type]
-                          }
-                          <ChevronDown className="w-4 h-4 ml-3" />
-                        </div>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-12">
-                        {dropdownItems.map((dropdownItem, idx) => (
-                          <DropdownMenuItem
-                            key={idx}
-                            onClick={() => {
-                              setType(dropdownItem.item);
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                type === dropdownItem.item
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              )}
-                            />
-                            {dropdownItem.title}
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-row">
-                      <div className="flex-[1] border-2 border-slate-400 h-fit p-4 mr-2 rounded-lg ">
-                        <HomepageForm qrType={type} />
-                      </div>
-                      <div className="flex-[2] flex rounded-md border-dashed h-[48rem] border-blue-600 justify-center items-center border-2 ">
-                        <DynamicAIQRCodeCard />
-                      </div>
-                    </div>
-                  </CardContent>
-                </TabsContent>
-                <TabsContent value="get_qr">
-                  <CardHeader className="flex flex-row items-baseline -mt-4">
-                    <div className="p-2 opacity-75 text-sm">QR Type: </div>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger className="bg-muted py-2 text-sm rounded-md outline-none">
-                        <div className="flex flex-row justify-between mx-4">
-                          {
-                            {
-                              url: "URL",
-                              multi_url: "Multi URL",
-                              contact: "Contact",
-                              free_text: "Free text",
-                            }[type]
-                          }
-                          <ChevronDown className="w-4 h-4 ml-3" />
-                        </div>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-12">
-                        {dropdownItems.map((dropdownItem, idx) => (
-                          <DropdownMenuItem
-                            key={idx}
-                            onClick={() => {
-                              setType(dropdownItem.item);
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                type === dropdownItem.item
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              )}
-                            />
-                            {dropdownItem.title}
-                          </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </CardHeader>
-                  <CardContent className="min-h-screen">
-                    <HomePageTable qrType={type} />
-                  </CardContent>
-                </TabsContent>
-              </Tabs>
-            </Card>
-          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
 
