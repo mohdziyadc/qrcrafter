@@ -16,10 +16,10 @@ import AiUrlTable from "./AiUrlTable";
 import HomePageTable from "./HomePageTable";
 import DynamicAIQRCodeCard from "./DynamicAIQRCodeCard";
 import dynamic from "next/dynamic";
-import { getFingerprintClient } from "@/lib/fingerprint";
-const ClientJS = dynamic(() => import("../components/ClientJS"), {
-  ssr: false,
-});
+// import { getFingerprintClient } from "@/lib/fingerprint";
+// const ClientJS = dynamic(() => import("../components/ClientJS"), {
+//   ssr: false,
+// });
 
 // import ModalVideo from '@/components/modal-video'
 
@@ -45,16 +45,9 @@ export default function Hero() {
   ];
   const [fingerprint, setFingerprint] = useState<string>();
 
-  // useEffect(() => {
-  //   const fpClient = getFingerprintClient();
-  //   if (fpClient) {
-  //     setFingerprint(fpClient.getFingerprint());
-  //   }
-  // }, []);
-
   return (
     <>
-      <ClientJS setFingerprint={setFingerprint} />
+      {/* <ClientJS setFingerprint={setFingerprint} /> */}
       <section className="relative  w-full">
         {/* Illustration behind hero content */}
         {/* <div

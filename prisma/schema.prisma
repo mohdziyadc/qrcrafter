@@ -215,7 +215,7 @@ model PlusSubscription {
 
 model AnonymousUser {
   id                       String                @id @default(cuid())
-  browserFingerprint       String                @unique
+  vistorId                 String                @unique
   numQrCodes               Int                   @default(0)
   lastGeneratedAt          DateTime              @default(now())
   anonymousContactQrCodes  AnonymousContactQr[]

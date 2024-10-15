@@ -20,32 +20,13 @@ import { error } from "console";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { qrType, browserFingerprint } = body;
+    const { qrType } = body;
+
+    // let
+    // const generationToken = req.cookies.qr_token
 
     const token = getBase64UUID();
     const encodedToken = encodeURIComponent(token);
-
-    let anonymousUser = await prismaClient.anonymousUser.findUnique({
-      where: {
-        browserFingerprint: browserFingerprint,
-      },
-    });
-
-    if (!anonymousUser) {
-      anonymousUser = await prismaClient.anonymousUser.create({
-        data: {
-          browserFingerprint: browserFingerprint,
-        },
-      });
-    }
-
-    // Limit to 5
-    if (anonymousUser.numQrCodes >= 5) {
-      return NextResponse.json(
-        { error: "AI QR Code limit reached >= 5" },
-        { status: 429 }
-      );
-    }
 
     let response:
       | AiUrlResponse
