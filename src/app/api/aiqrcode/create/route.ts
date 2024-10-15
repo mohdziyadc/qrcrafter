@@ -15,15 +15,77 @@ import {
 } from "@/lib/types";
 import { replicateClient } from "@/lib/replicate";
 import { prismaClient } from "@/lib/db";
-import { error } from "console";
+import { JwtPayload, sign, verify } from "jsonwebtoken";
+import { serialize } from "cookie";
+import { NextApiRequest, NextApiResponse } from "next";
+import { AnonymousUser } from "@prisma/client";
+import { cookies } from "next/headers";
+import { strict } from "assert";
+
+const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { qrType } = body;
 
-    // let
-    // const generationToken = req.cookies.qr_token
+    let visitorId: string | undefined;
+    const generationToken = cookies().get("qr_token")?.value;
+
+    if (generationToken) {
+      try {
+        console.log("GenerationToken " + generationToken);
+        const decoded = verify(generationToken, JWT_SECRET);
+        visitorId = (decoded as JwtPayload).visitorId;
+        console.log("Vistor Id from api: " + JSON.stringify(decoded));
+      } catch (e) {
+        console.log("Invalid Token error: " + e);
+      }
+    } else {
+      console.log("Generation Token: " + generationToken);
+    }
+    if (!visitorId) {
+      visitorId = Math.random().toString(36).substring(2, 9); //alphanumeric
+      const newToken = sign({ visitorId }, JWT_SECRET, { expiresIn: "30d" });
+      cookies().set("qr_token", newToken, {
+        httpOnly: true,
+        secure: true, // Change it to process.env.NODE_ENV !== "development" in prod,
+        sameSite: "strict",
+        maxAge: 30 * 24 * 60 * 60,
+        path: "/",
+      });
+
+      console.log("Cookie Set " + newToken);
+    }
+    let anonymousUser: AnonymousUser | undefined;
+    try {
+      anonymousUser = (await prismaClient.anonymousUser.findUnique({
+        where: {
+          vistorId: visitorId,
+        },
+      })) as AnonymousUser;
+    } catch (e) {
+      console.log("[PRISMA ERORR] " + e);
+    }
+
+    if (!anonymousUser) {
+      anonymousUser = await prismaClient.anonymousUser.create({
+        data: {
+          vistorId: visitorId,
+        },
+      });
+    }
+
+    if (anonymousUser.numQrCodes >= 5) {
+      return NextResponse.json(
+        {
+          allowed: false,
+          message:
+            "QR Code Generation limit reached. Please sign up to continue.",
+        },
+        { status: 429 }
+      );
+    }
 
     const token = getBase64UUID();
     const encodedToken = encodeURIComponent(token);
@@ -45,6 +107,17 @@ export async function POST(req: NextRequest) {
               name: response.name,
               anonymousUserId: anonymousUser.id,
               uniqueToken: encodedToken,
+              createdAt: new Date(),
+            },
+          });
+
+          await prismaClient.anonymousUser.update({
+            where: {
+              vistorId: visitorId,
+            },
+            data: {
+              numQrCodes: { increment: 1 },
+              lastGeneratedAt: new Date(),
             },
           });
         }
@@ -85,10 +158,18 @@ export async function POST(req: NextRequest) {
         response = await getUrlQrCode(body, encodedToken);
         return;
     }
-    return NextResponse.json(JSON.stringify(response), { status: 200 });
+
+    return NextResponse.json(
+      {
+        allowed: true,
+        responseData: response,
+        count: anonymousUser.numQrCodes,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.log("INTERNAL SERVOR ERROR " + JSON.stringify(error));
-    return new NextResponse("[INTERNAL SERVOR ERROR] " + error, {
+    return NextResponse.json("[INTERNAL SERVOR ERROR] " + error, {
       status: 500,
     });
   }
@@ -100,36 +181,36 @@ async function getUrlQrCode(
 ): Promise<AiUrlResponse> {
   const { prompt, name, url } = body;
   console.log("{BODY from getUrl} " + JSON.stringify(body));
-  const startTime = performance.now();
-  let imageUrl = await replicateClient.generateQRCode({
-    url: `http://localhost:3000/api/a/${encodedToken}`,
-    prompt: prompt,
-    qr_conditioning_scale: 2,
-    num_inference_steps: 30,
-    guidance_scale: 10,
-    negative_prompt:
-      "Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, blurry",
-  });
+  // const startTime = performance.now();
+  // let imageUrl = await replicateClient.generateQRCode({
+  //   url: `http://localhost:3000/api/a/${encodedToken}`,
+  //   prompt: prompt,
+  //   qr_conditioning_scale: 2,
+  //   num_inference_steps: 30,
+  //   guidance_scale: 10,
+  //   negative_prompt:
+  //     "Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, blurry",
+  // });
 
-  const endTime = performance.now();
-  const durationMS = endTime - startTime;
+  // const endTime = performance.now();
+  // const durationMS = endTime - startTime;
 
-  const response: AiUrlResponse = {
-    name: name,
-    latency_ms: Math.round(durationMS),
-    token: encodedToken,
-    image_url: imageUrl,
-    user_url: url,
-  };
-  // const resp1: AiUrlResponse = {
-  //   name: "Nilambur Teak",
-  //   latency_ms: 65451,
-  //   token: "d7%2FS7YNk",
-  //   image_url:
-  //     "https://replicate.delivery/pbxt/gRLnEqde2R31Eq4jnLXrSgqBT9gga7Ekz2CF0CTAEIyr8iyJA/seed-59570.png",
-  //   user_url: "https://substack.com/",
+  // const response: AiUrlResponse = {
+  //   name: name,
+  //   latency_ms: Math.round(durationMS),
+  //   token: encodedToken,
+  //   image_url: imageUrl,
+  //   user_url: url,
   // };
-  return response;
+  const resp1: AiUrlResponse = {
+    name: "Nilambur Teak",
+    latency_ms: 65451,
+    token: "d7%2FS7YNk",
+    image_url:
+      "https://replicate.delivery/pbxt/gRLnEqde2R31Eq4jnLXrSgqBT9gga7Ekz2CF0CTAEIyr8iyJA/seed-59570.png",
+    user_url: "https://substack.com/",
+  };
+  return resp1;
 }
 
 async function getMultiUrlQrCode(

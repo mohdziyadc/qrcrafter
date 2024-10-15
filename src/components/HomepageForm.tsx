@@ -5,7 +5,7 @@ import {
   aiUrlFormSchema,
 } from "@/validators/qrFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as z from "zod";
 import {
@@ -50,6 +50,8 @@ const HomepageForm = ({ qrType }: Props) => {
   const { loading, setLoading } = useLoading();
   const { image, setImage } = useImage();
   const { toast } = useToast();
+
+  const [qrCount, setQrCount] = useState(5);
 
   //creating a reference object - a workaround to access state in setTimeout
   const loadingRef = useRef(loading);
@@ -97,13 +99,16 @@ const HomepageForm = ({ qrType }: Props) => {
         "/api/aiqrcode/create",
         JSON.stringify(data)
       );
-      // console.log("[MUTATION RESPONSE] " + JSON.stringify(response));
+      console.log("[MUTATION RESPONSE] " + JSON.stringify(response));
       return response.data;
     },
     onSuccess: (data) => {
       setLoading("success");
-      console.log("Setting Image: " + data);
-      setImage(JSON.parse(data));
+      if (data.allowed) {
+        setQrCount(5 - data.count);
+      }
+      console.log("Setting Image: " + JSON.stringify(data));
+      setImage(data.responseData);
     },
     onError: (error) => {
       toast({
@@ -222,6 +227,7 @@ const HomepageForm = ({ qrType }: Props) => {
             </Button>
           </form>
         </Form>
+        <div>QR Codes remaining: {qrCount}</div>
       </div>
     </>
   );
