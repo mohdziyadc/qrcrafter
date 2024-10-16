@@ -218,7 +218,7 @@ model AnonymousUser {
   vistorId                 String                @unique
   numQrCodes               Int                   @default(0)
   lastGeneratedAt          DateTime              @default(now())
-  anonymousContactQrCodes  AnonymousContactQr[]
+  anonymousContactQrCodes  AnonymousContactQr[]  
   anonymousFreetextQrCodes AnonymousFreetextQr[]
   anonymousMultiUrlQrCodes AnonymousMultiUrlQr[]
   anonymousURLQrCodes      AnonymousURLQr[]
@@ -233,7 +233,7 @@ model AnonymousURLQr {
   uniqueToken     String        @unique
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  anonymousUser   AnonymousUser @relation(fields: [anonymousUserId], references: [id])
+  anonymousUser   AnonymousUser @relation(fields: [anonymousUserId], references: [id], onDelete: Cascade)
 }
 
 model AnonymousMultiUrlQr {
@@ -246,7 +246,7 @@ model AnonymousMultiUrlQr {
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   anonymousUserId String
-  anonymousUser   AnonymousUser @relation(fields: [anonymousUserId], references: [id])
+  anonymousUser   AnonymousUser @relation(fields: [anonymousUserId], references: [id], onDelete: Cascade)
 }
 
 model AnonymousContactQr {
@@ -262,7 +262,7 @@ model AnonymousContactQr {
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   anonymousUserId String
-  anonymousUser   AnonymousUser @relation(fields: [anonymousUserId], references: [id])
+  anonymousUser   AnonymousUser @relation(fields: [anonymousUserId], references: [id], onDelete: Cascade)
 }
 
 model AnonymousFreetextQr {
@@ -274,5 +274,5 @@ model AnonymousFreetextQr {
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   anonymousUserId String
-  anonymousUser   AnonymousUser @relation(fields: [anonymousUserId], references: [id])
+  anonymousUser   AnonymousUser @relation(fields: [anonymousUserId], references: [id], onDelete: Cascade)
 }

@@ -6,7 +6,6 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Check, ChevronDown } from "lucide-react";
-import { title } from "process";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import HomepageForm from "./HomepageForm";
@@ -15,7 +14,6 @@ import NoQrFound from "./NoQrFound";
 import AiUrlTable from "./AiUrlTable";
 import HomePageTable from "./HomePageTable";
 import DynamicAIQRCodeCard from "./DynamicAIQRCodeCard";
-import dynamic from "next/dynamic";
 // import { getFingerprintClient } from "@/lib/fingerprint";
 // const ClientJS = dynamic(() => import("../components/ClientJS"), {
 //   ssr: false,
@@ -43,11 +41,9 @@ export default function Hero() {
       item: "free_text",
     },
   ];
-  const [fingerprint, setFingerprint] = useState<string>();
 
   return (
     <>
-      {/* <ClientJS setFingerprint={setFingerprint} /> */}
       <section className="relative  w-full">
         {/* Illustration behind hero content */}
         {/* <div
@@ -99,7 +95,6 @@ export default function Hero() {
                   Create beautiful <span className="font-bold">dynamic AI</span>{" "}
                   generated QR Codes to level up your game.
                 </p>
-                <p>Fingerprint Hash: {fingerprint}</p>
               </div>
             </div>
 

@@ -282,3 +282,11 @@ async function getContactQrCode(
    */
   return "";
 }
+
+/**
+ * GO EAZY on the fingerprint for now. Build & Launch
+ * Criteria                Same property
+ * Common across browsers - IP Address
+ * Same Browser (Normal + Incognito) - IP Address + User Agent
+ * Different Tabs - cookies
+ */
