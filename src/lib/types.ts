@@ -80,3 +80,5 @@ export type AiUrlResponse = QRInputResponse & AiUrlQr;
 export type AiMultiUrlResponse = QRInputResponse & AiMultiUrlQr;
 export type AiFreeTextResponse = QRInputResponse & AiFreeTextQr;
 export type AiContactResponse = QRInputResponse & AiContactQr;
+export type AiAnonContactResponse = QRInputResponse &
+  AiContactQr & { name: string };

@@ -18,26 +18,36 @@ export async function GET(
         qrCodeAnalytics: true,
       },
     });
-    if (!qrCode) {
+
+    const anonQrCode = await prismaClient.anonymousURLQr.findUnique({
+      where: {
+        uniqueToken: uniqueToken,
+      },
+    });
+    const qrCodeFound = qrCode !== null || anonQrCode !== null;
+    if (!qrCodeFound) {
       return new NextResponse("No QR code found with the token given", {
         status: 404,
       });
     }
-
-    await prismaClient.qRCodeAnalytics.update({
-      where: {
-        id: qrCode.qrCodeAnalytics.id,
-      },
-      data: {
-        scanCount: {
-          increment: 1,
+    if (qrCode) {
+      await prismaClient.qRCodeAnalytics.update({
+        where: {
+          id: qrCode.qrCodeAnalytics.id,
         },
-        lastScanAt: new Date(),
-      },
-    });
+        data: {
+          scanCount: {
+            increment: 1,
+          },
+          lastScanAt: new Date(),
+        },
+      });
+    }
 
-    if (qrCode.url) {
+    if (qrCode && qrCode.url) {
       redirectUrl = qrCode.url;
+    } else if (anonQrCode && anonQrCode.url) {
+      redirectUrl = anonQrCode.url;
     } else {
       return new NextResponse("No URL found", { status: 404 });
     }

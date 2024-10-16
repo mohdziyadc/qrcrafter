@@ -1,13 +1,8 @@
-import {
-  aiContactFormSchema,
-  aiFreeTextFormSchema,
-  aiMultiUrlFormSchema,
-  aiUrlFormSchema,
-} from "@/validators/qrFormSchema";
 import { NextRequest, NextResponse } from "next/server";
 import { getBase64UUID } from "@/lib/utils";
 import QRCode from "qrcode";
 import {
+  AiAnonContactResponse,
   AiContactResponse,
   AiFreeTextResponse,
   AiMultiUrlResponse,
@@ -94,7 +89,7 @@ export async function POST(req: NextRequest) {
       | AiUrlResponse
       | AiMultiUrlResponse
       | AiFreeTextResponse
-      | AiContactResponse;
+      | AiAnonContactResponse;
 
     switch (qrType) {
       case "url":
@@ -136,6 +131,16 @@ export async function POST(req: NextRequest) {
               image_url: response.image_url,
             },
           });
+
+          await prismaClient.anonymousUser.update({
+            where: {
+              vistorId: visitorId,
+            },
+            data: {
+              numQrCodes: { increment: 1 },
+              lastGeneratedAt: new Date(),
+            },
+          });
         }
         break;
       case "free_text":
@@ -150,10 +155,45 @@ export async function POST(req: NextRequest) {
               uniqueToken: encodedToken,
             },
           });
+
+          await prismaClient.anonymousUser.update({
+            where: {
+              vistorId: visitorId,
+            },
+            data: {
+              numQrCodes: { increment: 1 },
+              lastGeneratedAt: new Date(),
+            },
+          });
         }
         break;
-      // case "contact":
-      //   response = await getContactQrCode(body, encodedToken);
+      case "contact":
+        response = await getContactQrCode(body, encodedToken);
+        if (response) {
+          await prismaClient.anonymousContactQr.create({
+            data: {
+              first_name: response.user_first_name,
+              name: response.name,
+              last_name: response.user_last_name,
+              image_url: response.image_url,
+              phone_number: response.user_phone_number,
+              organisation: response.user_organisation,
+              email: response.user_email,
+              anonymousUserId: anonymousUser.id,
+              uniqueToken: encodedToken,
+            },
+          });
+
+          await prismaClient.anonymousUser.update({
+            where: {
+              vistorId: visitorId,
+            },
+            data: {
+              numQrCodes: { increment: 1 },
+              lastGeneratedAt: new Date(),
+            },
+          });
+        }
       default:
         response = await getUrlQrCode(body, encodedToken);
         return;
@@ -181,36 +221,29 @@ async function getUrlQrCode(
 ): Promise<AiUrlResponse> {
   const { prompt, name, url } = body;
   console.log("{BODY from getUrl} " + JSON.stringify(body));
-  // const startTime = performance.now();
-  // let imageUrl = await replicateClient.generateQRCode({
-  //   url: `http://localhost:3000/api/a/${encodedToken}`,
-  //   prompt: prompt,
-  //   qr_conditioning_scale: 2,
-  //   num_inference_steps: 30,
-  //   guidance_scale: 10,
-  //   negative_prompt:
-  //     "Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, blurry",
-  // });
+  const startTime = performance.now();
+  let imageUrl = await replicateClient.generateQRCode({
+    url: `http://localhost:3000/api/a/${encodedToken}`,
+    prompt: prompt,
+    qr_conditioning_scale: 2,
+    num_inference_steps: 30,
+    guidance_scale: 10,
+    negative_prompt:
+      "Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, blurry",
+  });
 
-  // const endTime = performance.now();
-  // const durationMS = endTime - startTime;
+  const endTime = performance.now();
+  const durationMS = endTime - startTime;
 
-  // const response: AiUrlResponse = {
-  //   name: name,
-  //   latency_ms: Math.round(durationMS),
-  //   token: encodedToken,
-  //   image_url: imageUrl,
-  //   user_url: url,
-  // };
-  const resp1: AiUrlResponse = {
-    name: "Nilambur Teak",
-    latency_ms: 65451,
-    token: "d7%2FS7YNk",
-    image_url:
-      "https://replicate.delivery/pbxt/gRLnEqde2R31Eq4jnLXrSgqBT9gga7Ekz2CF0CTAEIyr8iyJA/seed-59570.png",
-    user_url: "https://substack.com/",
+  const response: AiUrlResponse = {
+    name: name,
+    latency_ms: Math.round(durationMS),
+    token: encodedToken,
+    image_url: imageUrl,
+    user_url: url,
   };
-  return resp1;
+
+  return response;
 }
 
 async function getMultiUrlQrCode(
@@ -253,11 +286,11 @@ async function getFreeTextQrCode(
   let imageUrl = await replicateClient.generateQRCode({
     url: `http://localhost:3000/aitext/${encodedToken}`,
     prompt: prompt,
-    qr_conditioning_scale: 2,
+    qr_conditioning_scale: 2.5,
     num_inference_steps: 30,
     guidance_scale: 10,
     negative_prompt:
-      "Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, blurry",
+      "Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, blurry, distorted, out of focus, smudged, low resolution, pixelated",
   });
 
   const end = performance.now();
@@ -275,12 +308,42 @@ async function getFreeTextQrCode(
 async function getContactQrCode(
   body: any,
   encodedToken: string
-): Promise<string> {
-  const { prompt } = body;
-  /**
-   * TODO: Add name to AI Contact QR Code in schema -> zodSchema -> backend responses
-   */
-  return "";
+): Promise<AiAnonContactResponse> {
+  const {
+    prompt,
+    name,
+    first_name,
+    last_name,
+    organisation,
+    email,
+    phone_number,
+  } = body;
+
+  const startTime = performance.now();
+  let imageUrl = await replicateClient.generateQRCode({
+    url: `http://localhost:3000/aicontact/${encodedToken}`,
+    prompt: prompt,
+    qr_conditioning_scale: 2,
+    num_inference_steps: 30,
+    guidance_scale: 10,
+    negative_prompt:
+      "Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, blurry",
+  });
+
+  const endTime = performance.now();
+  const durationMS = endTime - startTime;
+  const response: AiAnonContactResponse = {
+    name: name,
+    user_first_name: first_name,
+    user_last_name: last_name,
+    user_email: email,
+    user_organisation: organisation,
+    user_phone_number: phone_number,
+    latency_ms: Math.round(durationMS),
+    image_url: imageUrl,
+    token: encodedToken,
+  };
+  return response;
 }
 
 /**
@@ -289,4 +352,8 @@ async function getContactQrCode(
  * Common across browsers - IP Address
  * Same Browser (Normal + Incognito) - IP Address + User Agent
  * Different Tabs - cookies
+ */
+
+/**
+ * TODO: Integrate AWS S3 instead of Cloudinary
  */
