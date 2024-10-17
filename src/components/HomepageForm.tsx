@@ -22,7 +22,7 @@ import { Textarea } from "./ui/textarea";
 import MultiUrlSkeleton from "./MultiUrlSkeleton";
 import ContactFormSkeleton from "./ContactFormSkeleton";
 import { Button } from "./ui/button";
-import { QrCode } from "lucide-react";
+import { Loader2, QrCode } from "lucide-react";
 import { useLoading } from "@/app/context/useLoading";
 import { useImage } from "@/app/context/useImage";
 import { useMutation } from "@tanstack/react-query";
@@ -214,16 +214,13 @@ const HomepageForm = ({ qrType }: Props) => {
               )}
             />
             <Button className="mt-4 w-full" type="submit">
-              {/* {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : !(isSuccess || isError) ? (
-              <p className="flex flex-row items-center">
-                <QrCode className="h-4 w-4 mr-2" /> Generate QR Code
-              </p>
-            ) : (
-              "✨ Regenerate"
-            )} */}
-              <QrCode className="h-4 w-4 mr-2" /> Generate QR Code
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <p className="flex flex-row items-center">
+                  <QrCode className="h-4 w-4 mr-2" /> Generate QR Code
+                </p>
+              )}
             </Button>
           </form>
         </Form>

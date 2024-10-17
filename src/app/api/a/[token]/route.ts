@@ -9,7 +9,7 @@ export async function GET(
   let redirectUrl: string;
 
   try {
-    const uniqueToken = params.token;
+    const uniqueToken = encodeURIComponent(params.token);
     const qrCode = await prismaClient.aiURLQRCode.findUnique({
       where: {
         uniqueToken: uniqueToken,
