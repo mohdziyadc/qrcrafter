@@ -154,7 +154,7 @@ export default function Hero() {
                           <HomepageForm qrType={type} />
                         </div>
                         <div className="flex-[2] flex rounded-md border-dashed h-[48rem] border-blue-600 justify-center items-center border-2 ">
-                          <DynamicAIQRCodeCard />
+                          <DynamicAIQRCodeCard isHomepage />
                         </div>
                       </div>
                     </CardContent>

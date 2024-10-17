@@ -17,9 +17,11 @@ import axios from "axios";
 import { useToast } from "./ui/use-toast";
 import { Loader2 } from "lucide-react";
 import downloadQrCode from "@/lib/downloadQrCode";
-type Props = {};
+type Props = {
+  isHomepage: boolean;
+};
 
-const DynamicAIQRCodeCard = (props: Props) => {
+const DynamicAIQRCodeCard = ({ isHomepage = false }: Props) => {
   const { loading } = useLoading();
   const { image } = useImage();
   const { toast } = useToast();
@@ -307,19 +309,21 @@ const DynamicAIQRCodeCard = (props: Props) => {
             </CardContent>
             <CardFooter className="flex flex-col">
               <div className="flex flex-row mt-4 items-center justify-center gap-2 ">
-                <Button
-                  variant={"outline"}
-                  onClick={() => {
-                    checkTypeAndSave();
-                  }}
-                  disabled={disableBtn && querySuccess}
-                >
-                  {loadingBtn ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    "Save QR Code"
-                  )}
-                </Button>
+                {!isHomepage && (
+                  <Button
+                    variant={"outline"}
+                    onClick={() => {
+                      checkTypeAndSave();
+                    }}
+                    disabled={disableBtn && querySuccess}
+                  >
+                    {loadingBtn ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      "Save QR Code"
+                    )}
+                  </Button>
+                )}
                 <Button
                   onClick={() => {
                     downloadQrCode(image.image_url, "aiQrCode");
@@ -328,9 +332,16 @@ const DynamicAIQRCodeCard = (props: Props) => {
                   Download
                 </Button>
               </div>
-              <p className="text-gray-400 text-sm italic text-center mt-2">
-                You should save the QR code if you want to update it later.
-              </p>
+              {!isHomepage && (
+                <p className="text-gray-400 text-sm italic text-center mt-2">
+                  You should save the QR code if you want to update it later.
+                </p>
+              )}
+              {isHomepage && (
+                <p className="text-gray-400 text-sm italic text-center mt-2">
+                  {`QR Code has been successfully saved. Click on "Your QR Codes" tab to view it.`}
+                </p>
+              )}
             </CardFooter>
           </Card>
         )
