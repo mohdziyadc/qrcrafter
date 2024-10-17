@@ -194,6 +194,7 @@ export async function POST(req: NextRequest) {
             },
           });
         }
+        break;
       default:
         response = await getUrlQrCode(body, encodedToken);
         return;

@@ -1,5 +1,5 @@
 import {
-  aiContactFormSchema,
+  aiAnonContactSchema,
   aiFreeTextFormSchema,
   aiMultiUrlFormSchema,
   aiUrlFormSchema,
@@ -64,7 +64,7 @@ const HomepageForm = ({ qrType }: Props) => {
       case "multi_url":
         return aiMultiUrlFormSchema;
       case "contact":
-        return aiContactFormSchema;
+        return aiAnonContactSchema;
       case "free_text":
         return aiFreeTextFormSchema;
       default:

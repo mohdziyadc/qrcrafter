@@ -7,6 +7,7 @@ import { Card, CardContent, CardFooter } from "./ui/card";
 import { Button } from "./ui/button";
 import { useMutation } from "@tanstack/react-query";
 import {
+  AiAnonContactResponse,
   AiContactResponse,
   AiFreeTextResponse,
   AiMultiUrlResponse,
@@ -38,6 +39,7 @@ const DynamicAIQRCodeCard = ({ isHomepage = false }: Props) => {
       | AiMultiUrlResponse
       | AiContactResponse
       | AiFreeTextResponse
+      | AiAnonContactResponse
   ): response is AiUrlResponse {
     return (response as AiUrlResponse).user_url !== undefined;
   }
@@ -48,6 +50,7 @@ const DynamicAIQRCodeCard = ({ isHomepage = false }: Props) => {
       | AiMultiUrlResponse
       | AiContactResponse
       | AiFreeTextResponse
+      | AiAnonContactResponse
   ): response is AiMultiUrlResponse {
     return (response as AiMultiUrlResponse).user_titles !== undefined;
   }
@@ -58,6 +61,7 @@ const DynamicAIQRCodeCard = ({ isHomepage = false }: Props) => {
       | AiMultiUrlResponse
       | AiContactResponse
       | AiFreeTextResponse
+      | AiAnonContactResponse
   ): response is AiFreeTextResponse {
     return (response as AiFreeTextResponse).user_free_text !== undefined;
   }
@@ -68,8 +72,20 @@ const DynamicAIQRCodeCard = ({ isHomepage = false }: Props) => {
       | AiMultiUrlResponse
       | AiContactResponse
       | AiFreeTextResponse
+      | AiAnonContactResponse
   ): response is AiContactResponse {
     return (response as AiContactResponse).user_email !== undefined;
+  }
+
+  function isAiAnonContactResponse(
+    response:
+      | AiUrlResponse
+      | AiMultiUrlResponse
+      | AiContactResponse
+      | AiFreeTextResponse
+      | AiAnonContactResponse
+  ): response is AiAnonContactResponse {
+    return (response as AiAnonContactResponse).name !== undefined;
   }
 
   useEffect(() => {
@@ -227,6 +243,36 @@ const DynamicAIQRCodeCard = ({ isHomepage = false }: Props) => {
     },
   });
 
+  const { mutate: saveAiAnonContactQr } = useMutation({
+    onMutate: () => {
+      setLoadingBtn(true);
+    },
+    mutationFn: async (payload: AiAnonContactResponse) => {
+      const response = await axios.post(
+        "/api/aiqrcode/contact/save",
+        JSON.stringify(payload)
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success!",
+        description: "QR Code saved successfully",
+      });
+      setLoadingBtn(false);
+      setQuerySuccess(true);
+      setDisableBtn(true);
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occurred during this process.",
+        variant: "destructive",
+      });
+      setLoadingBtn(false);
+    },
+  });
+
   /**
    * We have different types for QR Code. We need to verify which type it is
    * and call the appropriate mutation to save it to the DB
@@ -270,6 +316,20 @@ const DynamicAIQRCodeCard = ({ isHomepage = false }: Props) => {
         image_url: image.image_url,
         token: image.token,
         latency_ms: image.latency_ms,
+      });
+    } else {
+      const anonImage = image as AiAnonContactResponse;
+      console.log("AI Anon Contact QR Code");
+      saveAiAnonContactQr({
+        name: anonImage.name,
+        user_first_name: anonImage.user_first_name,
+        user_last_name: anonImage.user_last_name,
+        user_organisation: anonImage.user_organisation,
+        user_email: anonImage.user_email,
+        user_phone_number: anonImage.user_phone_number,
+        image_url: anonImage.image_url,
+        token: anonImage.token,
+        latency_ms: anonImage.latency_ms,
       });
     }
   };

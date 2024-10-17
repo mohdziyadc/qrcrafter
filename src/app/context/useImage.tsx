@@ -4,6 +4,7 @@ import {
   AiContactResponse,
   AiFreeTextResponse,
   AiMultiUrlResponse,
+  AiAnonContactResponse,
 } from "@/lib/types";
 import {
   Dispatch,
@@ -19,13 +20,15 @@ type ImageContextProps = {
     | AiUrlResponse
     | AiMultiUrlResponse
     | AiFreeTextResponse
-    | AiContactResponse;
+    | AiContactResponse
+    | AiAnonContactResponse;
   setImage: Dispatch<
     SetStateAction<
       | AiUrlResponse
       | AiMultiUrlResponse
       | AiFreeTextResponse
       | AiContactResponse
+      | AiAnonContactResponse
     >
   >;
 };
