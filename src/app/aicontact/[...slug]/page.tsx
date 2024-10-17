@@ -59,7 +59,7 @@ const AiContactPage = (props: Props) => {
         <div className="text-3xl">No contact present</div>
       )}
       {contactQr && (
-        <Card className="m-4 w-1/3">
+        <Card className="w-1/3">
           <CardHeader>
             <CardTitle>
               {isAnonContactQr(contactQr) ? contactQr.name : "Contact"}
