@@ -38,7 +38,7 @@ export type FormInput = {
   url?: string;
   urls: string[];
   titles: string[];
-  freeText?: string;
+  freetext?: string;
   first_name?: string;
   last_name?: string;
   organisation?: string;
@@ -56,6 +56,11 @@ const HomepageForm = ({ qrType }: Props) => {
   //creating a reference object - a workaround to access state in setTimeout
   const loadingRef = useRef(loading);
   loadingRef.current = loading;
+
+  useEffect(() => {
+    console.log("QR TYPE:" + qrType);
+    console.log("Schema: " + JSON.stringify(getSchema()));
+  });
 
   const getSchema = () => {
     switch (qrType) {
@@ -78,7 +83,7 @@ const HomepageForm = ({ qrType }: Props) => {
       url: "",
       urls: [""],
       titles: [""],
-      freeText: "",
+      freetext: "",
       first_name: "",
       last_name: "",
       organisation: "",
@@ -178,19 +183,24 @@ const HomepageForm = ({ qrType }: Props) => {
             )}
             {qrType === "multi_url" && <MultiUrlSkeleton form={form} />}
             {qrType === "free_text" && (
-              <FormField
-                control={form.control}
-                name="freeText"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Text</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Enter your text" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div>
+                <FormField
+                  control={form.control}
+                  name="freetext"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Text</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Enter your text here"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             )}
             {qrType === "contact" && <ContactFormSkeleton form={form} />}
             <FormField

@@ -53,13 +53,17 @@ const AiContactPage = (props: Props) => {
   }, [uniqueToken]);
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      {loading && <Loader2 className="h-12 w-12 animate-spin" />}
+    <div>
+      {loading && (
+        <div className="flex justify-center items-center h-screen">
+          <Loader2 className="h-12 w-12 animate-spin" />
+        </div>
+      )}
       {!loading && !contactQr && (
         <div className="text-3xl">No contact present</div>
       )}
       {contactQr && (
-        <Card className="w-1/3">
+        <Card className=" m-auto mt-8 w-1/3">
           <CardHeader>
             <CardTitle>
               {isAnonContactQr(contactQr) ? contactQr.name : "Contact"}
