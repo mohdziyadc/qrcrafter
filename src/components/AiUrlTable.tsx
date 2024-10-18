@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import { AiURLQRCode } from "@prisma/client";
+import { AiURLQRCode, AnonymousURLQr } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
@@ -27,11 +27,14 @@ import {
 import UpdateAiUrlForm from "./UpdateAiUrlForm";
 import { useToast } from "./ui/use-toast";
 import NoQrFound from "./NoQrFound";
+import { getAnonAiUrlList } from "@/lib/actions";
 
 type Props = {};
 
 const AiUrlTable = (props: Props) => {
   const [qrCodes, setQrCodes] = useState<AiURLQRCode[]>([]);
+  const [anonQrCodes, setAnonQrCodes] = useState<AnonymousURLQr[]>([]);
+
   const [qrCode, setQrCode] = useState<AiURLQRCode>();
   const [editDialog, setEditDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
@@ -44,6 +47,17 @@ const AiUrlTable = (props: Props) => {
       const response = await axios.get("/api/aiqrcode/url");
       return response.data.qrCodes;
     },
+  });
+
+  useEffect(() => {
+    const getAnonQrcodes = async () => {
+      const res = await getAnonAiUrlList();
+      // setAnonQrCodes(res.qrCodes)
+      console.log("Anon QR Code Message: " + JSON.stringify(res.message));
+
+      console.log("Anon QR Codes: " + res.qrCodes);
+    };
+    getAnonQrcodes();
   });
 
   const { mutate: deleteAiUrlQr, isLoading: isDeleting } = useMutation({
