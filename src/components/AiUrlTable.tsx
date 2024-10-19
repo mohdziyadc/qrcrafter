@@ -27,7 +27,7 @@ import {
 import UpdateAiUrlForm from "./UpdateAiUrlForm";
 import { useToast } from "./ui/use-toast";
 import NoQrFound from "./NoQrFound";
-import { getAnonAiUrlList } from "@/lib/actions";
+import { deleteAnonAiUrlQrcode, getAnonAiUrlList } from "@/lib/actions";
 
 type Props = {
   isHomepage: boolean;
@@ -103,6 +103,25 @@ const AiUrlTable = ({ isHomepage }: Props) => {
     },
   });
 
+  const { mutate: deleteAnonQrcode, isLoading: isAnonDeleting } = useMutation({
+    mutationFn: async () => await deleteAnonAiUrlQrcode(qrCode!.uniqueToken),
+    onSuccess: () => {
+      toast({
+        title: "Success!",
+        description: "You have deleted the QR code successfully.",
+      });
+      setDeleteDialog(false);
+      queryClient.invalidateQueries(["AnonAiUrlQrCodes"]);
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occurred during the process.",
+        variant: "destructive",
+      });
+    },
+  });
+
   useEffect(() => {
     if (isSuccess) {
       setQrCodes(aiQrcodesData);
@@ -152,7 +171,7 @@ const AiUrlTable = ({ isHomepage }: Props) => {
                       <div
                         className="ml-1 text-red-500 hover:bg-secondary-foreground/10 w-fit p-2 rounded-md"
                         onClick={() => {
-                          setQrCode(qrCode as AiURLQRCode);
+                          setQrCode(qrCode);
                           setDeleteDialog(true);
                         }}
                       >
@@ -193,10 +212,14 @@ const AiUrlTable = ({ isHomepage }: Props) => {
                 <AlertDialogAction
                   className="bg-red-500"
                   onClick={() => {
+                    if (isHomepage) {
+                      deleteAnonQrcode();
+                      return;
+                    }
                     deleteAiUrlQr(qrCode!.uniqueToken);
                   }}
                 >
-                  {isDeleting ? (
+                  {isDeleting || isAnonDeleting ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
                     <p>Delete</p>

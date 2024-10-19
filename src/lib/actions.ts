@@ -122,7 +122,7 @@ export async function updateAnonAiUrlQrcode(payload: {
   }
 }
 
-export async function deleteAnonUrlQrcode(uniqueToken: string) {
+export async function deleteAnonAiUrlQrcode(uniqueToken: string) {
   try {
     const anonUser = await getAnonymousUser();
     if (!anonUser) {
