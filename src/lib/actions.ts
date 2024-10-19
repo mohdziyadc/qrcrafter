@@ -129,6 +129,70 @@ export async function getAnonAiMultiUrlList() {
   }
 }
 
+export async function getAnonAiContactList() {
+  try {
+    const anonUser = await getAnonymousUser();
+    if (!anonUser) {
+      return {
+        success: false,
+        message: "No Anonymous user found",
+        qrCodes: [],
+      };
+    }
+    const qrCodes = await prismaClient.anonymousContactQr.findMany({
+      where: {
+        anonymousUserId: anonUser.id,
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
+    return {
+      success: true,
+      message: `QR Codes found for vistorId: ${anonUser.id}`,
+      qrCodes,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: `An invalid error occured: ${error} `,
+      qrCodes: [],
+    };
+  }
+}
+
+export async function getAnonAiFreetextList() {
+  try {
+    const anonUser = await getAnonymousUser();
+    if (!anonUser) {
+      return {
+        success: false,
+        message: "No Anonymous user found",
+        qrCodes: [],
+      };
+    }
+    const qrCodes = await prismaClient.anonymousFreetextQr.findMany({
+      where: {
+        anonymousUserId: anonUser.id,
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
+    return {
+      success: true,
+      message: `QR Codes found for vistorId: ${anonUser.id}`,
+      qrCodes,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: `An invalid error occured: ${error} `,
+      qrCodes: [],
+    };
+  }
+}
+
 export async function updateAnonAiUrlQrcode(payload: {
   uniqueToken: string;
   url: string;
@@ -146,6 +210,7 @@ export async function updateAnonAiUrlQrcode(payload: {
       data: {
         name: payload.name,
         url: payload.url,
+        updatedAt: new Date(),
       },
     });
     return { success: true, message: "QR code updated" };
@@ -175,10 +240,78 @@ export async function updateAnonAiMultiUrlCode(payload: {
         name: payload.name,
         urls: payload.urls,
         titles: payload.titles,
+        updatedAt: new Date(),
       },
     });
 
     return { success: true, message: "QR code updated" };
+  } catch (error) {
+    console.log("[SERVOR ERROR] " + error);
+    return {
+      success: false,
+      message: `Process failed with an error ${error}`,
+    };
+  }
+}
+
+export async function updateAnonAiContactQr(payload: {
+  uniqueToken: string;
+  name: string;
+  user_first_name: string;
+  user_last_name: string;
+  user_organisation: string;
+  user_email: string;
+  user_phone_number: string;
+}) {
+  try {
+    const anonUser = await getAnonymousUser();
+    if (!anonUser) {
+      return { success: false, message: "No Anonymous user found" };
+    }
+    await prismaClient.anonymousContactQr.update({
+      where: {
+        uniqueToken: payload.uniqueToken,
+      },
+      data: {
+        name: payload.name,
+        first_name: payload.user_first_name,
+        last_name: payload.user_last_name,
+        email: payload.user_email,
+        organisation: payload.user_organisation,
+        phone_number: payload.user_phone_number,
+        updatedAt: new Date(),
+      },
+    });
+    return { success: true, message: "QR code updated" };
+  } catch (error) {
+    console.log("[SERVOR ERROR] " + error);
+    return {
+      success: false,
+      message: `Process failed with an error ${error}`,
+    };
+  }
+}
+
+export async function updateAnonAiFreetextQr(payload: {
+  uniqueToken: string;
+  name: string;
+  freeText: string;
+}) {
+  try {
+    const anonUser = await getAnonymousUser();
+    if (!anonUser) {
+      return { success: false, message: "No Anonymous user found" };
+    }
+    await prismaClient.anonymousFreetextQr.update({
+      where: {
+        uniqueToken: payload.uniqueToken,
+      },
+      data: {
+        name: payload.name,
+        free_text: payload.freeText,
+        updatedAt: new Date(),
+      },
+    });
   } catch (error) {
     console.log("[SERVOR ERROR] " + error);
     return {
@@ -226,6 +359,49 @@ export async function deleteAnonAiMultiUrlQr(uniqueToken: string) {
     };
   }
 }
+
+export async function deleteAnonAiContactQr(uniqueToken: string) {
+  try {
+    const anonUser = await getAnonymousUser();
+    if (!anonUser) {
+      return { success: false, message: "No Anonymous user found" };
+    }
+    await prismaClient.anonymousContactQr.delete({
+      where: {
+        uniqueToken: uniqueToken,
+      },
+    });
+    return { success: true, message: "DELETED THIS SHIT" };
+  } catch (error) {
+    console.log("[SERVOR ERROR] " + error);
+    return {
+      success: false,
+      message: `Process failed with the error ${error}`,
+    };
+  }
+}
+
+export async function deleteAnonAiFreetextQr(uniqueToken: string) {
+  try {
+    const anonUser = await getAnonymousUser();
+    if (!anonUser) {
+      return { success: false, message: "No Anonymous user found" };
+    }
+    await prismaClient.anonymousFreetextQr.delete({
+      where: {
+        uniqueToken: uniqueToken,
+      },
+    });
+    return { success: true, message: "DELETED THIS SHIT" };
+  } catch (error) {
+    console.log("[SERVOR ERROR] " + error);
+    return {
+      success: false,
+      message: `Process failed with the error ${error}`,
+    };
+  }
+}
+
 async function updateQrScanCount(
   qrcode: MulitUrlAiQr | AiContactQr | AiFreeTextQr
 ) {
