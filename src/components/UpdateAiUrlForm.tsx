@@ -124,8 +124,8 @@ const UpdateAiUrlForm = ({
     },
   });
 
-  const isUpdating = isAiUrlUpdating && isAnonUpdating;
-  const isSuccess = aiUrlQrSuccess && isAnonSuccess;
+  const isUpdating = isAiUrlUpdating || isAnonUpdating;
+  const isSuccess = aiUrlQrSuccess || isAnonSuccess;
   const onSubmitHandler = ({ url, name, prompt }: updateAiUrlInput) => {
     if (isAnonymous) {
       updateAnonQrcode({ url, name, prompt });

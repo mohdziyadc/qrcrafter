@@ -23,15 +23,22 @@ import { cn } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useToast } from "./ui/use-toast";
+import { updateAnonAiMultiUrlCode } from "@/lib/actions";
 
 type Props = {
   qrCode: MulitUrlAiQr | AnonymousMultiUrlQr;
   editDialog: boolean;
   setEditDialog: Dispatch<SetStateAction<boolean>>;
+  isAnonymous: boolean;
 };
 
 type updateAiMultiUrlInput = z.infer<typeof aiMultiUrlFormSchema>;
-const UpdateAiMultiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
+const UpdateAiMultiUrlForm = ({
+  qrCode,
+  editDialog,
+  setEditDialog,
+  isAnonymous,
+}: Props) => {
   const form = useForm<updateAiMultiUrlInput>({
     resolver: zodResolver(aiMultiUrlFormSchema),
     defaultValues: {
@@ -44,7 +51,6 @@ const UpdateAiMultiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [disableUpdateBtn, setDisableUpdateBtn] = useState(true);
 
   const fetchImageDataUrl = async (imageUrl: string) => {
     const response = await fetch(imageUrl);
@@ -61,8 +67,8 @@ const UpdateAiMultiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
 
   const {
     mutate: updateAiMultiUrlQr,
-    isLoading: isUpdating,
-    isSuccess,
+    isLoading: isUpdatingAi,
+    isSuccess: isAiSuccess,
   } = useMutation({
     mutationFn: async (params: updateAiMultiUrlInput) => {
       const response = await axios.post("/api/aiqrcode/multiurl/update", {
@@ -88,18 +94,48 @@ const UpdateAiMultiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
       });
     },
   });
+  const {
+    mutate: updateAnonQrcode,
+    isLoading: isUpdatingAnon,
+    isSuccess: isAnonSuccess,
+  } = useMutation({
+    mutationFn: async (params: updateAiMultiUrlInput) => {
+      const payload = {
+        uniqueToken: qrCode.uniqueToken,
+        name: params.name,
+        urls: params.urls,
+        titles: params.titles,
+      };
+      const res = await updateAnonAiMultiUrlCode(payload);
+      return res;
+    },
+    onSuccess: (data) => {
+      if (data.success) {
+        toast({
+          title: "Success!",
+          description: "You have updated the QR code successfully.",
+        });
+        queryClient.invalidateQueries(["AnonAiMultiUrlQrCodes"]);
+        setEditDialog(false);
+      }
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occured during the process.",
+      });
+    },
+  });
+
+  const isUpdating = isUpdatingAnon || isUpdatingAi;
+  const isSuccess = isAiSuccess || isAnonSuccess;
   const onSubmitHandler = (formInputs: updateAiMultiUrlInput) => {
+    if (isAnonymous) {
+      updateAnonQrcode(formInputs);
+      return;
+    }
     updateAiMultiUrlQr(formInputs);
   };
-
-  // Enable the update button only if the user has changed some input
-  useEffect(() => {
-    if (form.formState.isDirty) {
-      setDisableUpdateBtn(false);
-    } else {
-      setDisableUpdateBtn(true);
-    }
-  }, [form.formState.isDirty]);
 
   return (
     <div>
@@ -210,7 +246,7 @@ const UpdateAiMultiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
                 {/* To make it a normal btn add type attribute. If it isnt added, it will try to submit the form */}
                 <Button
                   type="button"
-                  variant={"secondary"}
+                  variant={"outline"}
                   className="font-semibold"
                   onClick={() => {
                     form.setValue("urls", [...form.watch("urls"), ""]); //appending to the units array
@@ -222,7 +258,7 @@ const UpdateAiMultiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
                 </Button>
                 <Button
                   type="button"
-                  variant={"secondary"}
+                  variant={"outline"}
                   className="font-semibold ml-2"
                   onClick={() => {
                     form.setValue("urls", form.watch("urls").slice(0, -1)); //removing from the units array
@@ -250,7 +286,7 @@ const UpdateAiMultiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
               <Button
                 type="submit"
                 className="ml-2"
-                disabled={isSuccess || disableUpdateBtn}
+                disabled={isSuccess || !form.formState.isDirty}
               >
                 {isUpdating ? (
                   <Loader2 className=" animate-spin" />

@@ -49,6 +49,7 @@ const AiMultiUrlTable = ({ isHomepage }: Props) => {
       const response = await axios.get("/api/aiqrcode/multiurl");
       return response.data.qrCodes;
     },
+    enabled: !isHomepage,
   });
 
   const {
@@ -58,6 +59,7 @@ const AiMultiUrlTable = ({ isHomepage }: Props) => {
   } = useQuery({
     queryKey: ["AnonAiMultiUrlQrCodes"],
     queryFn: async () => await getAnonAiMultiUrlList(),
+    enabled: isHomepage,
   });
 
   const { toast } = useToast();
@@ -166,6 +168,7 @@ const AiMultiUrlTable = ({ isHomepage }: Props) => {
                   qrCode={qrCode}
                   editDialog={editDialog}
                   setEditDialog={setEditDialog}
+                  isAnonymous={isHomepage}
                 />
               )}
             </DialogContent>
