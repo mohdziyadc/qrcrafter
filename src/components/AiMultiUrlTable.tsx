@@ -26,7 +26,7 @@ import LoadingSpinner from "@/app/manage/loading";
 import UpdateAiMultiUrlForm from "./UpdateAiMultiUrlForm";
 import { useToast } from "./ui/use-toast";
 import NoQrFound from "./NoQrFound";
-import { getAnonAiMultiUrlList } from "@/lib/actions";
+import { deleteAnonAiMultiUrlQr, getAnonAiMultiUrlList } from "@/lib/actions";
 
 type Props = {
   isHomepage: boolean;
@@ -88,6 +88,42 @@ const AiMultiUrlTable = ({ isHomepage }: Props) => {
       });
     },
   });
+
+  const { mutate: deleteAnonQrCode, isLoading: isAnonDeleting } = useMutation({
+    mutationFn: async (uniqueToken: string) => {
+      const res = await deleteAnonAiMultiUrlQr(uniqueToken);
+      return res;
+    },
+    onSuccess: (data) => {
+      if (data.success) {
+        toast({
+          title: "Success!",
+          description: "You have deleted the QR code successfully.",
+        });
+        setDeleteDialog(false);
+        queryClient.invalidateQueries(["AnonAiMultiUrlQrCodes"]);
+      }
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occured during the process.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const onDeleteHandler = () => {
+    const isAnonymous = isHomepage;
+    if (!qrCode) {
+      return;
+    }
+    if (isAnonymous) {
+      deleteAnonQrCode(qrCode.uniqueToken);
+      return;
+    }
+    deleteAiMultiUrlQr(qrCode.uniqueToken);
+  };
   useEffect(() => {
     if (aiQrSuccess) {
       setQrCodes(aiMultiQrCodes);
@@ -187,10 +223,10 @@ const AiMultiUrlTable = ({ isHomepage }: Props) => {
                 <AlertDialogAction
                   className="bg-red-500"
                   onClick={() => {
-                    deleteAiMultiUrlQr(qrCode!.uniqueToken);
+                    onDeleteHandler();
                   }}
                 >
-                  {isDeleting ? (
+                  {isDeleting || isAnonDeleting ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
                     <p>Delete</p>
