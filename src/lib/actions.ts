@@ -122,6 +122,24 @@ export async function updateAnonAiUrlQrcode(payload: {
   }
 }
 
+export async function deleteAnonUrlQrcode(uniqueToken: string) {
+  try {
+    const anonUser = await getAnonymousUser();
+    if (!anonUser) {
+      return { success: false, message: "No Anonymous user found" };
+    }
+    await prismaClient.anonymousURLQr.delete({
+      where: {
+        uniqueToken: uniqueToken,
+      },
+    });
+    return { success: true, message: "DELETED THIS SHIT" };
+  } catch (error) {
+    console.log("[SERVOR ERROR] " + error);
+    return { success: false, message: "An unknown error occured." };
+  }
+}
+
 async function updateQrScanCount(
   qrcode: MulitUrlAiQr | AiContactQr | AiFreeTextQr
 ) {
