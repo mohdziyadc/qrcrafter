@@ -96,11 +96,11 @@ export async function getAnonAiUrlList() {
   }
 }
 
-export async function updateAnonAiUrlQrcode(
-  uniqueToken: string,
-  url: string,
-  name: string
-) {
+export async function updateAnonAiUrlQrcode(payload: {
+  uniqueToken: string;
+  url: string;
+  name: string;
+}) {
   try {
     const anonUser = await getAnonymousUser();
     if (!anonUser) {
@@ -108,11 +108,11 @@ export async function updateAnonAiUrlQrcode(
     }
     await prismaClient.anonymousURLQr.update({
       where: {
-        uniqueToken: uniqueToken,
+        uniqueToken: payload.uniqueToken,
       },
       data: {
-        name: name,
-        url: url,
+        name: payload.name,
+        url: payload.url,
       },
     });
     return { success: true, message: "QR code updated" };

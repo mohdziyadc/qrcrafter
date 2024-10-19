@@ -21,14 +21,21 @@ import { Loader2 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useToast } from "./ui/use-toast";
+import { updateAnonAiUrlQrcode } from "@/lib/actions";
 
 type Props = {
   qrCode: AiURLQRCode | AnonymousURLQr;
   editDialog: boolean;
   setEditDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  isAnonymous: boolean;
 };
 type updateAiUrlInput = z.infer<typeof aiUrlFormSchema>;
-const UpdateAiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
+const UpdateAiUrlForm = ({
+  qrCode,
+  editDialog,
+  setEditDialog,
+  isAnonymous,
+}: Props) => {
   const form = useForm<updateAiUrlInput>({
     resolver: zodResolver(aiUrlFormSchema),
     defaultValues: {
@@ -56,8 +63,8 @@ const UpdateAiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
 
   const {
     mutate: updateAiUrlQrCode,
-    isLoading: isUpdating,
-    isSuccess,
+    isLoading: isAiUrlUpdating,
+    isSuccess: aiUrlQrSuccess,
   } = useMutation({
     mutationFn: async ({ url, name }: updateAiUrlInput) => {
       const response = await axios.post("/api/aiqrcode/url/update", {
@@ -83,7 +90,47 @@ const UpdateAiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
       });
     },
   });
+
+  const {
+    mutate: updateAnonQrcode,
+    isLoading: isAnonUpdating,
+    isSuccess: isAnonSuccess,
+  } = useMutation({
+    mutationFn: async ({ name, url }: updateAiUrlInput) => {
+      const payload = {
+        uniqueToken: qrCode.uniqueToken,
+        name: name,
+        url: url,
+      };
+      const res = await updateAnonAiUrlQrcode(payload);
+      return res;
+    },
+    onSuccess: (data) => {
+      if (data.success) {
+        toast({
+          title: "Success!",
+          description: "You have successfully updated the QR code",
+        });
+        setEditDialog(false);
+        queryClient.invalidateQueries(["AnonAiUrlQrCodes"]);
+      }
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occured during the process.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const isUpdating = isAiUrlUpdating && isAnonUpdating;
+  const isSuccess = aiUrlQrSuccess && isAnonSuccess;
   const onSubmitHandler = ({ url, name, prompt }: updateAiUrlInput) => {
+    if (isAnonymous) {
+      updateAnonQrcode({ url, name, prompt });
+      return;
+    }
     updateAiUrlQrCode({ url, name, prompt });
   };
   return (
@@ -143,7 +190,11 @@ const UpdateAiUrlForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
             >
               Cancel
             </Button>
-            <Button type="submit" className="ml-2" disabled={isSuccess}>
+            <Button
+              type="submit"
+              className="ml-2"
+              disabled={isSuccess || !form.formState.isDirty}
+            >
               {isUpdating ? (
                 <Loader2 className=" animate-spin" />
               ) : isSuccess ? (

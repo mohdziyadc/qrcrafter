@@ -174,6 +174,7 @@ const AiUrlTable = ({ isHomepage }: Props) => {
                   qrCode={qrCode}
                   editDialog={editDialog}
                   setEditDialog={setEditDialog}
+                  isAnonymous={isHomepage ? true : false}
                 />
               )}
             </DialogContent>
