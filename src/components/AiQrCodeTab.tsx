@@ -82,7 +82,7 @@ const AiQrCodeTab = (props: Props) => {
         </TabsContent>
         <TabsContent value="ai_multi_url">
           <CardContent>
-            <AiMultiUrlTable />
+            <AiMultiUrlTable isHomepage={false} />
           </CardContent>
         </TabsContent>
         <TabsContent value="ai_freetext">

@@ -19,28 +19,45 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
-import { MulitUrlAiQr } from "@prisma/client";
+import { AnonymousMultiUrlQr, MulitUrlAiQr } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
 import UpdateAiMultiUrlForm from "./UpdateAiMultiUrlForm";
 import { useToast } from "./ui/use-toast";
 import NoQrFound from "./NoQrFound";
+import { getAnonAiMultiUrlList } from "@/lib/actions";
 
-type Props = {};
+type Props = {
+  isHomepage: boolean;
+};
 
-const AiMultiUrlTable = (props: Props) => {
+const AiMultiUrlTable = ({ isHomepage }: Props) => {
   const [qrCodes, setQrCodes] = useState<MulitUrlAiQr[]>([]);
-  const [qrCode, setQrCode] = useState<MulitUrlAiQr>();
+  const [anonQrCodes, setAnonQrCodes] = useState<AnonymousMultiUrlQr[]>([]);
+  const [qrCode, setQrCode] = useState<MulitUrlAiQr | AnonymousMultiUrlQr>();
   const [editDialog, setEditDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
 
-  const { data, isLoading, isSuccess } = useQuery({
+  const {
+    data: aiMultiQrCodes,
+    isLoading: aiQrLoading,
+    isSuccess: aiQrSuccess,
+  } = useQuery({
     queryKey: ["aiMultiUrlQrCodes"],
     queryFn: async () => {
       const response = await axios.get("/api/aiqrcode/multiurl");
       return response.data.qrCodes;
     },
+  });
+
+  const {
+    data: anonQrCodeList,
+    isLoading: anonQrLoading,
+    isSuccess: anonQrSuccess,
+  } = useQuery({
+    queryKey: ["AnonAiMultiUrlQrCodes"],
+    queryFn: async () => await getAnonAiMultiUrlList(),
   });
 
   const { toast } = useToast();
@@ -70,17 +87,25 @@ const AiMultiUrlTable = (props: Props) => {
     },
   });
   useEffect(() => {
-    if (isSuccess) {
-      setQrCodes(data);
+    if (aiQrSuccess) {
+      setQrCodes(aiMultiQrCodes);
     }
-  }, [isSuccess, data]);
+  }, [aiQrSuccess, aiMultiQrCodes]);
+
+  useEffect(() => {
+    if (anonQrSuccess) {
+      setAnonQrCodes(anonQrCodeList.qrCodes);
+    }
+  }, [anonQrSuccess, anonQrCodeList]);
+
+  const isLoading = aiQrLoading && anonQrLoading;
 
   if (isLoading) {
     return <LoadingSpinner component />;
   }
   return (
     <div>
-      {qrCodes.length !== 0 ? (
+      {(isHomepage ? anonQrCodes : qrCodes).length !== 0 ? (
         <>
           <Table>
             <TableHeader>
@@ -92,7 +117,7 @@ const AiMultiUrlTable = (props: Props) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {qrCodes.map((qrCode, idx) => (
+              {(isHomepage ? anonQrCodes : qrCodes).map((qrCode, idx) => (
                 <TableRow key={qrCode.id}>
                   <TableCell>{idx + 1}</TableCell>
                   <TableCell>{qrCode.name}</TableCell>

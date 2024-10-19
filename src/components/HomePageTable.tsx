@@ -10,7 +10,7 @@ function HomePageTable({ qrType }: Props) {
   return (
     <>
       {qrType === "url" && <AiUrlTable isHomepage={true} />}
-      {qrType === "multi_url" && <AiMultiUrlTable />}
+      {qrType === "multi_url" && <AiMultiUrlTable isHomepage={true} />}
     </>
   );
 }

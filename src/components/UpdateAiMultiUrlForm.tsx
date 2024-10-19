@@ -1,6 +1,6 @@
 import { aiMultiUrlFormSchema } from "@/validators/qrFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MulitUrlAiQr } from "@prisma/client";
+import { AnonymousMultiUrlQr, MulitUrlAiQr } from "@prisma/client";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -25,7 +25,7 @@ import axios from "axios";
 import { useToast } from "./ui/use-toast";
 
 type Props = {
-  qrCode: MulitUrlAiQr;
+  qrCode: MulitUrlAiQr | AnonymousMultiUrlQr;
   editDialog: boolean;
   setEditDialog: Dispatch<SetStateAction<boolean>>;
 };

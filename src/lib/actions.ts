@@ -96,6 +96,39 @@ export async function getAnonAiUrlList() {
   }
 }
 
+export async function getAnonAiMultiUrlList() {
+  try {
+    const anonUser = await getAnonymousUser();
+    if (!anonUser) {
+      return {
+        success: false,
+        message: "No Anonymous user found",
+        qrCodes: [],
+      };
+    }
+    const qrCodes = await prismaClient.anonymousMultiUrlQr.findMany({
+      where: {
+        anonymousUserId: anonUser.id,
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
+    return {
+      success: true,
+      message: `QR Codes found for vistorId: ${anonUser.id}`,
+      qrCodes,
+    };
+  } catch (error) {
+    console.error("[SERVOR ERROR]", error);
+    return {
+      success: false,
+      message: `An invalid error occured: ${error} `,
+      qrCodes: [],
+    };
+  }
+}
+
 export async function updateAnonAiUrlQrcode(payload: {
   uniqueToken: string;
   url: string;
