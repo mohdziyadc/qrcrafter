@@ -96,6 +96,32 @@ export async function getAnonAiUrlList() {
   }
 }
 
+export async function updateAnonAiUrlQrcode(
+  uniqueToken: string,
+  url: string,
+  name: string
+) {
+  try {
+    const anonUser = await getAnonymousUser();
+    if (!anonUser) {
+      return { success: false, message: "No Anonynomous User found" };
+    }
+    await prismaClient.anonymousURLQr.update({
+      where: {
+        uniqueToken: uniqueToken,
+      },
+      data: {
+        name: name,
+        url: url,
+      },
+    });
+    return { success: true, message: "QR code updated" };
+  } catch (error) {
+    console.log("[SERVOR ERROR] " + error);
+    return { success: false, message: "An error occured during the process." };
+  }
+}
+
 async function updateQrScanCount(
   qrcode: MulitUrlAiQr | AiContactQr | AiFreeTextQr
 ) {
