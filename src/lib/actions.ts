@@ -68,28 +68,26 @@ export async function getAnonAiFreetextQr(uniqueToken: string) {
 }
 
 export async function getAnonAiUrlList() {
-  const generationToken = cookies().get("qr_token")?.value;
-
-  if (!generationToken) {
-    return { success: false, message: "No Token Found", qrCodes: [] };
-  }
-
   try {
-    const decoded = verify(generationToken, JWT_SECRET);
-    const visitorId = (decoded as JwtPayload).visitorId;
-    const anonUser = await prismaClient.anonymousUser.findUnique({
-      where: {
-        vistorId: visitorId,
-      },
-    });
+    const anonUser = await getAnonymousUser();
+    if (!anonUser) {
+      return {
+        success: false,
+        message: "No Anonynmous user found",
+        qrCodes: [],
+      };
+    }
     const qrCodes = await prismaClient.anonymousURLQr.findMany({
       where: {
-        anonymousUserId: anonUser?.id,
+        anonymousUserId: anonUser.id,
+      },
+      orderBy: {
+        id: "asc",
       },
     });
     return {
       success: true,
-      message: `QR Codes found for vistorId: ${anonUser?.id}`,
+      message: `QR Codes found for vistorId: ${anonUser.id}`,
       qrCodes,
     };
   } catch (e) {
@@ -108,6 +106,21 @@ async function updateQrScanCount(
     data: {
       scanCount: { increment: 1 },
       lastScanAt: new Date(),
+    },
+  });
+}
+
+async function getAnonymousUser() {
+  const generationToken = cookies().get("qr_token")?.value;
+
+  if (!generationToken) {
+    return;
+  }
+  const decoded = verify(generationToken, JWT_SECRET);
+  const visitorId = (decoded as JwtPayload).visitorId;
+  return await prismaClient.anonymousUser.findUnique({
+    where: {
+      vistorId: visitorId,
     },
   });
 }

@@ -1,7 +1,7 @@
 "use client";
 import { aiUrlFormSchema } from "@/validators/qrFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AiURLQRCode } from "@prisma/client";
+import { AiURLQRCode, AnonymousURLQr } from "@prisma/client";
 import Image from "next/image";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -23,7 +23,7 @@ import axios from "axios";
 import { useToast } from "./ui/use-toast";
 
 type Props = {
-  qrCode: AiURLQRCode;
+  qrCode: AiURLQRCode | AnonymousURLQr;
   editDialog: boolean;
   setEditDialog: React.Dispatch<React.SetStateAction<boolean>>;
 };

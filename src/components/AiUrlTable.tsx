@@ -29,36 +29,55 @@ import { useToast } from "./ui/use-toast";
 import NoQrFound from "./NoQrFound";
 import { getAnonAiUrlList } from "@/lib/actions";
 
-type Props = {};
+type Props = {
+  isHomepage: boolean;
+};
 
-const AiUrlTable = (props: Props) => {
+const AiUrlTable = ({ isHomepage }: Props) => {
   const [qrCodes, setQrCodes] = useState<AiURLQRCode[]>([]);
   const [anonQrCodes, setAnonQrCodes] = useState<AnonymousURLQr[]>([]);
 
-  const [qrCode, setQrCode] = useState<AiURLQRCode>();
+  const [qrCode, setQrCode] = useState<AiURLQRCode | AnonymousURLQr>();
   const [editDialog, setEditDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isSuccess, isError } = useQuery({
+  const {
+    data: aiQrcodesData,
+    isLoading: aiQrcodeLoading,
+    isSuccess: aiQrcodeSuccess,
+    isError: aiQrcodeError,
+  } = useQuery({
     queryKey: ["aiUrlQrCodes"],
     queryFn: async () => {
       const response = await axios.get("/api/aiqrcode/url");
       return response.data.qrCodes;
     },
+    enabled: !isHomepage,
   });
+
+  const {
+    data: anonQrcodesData,
+    isSuccess: anonQrcodeSuccess,
+    isLoading: anonQrcodeLoading,
+    isError: anonQrcodeError,
+  } = useQuery({
+    queryKey: ["AnonAiUrlQrCodes"],
+    queryFn: async () => await getAnonAiUrlList(),
+    enabled: isHomepage,
+  });
+
+  const isLoading = anonQrcodeLoading && aiQrcodeLoading;
+  const isSuccess = anonQrcodeSuccess || aiQrcodeSuccess;
 
   useEffect(() => {
-    const getAnonQrcodes = async () => {
-      const res = await getAnonAiUrlList();
-      // setAnonQrCodes(res.qrCodes)
-      console.log("Anon QR Code Message: " + JSON.stringify(res.message));
-
-      console.log("Anon QR Codes: " + res.qrCodes);
-    };
-    getAnonQrcodes();
-  });
+    if (anonQrcodeSuccess) {
+      setAnonQrCodes(anonQrcodesData.qrCodes);
+    }
+    console.log("ANON QR CODES: " + anonQrCodes);
+    console.log("IS ERROR: " + aiQrcodeError);
+  }, [anonQrcodesData, anonQrcodeSuccess]);
 
   const { mutate: deleteAiUrlQr, isLoading: isDeleting } = useMutation({
     mutationFn: async (uniqueToken: string) => {
@@ -86,14 +105,14 @@ const AiUrlTable = (props: Props) => {
 
   useEffect(() => {
     if (isSuccess) {
-      setQrCodes(data);
+      setQrCodes(aiQrcodesData);
     }
-  }, [data, isSuccess]);
+  }, [aiQrcodesData, isSuccess]);
 
   if (isLoading) {
     return <LoadingSpinner component />;
   }
-  if (isError) {
+  if (anonQrcodeError && aiQrcodeError) {
     return (
       <div className="flex justify-center items-center">
         An unknown error occured. Please try again
@@ -102,7 +121,7 @@ const AiUrlTable = (props: Props) => {
   }
   return (
     <div>
-      {qrCodes.length !== 0 ? (
+      {(isHomepage ? anonQrCodes : qrCodes).length !== 0 ? (
         <>
           <Table>
             <TableHeader>
@@ -114,7 +133,7 @@ const AiUrlTable = (props: Props) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {qrCodes.map((qrCode, idx) => (
+              {(isHomepage ? anonQrCodes : qrCodes).map((qrCode, idx) => (
                 <TableRow key={qrCode.id}>
                   <TableCell>{idx + 1}</TableCell>
                   <TableCell>{qrCode.name}</TableCell>
@@ -133,7 +152,7 @@ const AiUrlTable = (props: Props) => {
                       <div
                         className="ml-1 text-red-500 hover:bg-secondary-foreground/10 w-fit p-2 rounded-md"
                         onClick={() => {
-                          setQrCode(qrCode);
+                          setQrCode(qrCode as AiURLQRCode);
                           setDeleteDialog(true);
                         }}
                       >
