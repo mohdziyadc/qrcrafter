@@ -87,7 +87,7 @@ const AiQrCodeTab = (props: Props) => {
         </TabsContent>
         <TabsContent value="ai_freetext">
           <CardContent>
-            <AiFreeTextTable />
+            <AiFreeTextTable isHomepage={false} />
           </CardContent>
         </TabsContent>
         <TabsContent value="ai_contact">

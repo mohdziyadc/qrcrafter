@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "./ui/table";
 import { Edit2, Loader2, Trash2 } from "lucide-react";
-import { AiFreeTextQr } from "@prisma/client";
+import { AiFreeTextQr, AnonymousFreetextQr } from "@prisma/client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import {
   AlertDialog,
@@ -27,19 +27,23 @@ import LoadingSpinner from "@/app/manage/loading";
 import UpdateAiFreeTextForm from "./UpdateAiFreeTextForm";
 import { useToast } from "./ui/use-toast";
 import NoQrFound from "./NoQrFound";
+import { deleteAnonAiFreetextQr, getAnonAiFreetextList } from "@/lib/actions";
 
-type Props = {};
+type Props = {
+  isHomepage: boolean;
+};
 
-const AiFreeTextTable = (props: Props) => {
+const AiFreeTextTable = ({ isHomepage }: Props) => {
   const [qrCodes, setQrCodes] = useState<AiFreeTextQr[]>([]);
-  const [qrCode, setQrCode] = useState<AiFreeTextQr>();
+  const [anonQrCodes, setAnonQrCodes] = useState<AnonymousFreetextQr[]>([]);
+  const [qrCode, setQrCode] = useState<AiFreeTextQr | AnonymousFreetextQr>();
   const [editDialog, setEditDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
 
   const {
-    data,
+    data: aiQrCodesList,
     isLoading: fetchingQr,
-    isError,
+    isError: isAiError,
     isSuccess: fetchSuccess,
   } = useQuery({
     queryKey: ["aiFreeTextQrCodes"],
@@ -47,6 +51,21 @@ const AiFreeTextTable = (props: Props) => {
       const response = await axios.get("/api/aiqrcode/freetext");
       return response.data.qrCodes;
     },
+    enabled: !isHomepage,
+  });
+
+  const {
+    data: anonQrCodesList,
+    isLoading: isAnonLoading,
+    isError: isAnonError,
+    isSuccess: isAnonSuccess,
+  } = useQuery({
+    queryKey: ["AnonAiFreetextQrCodes"],
+    queryFn: async () => {
+      const res = await getAnonAiFreetextList();
+      return res;
+    },
+    enabled: isHomepage,
   });
 
   const { toast } = useToast();
@@ -75,13 +94,56 @@ const AiFreeTextTable = (props: Props) => {
     },
   });
 
+  const { mutate: deleteAnonQr, isLoading: isAnonDeleting } = useMutation({
+    mutationFn: async (uniqueToken: string) => {
+      const res = await deleteAnonAiFreetextQr(uniqueToken);
+      return res;
+    },
+    onSuccess: (data) => {
+      if (data.success) {
+        toast({
+          title: "Success!",
+          description: "You have successfully deleted the QR code.",
+        });
+        queryClient.invalidateQueries(["AnonAiFreetextQrCodes"]);
+        setDeleteDialog(false);
+      }
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occurred during the process",
+      });
+    },
+  });
+
   useEffect(() => {
     if (fetchSuccess) {
-      setQrCodes(data);
+      setQrCodes(aiQrCodesList);
     }
-  }, [data, fetchSuccess]);
+  }, [aiQrCodesList, fetchSuccess]);
 
-  if (fetchingQr) {
+  useEffect(() => {
+    if (isAnonSuccess) {
+      setAnonQrCodes(anonQrCodesList.qrCodes);
+    }
+  }, [isAnonSuccess, anonQrCodesList]);
+
+  const isLoading = fetchingQr && isAnonLoading;
+  const isError = isAnonError || isAiError;
+
+  const onDeleteHandler = () => {
+    if (!qrCode) {
+      return;
+    }
+    if (isHomepage) {
+      deleteAnonQr(qrCode.uniqueToken);
+      return;
+    }
+    deleteAiFreeTextQr(qrCode.uniqueToken);
+  };
+
+  if (isLoading) {
     return (
       <div>
         <LoadingSpinner component />
@@ -95,9 +157,9 @@ const AiFreeTextTable = (props: Props) => {
   }
   return (
     <div>
-      {qrCodes.length === 0 ? (
+      {(isHomepage ? anonQrCodes : qrCodes).length === 0 ? (
         <div className="flex justify-center items-center ">
-          <NoQrFound qrType="Free Text" />
+          <NoQrFound isHomepage={isHomepage} qrType="Free Text" />
         </div>
       ) : (
         <Table>
@@ -110,41 +172,42 @@ const AiFreeTextTable = (props: Props) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {qrCodes.map((qrCode, idx) => (
-              <TableRow key={qrCode.id}>
-                <TableCell>{idx + 1}</TableCell>
-                <TableCell>{qrCode.name}</TableCell>
-                <TableCell>
-                  {qrCode.freetext.length > 80 ? (
-                    <p>{qrCode.freetext.slice(0, 80)}...</p>
-                  ) : (
-                    <p>{qrCode.freetext}</p>
-                  )}
-                </TableCell>
-                <TableCell>
-                  <div className="flex flex-row justify-start items-center">
-                    <div
-                      className="hover:bg-secondary-foreground/10 rounded-md w-fit p-2"
-                      onClick={() => {
-                        setEditDialog(true);
-                        setQrCode(qrCode);
-                      }}
-                    >
-                      <Edit2 className="h-4 w-4 " />
+            {(isHomepage ? anonQrCodes : qrCodes).map((qrCode, idx) => {
+              const freeText = isHomepage
+                ? (qrCode as AnonymousFreetextQr).free_text
+                : (qrCode as AiFreeTextQr).freetext;
+              const displayText =
+                freeText.length > 80 ? `${freeText.slice(0, 80)}...` : freeText;
+              return (
+                <TableRow key={qrCode.id}>
+                  <TableCell>{idx + 1}</TableCell>
+                  <TableCell>{qrCode.name}</TableCell>
+                  <TableCell>{displayText}</TableCell>
+                  <TableCell>
+                    <div className="flex flex-row justify-start items-center">
+                      <div
+                        className="hover:bg-secondary-foreground/10 rounded-md w-fit p-2"
+                        onClick={() => {
+                          setEditDialog(true);
+                          setQrCode(qrCode);
+                        }}
+                      >
+                        <Edit2 className="h-4 w-4 " />
+                      </div>
+                      <div
+                        className="ml-1 text-red-500 hover:bg-secondary-foreground/10 w-fit p-2 rounded-md"
+                        onClick={() => {
+                          setQrCode(qrCode);
+                          setDeleteDialog(true);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </div>
                     </div>
-                    <div
-                      className="ml-1 text-red-500 hover:bg-secondary-foreground/10 w-fit p-2 rounded-md"
-                      onClick={() => {
-                        setQrCode(qrCode);
-                        setDeleteDialog(true);
-                      }}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </div>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       )}
@@ -159,6 +222,7 @@ const AiFreeTextTable = (props: Props) => {
               qrCode={qrCode}
               editDialog={editDialog}
               setEditDialog={setEditDialog}
+              isAnonymous={isHomepage}
             />
           )}
         </DialogContent>
@@ -176,7 +240,7 @@ const AiFreeTextTable = (props: Props) => {
             <AlertDialogAction
               className="bg-red-500"
               onClick={() => {
-                deleteAiFreeTextQr(qrCode!.uniqueToken);
+                onDeleteHandler();
               }}
             >
               {isDeleting ? (

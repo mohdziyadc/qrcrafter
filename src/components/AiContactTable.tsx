@@ -254,7 +254,7 @@ const AiContactTable = ({ isHomepage }: Props) => {
           </>
         ) : (
           <div className="flex justify-center items-center">
-            <NoQrFound qrType="Contact" />
+            <NoQrFound qrType="Contact" isHomepage={isHomepage} />
           </div>
         )}
       </div>

@@ -14,7 +14,7 @@ function HomePageTable({ qrType }: Props) {
       {qrType === "url" && <AiUrlTable isHomepage={true} />}
       {qrType === "multi_url" && <AiMultiUrlTable isHomepage={true} />}
       {qrType === "contact" && <AiContactTable isHomepage={true} />}
-      {qrType === "free_text" && <AiFreeTextTable />}
+      {qrType === "free_text" && <AiFreeTextTable isHomepage={true} />}
     </>
   );
 }

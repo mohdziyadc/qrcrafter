@@ -231,7 +231,7 @@ const AiUrlTable = ({ isHomepage }: Props) => {
         </>
       ) : (
         <div className="flex justify-center items-center">
-          <NoQrFound qrType="URL" />
+          <NoQrFound qrType="URL" isHomepage={isHomepage} />
         </div>
       )}
     </div>

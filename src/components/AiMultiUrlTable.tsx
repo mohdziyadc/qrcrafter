@@ -238,7 +238,7 @@ const AiMultiUrlTable = ({ isHomepage }: Props) => {
         </>
       ) : (
         <div className="flex justify-center items-center">
-          <NoQrFound qrType="Multi URL" />
+          <NoQrFound qrType="Multi URL" isHomepage={isHomepage} />
         </div>
       )}
     </div>

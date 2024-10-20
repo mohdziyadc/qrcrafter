@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { aiFreeTextFormSchema } from "@/validators/qrFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AiFreeTextQr } from "@prisma/client";
+import { AiFreeTextQr, AnonymousFreetextQr } from "@prisma/client";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
@@ -22,20 +22,28 @@ import { Textarea } from "./ui/textarea";
 import { ScrollArea } from "./ui/scroll-area";
 import axios from "axios";
 import { useToast } from "./ui/use-toast";
+import { updateAnonAiFreetextQr } from "@/lib/actions";
 type Props = {
-  qrCode: AiFreeTextQr;
+  qrCode: AiFreeTextQr | AnonymousFreetextQr;
   editDialog: boolean;
   setEditDialog: Dispatch<SetStateAction<boolean>>;
+  isAnonymous: boolean;
 };
 
 type updateFreetextInput = z.infer<typeof aiFreeTextFormSchema>;
-const UpdateAiFreeTextForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
-  const [disableUpdateBtn, setDisableUpdateBtn] = useState(false);
+const UpdateAiFreeTextForm = ({
+  qrCode,
+  editDialog,
+  setEditDialog,
+  isAnonymous,
+}: Props) => {
   const form = useForm<updateFreetextInput>({
     resolver: zodResolver(aiFreeTextFormSchema),
     defaultValues: {
       name: qrCode.name,
-      freetext: qrCode.freetext,
+      freetext: isAnonymous
+        ? (qrCode as AnonymousFreetextQr).free_text
+        : (qrCode as AiFreeTextQr).freetext,
       prompt: "EMPTY",
     },
   });
@@ -82,17 +90,46 @@ const UpdateAiFreeTextForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
       });
     },
   });
+
+  const {
+    mutate: updateAnonQr,
+    isLoading: isAnonUpdating,
+    isSuccess: isAnonSuccess,
+  } = useMutation({
+    mutationFn: async ({ name, freetext }: updateFreetextInput) => {
+      const res = await updateAnonAiFreetextQr({
+        name: name,
+        freeText: freetext,
+        uniqueToken: qrCode.uniqueToken,
+      });
+      return res;
+    },
+    onSuccess: (data) => {
+      if (data.success) {
+        toast({
+          title: "Success!",
+          description: "You have successfully updated this QR code.",
+        });
+        queryClient.invalidateQueries(["AnonAiFreetextQrCodes"]);
+        setEditDialog(false);
+      }
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occured during the process.",
+        variant: "destructive",
+      });
+    },
+  });
+
   function onSubmitHandler(params: updateFreetextInput) {
+    if (isAnonymous) {
+      updateAnonQr(params);
+      return;
+    }
     updateAiFreeTextQr(params);
   }
-
-  useEffect(() => {
-    if (!form.formState.isDirty) {
-      setDisableUpdateBtn(true);
-    } else {
-      setDisableUpdateBtn(false);
-    }
-  }, [form.formState.isDirty]);
 
   return (
     <>
@@ -156,9 +193,9 @@ const UpdateAiFreeTextForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
             <Button
               type="submit"
               className="ml-2"
-              disabled={isSuccess || disableUpdateBtn}
+              disabled={isSuccess || isAnonSuccess || !form.formState.isDirty}
             >
-              {isUpdating ? (
+              {isUpdating || isAnonUpdating ? (
                 <Loader2 className=" animate-spin" />
               ) : isSuccess ? (
                 <p>Updated</p>

@@ -317,6 +317,10 @@ export async function updateAnonAiFreetextQr(payload: {
         updatedAt: new Date(),
       },
     });
+    return {
+      success: true,
+      message: "QR code updated",
+    };
   } catch (error) {
     console.log("[SERVOR ERROR] " + error);
     return {
