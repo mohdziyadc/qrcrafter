@@ -1,6 +1,9 @@
-import { aiContactFormSchema } from "@/validators/qrFormSchema";
+import {
+  aiAnonContactSchema,
+  aiContactFormSchema,
+} from "@/validators/qrFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AiContactQr } from "@prisma/client";
+import { AiContactQr, AnonymousContactQr } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -20,17 +23,37 @@ import { cn } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useToast } from "./ui/use-toast";
+import { updateAnonAiContactQr } from "@/lib/actions";
 
 type Props = {
-  qrCode: AiContactQr;
+  qrCode: AiContactQr | AnonymousContactQr;
   editDialog: boolean;
   setEditDialog: Dispatch<SetStateAction<boolean>>;
+  isAnonymous: boolean;
 };
 
-type updateAiContactInput = z.infer<typeof aiContactFormSchema>;
-const UpdateAiContactForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
+type updateAiContactInput = z.infer<
+  typeof aiContactFormSchema | typeof aiAnonContactSchema
+>;
+
+const UpdateAiContactForm = ({
+  qrCode,
+  editDialog,
+  setEditDialog,
+  isAnonymous,
+}: Props) => {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const getSchema = () => {
+    if (isAnonymous) {
+      return aiAnonContactSchema;
+    }
+    return aiContactFormSchema;
+  };
+
   const form = useForm<updateAiContactInput>({
-    resolver: zodResolver(aiContactFormSchema),
+    resolver: zodResolver(getSchema()),
     defaultValues: {
       first_name: qrCode.first_name,
       last_name: qrCode.last_name,
@@ -38,11 +61,9 @@ const UpdateAiContactForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
       email: qrCode.email,
       phone_number: qrCode.phone_number,
       prompt: "EMPTY",
+      name: (qrCode as AnonymousContactQr).name,
     },
   });
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
-  const [disableUpdateBtn, setDisableUpdateBtn] = useState(false);
 
   const fetchImageObjectUrl = async (imageUrl: string) => {
     const response = await fetch(imageUrl);
@@ -89,17 +110,50 @@ const UpdateAiContactForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
       });
     },
   });
+  const {
+    mutate: updateAnonContactQr,
+    isLoading: isAnonUpdating,
+    isSuccess: isAnonSuccess,
+  } = useMutation({
+    mutationFn: async (payload: updateAiContactInput) => {
+      const payloadWithName = payload as z.infer<typeof aiAnonContactSchema>;
+      const res = await updateAnonAiContactQr({
+        name: payloadWithName.name,
+        user_first_name: payloadWithName.first_name,
+        user_last_name: payloadWithName.last_name,
+        user_organisation: payloadWithName.organisation,
+        user_email: payloadWithName.email,
+        user_phone_number: payloadWithName.phone_number,
+        uniqueToken: qrCode.uniqueToken,
+      });
+      return res;
+    },
+    onSuccess: (data) => {
+      if (data.success) {
+        queryClient.invalidateQueries(["AnonAiContactQrCodes"]);
+        toast({
+          title: "Success!",
+          description: "You have successfully updated the QR code.",
+        });
+        setEditDialog(false);
+      }
+    },
+    onError: () => {
+      toast({
+        title: "Error!",
+        description: "An unknown error occurred during the process.",
+        variant: "destructive",
+      });
+    },
+  });
   const onSubmitHandler = (params: updateAiContactInput) => {
+    if (isAnonymous) {
+      updateAnonContactQr(params);
+      return;
+    }
     updateAiContactQr(params);
   };
 
-  useEffect(() => {
-    if (!form.formState.isDirty) {
-      setDisableUpdateBtn(true);
-    } else {
-      setDisableUpdateBtn(false);
-    }
-  }, [form.formState.isDirty]);
   return (
     <div>
       <div className="flex flex-col justify-center items-center mt-2 w-full ">
@@ -125,6 +179,21 @@ const UpdateAiContactForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
             onSubmit={form.handleSubmit(onSubmitHandler)}
             className="w-full"
           >
+            {(qrCode as AnonymousContactQr).name !== undefined && (
+              <FormField
+                name="name"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>First Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <div className="flex flex-row">
               <FormField
                 name="first_name"
@@ -206,9 +275,9 @@ const UpdateAiContactForm = ({ qrCode, editDialog, setEditDialog }: Props) => {
               <Button
                 type="submit"
                 className="ml-2"
-                disabled={isSuccess || disableUpdateBtn}
+                disabled={isSuccess || isAnonSuccess || !form.formState.isDirty}
               >
-                {isLoading ? (
+                {isLoading || isAnonUpdating ? (
                   <Loader2 className=" animate-spin" />
                 ) : isSuccess ? (
                   <p>Updated</p>

@@ -20,38 +20,58 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
-import { AiContactQr } from "@prisma/client";
+import { AiContactQr, AnonymousContactQr } from "@prisma/client";
 import NoQrFound from "./NoQrFound";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
 import UpdateAiContactForm from "./UpdateAiContactForm";
 import { useToast } from "./ui/use-toast";
+import { deleteAnonAiContactQr, getAnonAiContactList } from "@/lib/actions";
 
-type Props = {};
+type Props = {
+  isHomepage: boolean;
+};
 
-const AiContactTable = (props: Props) => {
+const AiContactTable = ({ isHomepage }: Props) => {
   const [qrCodes, setQrCodes] = useState<AiContactQr[]>([]);
-  const [qrCode, setQrCode] = useState<AiContactQr>();
+  const [anonQrCodes, setAnonQrCodes] = useState<AnonymousContactQr[]>([]);
+  const [qrCode, setQrCode] = useState<AiContactQr | AnonymousContactQr>();
   const [editDialog, setEditDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isError, isSuccess } = useQuery({
+  const {
+    data: aiQrCodes,
+    isLoading: isAiLoading,
+    isError: isAiError,
+    isSuccess: isAiSuccess,
+  } = useQuery({
     queryKey: ["aiContactQrCodes"],
     queryFn: async () => {
       const response = await axios.get("/api/aiqrcode/contact");
       return response.data.qrCodes;
     },
+    enabled: !isHomepage,
   });
 
   const {
-    mutate: deleteAiContactQr,
-    isLoading: isDeleting,
-    isSuccess: isDeleted,
-  } = useMutation({
+    data: anonQrCodeList,
+    isLoading: isAnonLoading,
+    isError: isAnonError,
+    isSuccess: isAnonSuccess,
+  } = useQuery({
+    queryKey: ["AnonAiContactQrCodes"],
+    queryFn: async () => {
+      const res = await getAnonAiContactList();
+      return res;
+    },
+    enabled: isHomepage,
+  });
+
+  const { mutate: deleteAiContactQr, isLoading: isDeleting } = useMutation({
     mutationFn: async (uniqueToken: string) => {
       const response = await axios.post("/api/aiqrcode/contact/delete", {
         uniqueToken: uniqueToken,
@@ -75,11 +95,58 @@ const AiContactTable = (props: Props) => {
     },
   });
 
+  const { mutate: deleteAnonContactQr, isLoading: isAnonDeleting } =
+    useMutation({
+      mutationFn: async (uniqueToken: string) => {
+        const res = await deleteAnonAiContactQr(uniqueToken);
+        return res;
+      },
+      onSuccess: (data) => {
+        if (data.success) {
+          queryClient.invalidateQueries(["AnonAiContactQrCodes"]);
+          toast({
+            title: "Success!",
+            description: "You have successfully deleted the QR code",
+          });
+          setDeleteDialog(false);
+        }
+      },
+      onError: () => {
+        toast({
+          title: "Error!",
+          description: "An error occurred during the process.",
+          variant: "destructive",
+        });
+      },
+    });
+
   useEffect(() => {
-    if (isSuccess) {
-      setQrCodes(data);
+    if (isAiSuccess) {
+      setQrCodes(aiQrCodes);
     }
-  }, [isSuccess, data]);
+  }, [isAiSuccess, aiQrCodes]);
+
+  useEffect(() => {
+    if (isAnonSuccess) {
+      setAnonQrCodes(anonQrCodeList.qrCodes);
+    }
+  }, [isAnonSuccess, anonQrCodeList]);
+
+  const isLoading = isAiLoading && isAnonLoading;
+  const isSuccess = isAiSuccess || isAnonSuccess;
+  const isError = isAiError && isAnonError;
+
+  const onDeleteHandler = () => {
+    const isAnonymous = isHomepage;
+    if (!qrCode) {
+      return;
+    }
+    if (isAnonymous) {
+      deleteAnonContactQr(qrCode.uniqueToken);
+      return;
+    }
+    deleteAiContactQr(qrCode.uniqueToken);
+  };
 
   if (isLoading) {
     return (
@@ -95,20 +162,24 @@ const AiContactTable = (props: Props) => {
   return (
     <div>
       <div>
-        {qrCodes.length !== 0 ? (
+        {(isHomepage ? anonQrCodes : qrCodes).length !== 0 ? (
           <>
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>S.No</TableHead>
+                  <TableHead>Name</TableHead>
                   <TableHead>Contact</TableHead>
                   <TableHead>Edit</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {qrCodes.map((qrCode, idx) => (
+                {(isHomepage ? anonQrCodes : qrCodes).map((qrCode, idx) => (
                   <TableRow key={idx}>
                     <TableCell>{idx + 1}</TableCell>
+                    <TableCell>
+                      {isHomepage && (qrCode as AnonymousContactQr).name}
+                    </TableCell>
                     <TableCell>
                       {qrCode.first_name} {qrCode.last_name}
                     </TableCell>
@@ -149,6 +220,7 @@ const AiContactTable = (props: Props) => {
                     qrCode={qrCode}
                     editDialog={editDialog}
                     setEditDialog={setEditDialog}
+                    isAnonymous={isHomepage}
                   />
                 )}
               </DialogContent>
@@ -167,13 +239,10 @@ const AiContactTable = (props: Props) => {
                   <AlertDialogAction
                     className="bg-red-500"
                     onClick={() => {
-                      deleteAiContactQr(qrCode!.uniqueToken);
-                      if (isDeleted) {
-                        setDeleteDialog(false);
-                      }
+                      onDeleteHandler();
                     }}
                   >
-                    {isDeleting ? (
+                    {isDeleting || isAnonDeleting ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
                       <p>Delete</p>

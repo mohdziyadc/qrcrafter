@@ -92,7 +92,7 @@ const AiQrCodeTab = (props: Props) => {
         </TabsContent>
         <TabsContent value="ai_contact">
           <CardContent>
-            <AiContactTable />
+            <AiContactTable isHomepage={false} />
           </CardContent>
         </TabsContent>
       </Tabs>

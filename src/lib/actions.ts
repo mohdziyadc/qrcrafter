@@ -6,6 +6,8 @@ import { cookies } from "next/headers";
 import { JwtPayload, verify } from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
+
+/** Get Anonymous Qr Codes */
 export async function getAiMultiUrlQrcode(uniqueToken: string) {
   const response = await prismaClient.mulitUrlAiQr.findUnique({
     where: {
@@ -66,6 +68,8 @@ export async function getAnonAiFreetextQr(uniqueToken: string) {
     },
   });
 }
+
+/** Get List of Anonymous Qr Codes */
 
 export async function getAnonAiUrlList() {
   try {
@@ -193,6 +197,7 @@ export async function getAnonAiFreetextList() {
   }
 }
 
+/** Update Anonymous Qr Codes */
 export async function updateAnonAiUrlQrcode(payload: {
   uniqueToken: string;
   url: string;
@@ -321,6 +326,7 @@ export async function updateAnonAiFreetextQr(payload: {
   }
 }
 
+/** Delete Anonymous Qr Codes */
 export async function deleteAnonAiUrlQrcode(uniqueToken: string) {
   try {
     const anonUser = await getAnonymousUser();
