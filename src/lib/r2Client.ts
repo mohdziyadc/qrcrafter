@@ -1,5 +1,4 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import * as crypto from "crypto";
 import { v4 as uuidv4 } from "uuid";
 
 export class R2Client {
