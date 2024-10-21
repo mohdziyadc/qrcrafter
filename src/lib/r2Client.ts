@@ -1,5 +1,6 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import * as crypto from "crypto";
+import { v4 as uuidv4 } from "uuid";
 
 export class R2Client {
   private static instance: R2Client | null = null;
@@ -12,7 +13,7 @@ export class R2Client {
     const accessKeyId = process.env.R2_ACCESS_KEY_ID;
     const secretKey = process.env.R2_SECRET_ACCESS_KEY;
     this.bucketName = process.env.R2_BUCKET_NAME as string;
-    this.r2DevDomain = `https://pub-${accountId}.r2.dev`;
+    this.r2DevDomain = process.env.R2_DEV_DOMAIN as string;
 
     if (!accountId || !accessKeyId || !secretKey || !this.bucketName) {
       throw new Error(
@@ -38,7 +39,7 @@ export class R2Client {
   }
 
   private generateKey(prefix: string) {
-    const randomString = crypto.randomBytes(8).toString();
+    const randomString = uuidv4();
     return `${prefix}-${randomString}.png`;
   }
 
@@ -78,3 +79,5 @@ export class R2Client {
     return Buffer.from(arrayBuffer);
   }
 }
+
+export const r2Client = R2Client.getClient();

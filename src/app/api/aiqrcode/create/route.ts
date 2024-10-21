@@ -16,6 +16,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { AnonymousUser } from "@prisma/client";
 import { cookies } from "next/headers";
 import { strict } from "assert";
+import { r2Client } from "@/lib/r2Client";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
@@ -95,10 +96,12 @@ export async function POST(req: NextRequest) {
       case "url":
         response = await getUrlQrCode(body, encodedToken);
         if (response) {
+          const imageBuffer = await r2Client.urlToBuffer(response.image_url);
+          const { url: r2ImageUrl } = await r2Client.uploadImage(imageBuffer);
           await prismaClient.anonymousURLQr.create({
             data: {
               url: response.user_url,
-              image_url: response.image_url,
+              image_url: r2ImageUrl,
               name: response.name,
               anonymousUserId: anonymousUser.id,
               uniqueToken: encodedToken,
@@ -121,6 +124,8 @@ export async function POST(req: NextRequest) {
       case "multi_url":
         response = await getMultiUrlQrCode(body, encodedToken);
         if (response) {
+          const imageBuffer = await r2Client.urlToBuffer(response.image_url);
+          const { url: r2ImageUrl } = await r2Client.uploadImage(imageBuffer);
           await prismaClient.anonymousMultiUrlQr.create({
             data: {
               name: response.name,
@@ -128,7 +133,7 @@ export async function POST(req: NextRequest) {
               titles: response.user_titles,
               anonymousUserId: anonymousUser.id,
               uniqueToken: encodedToken,
-              image_url: response.image_url,
+              image_url: r2ImageUrl,
             },
           });
 
@@ -146,11 +151,13 @@ export async function POST(req: NextRequest) {
       case "free_text":
         response = await getFreeTextQrCode(body, encodedToken);
         if (response) {
+          const imageBuffer = await r2Client.urlToBuffer(response.image_url);
+          const { url: r2ImageUrl } = await r2Client.uploadImage(imageBuffer);
           await prismaClient.anonymousFreetextQr.create({
             data: {
               name: response.name,
               free_text: response.user_free_text,
-              image_url: response.image_url,
+              image_url: r2ImageUrl,
               anonymousUserId: anonymousUser.id,
               uniqueToken: encodedToken,
             },
@@ -170,12 +177,14 @@ export async function POST(req: NextRequest) {
       case "contact":
         response = await getContactQrCode(body, encodedToken);
         if (response) {
+          const imageBuffer = await r2Client.urlToBuffer(response.image_url);
+          const { url: r2ImageUrl } = await r2Client.uploadImage(imageBuffer);
           await prismaClient.anonymousContactQr.create({
             data: {
               first_name: response.user_first_name,
               name: response.name,
               last_name: response.user_last_name,
-              image_url: response.image_url,
+              image_url: r2ImageUrl,
               phone_number: response.user_phone_number,
               organisation: response.user_organisation,
               email: response.user_email,
