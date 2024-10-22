@@ -18,6 +18,7 @@ import axios from "axios";
 import { useToast } from "./ui/use-toast";
 import { Loader2 } from "lucide-react";
 import downloadQrCode from "@/lib/downloadQrCode";
+import GenerateQRCodeScreen from "./GenerateQRCodeScreen";
 type Props = {
   isHomepage: boolean;
 };
@@ -349,62 +350,64 @@ const DynamicAIQRCodeCard = ({ isHomepage = false }: Props) => {
             Finishing up
           </p>{" "}
         </div>
-      ) : (
-        image.image_url && (
-          <Card className={"px-6 pt-6 pb-2 bg-background shadow-lg"}>
-            <CardContent>
-              <div className="relative flex flex-col justify-center items-center gap-y-2 w-[510px] border bg-primary border-gray-300 rounded shadow group p-2 mx-auto max-w-full">
-                <Image
-                  src={image.image_url}
-                  className="rounded "
-                  alt="qr code"
-                  width={480}
-                  height={480}
-                />
-                <p className="text-gray-400 text-sm italic">
-                  QR code took {(image.latency_ms / 1000).toFixed(2)} seconds to
-                  generate.
-                </p>
-              </div>
-            </CardContent>
-            <CardFooter className="flex flex-col">
-              <div className="flex flex-row mt-4 items-center justify-center gap-2 ">
-                {!isHomepage && (
-                  <Button
-                    variant={"outline"}
-                    onClick={() => {
-                      checkTypeAndSave();
-                    }}
-                    disabled={disableBtn && querySuccess}
-                  >
-                    {loadingBtn ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      "Save QR Code"
-                    )}
-                  </Button>
-                )}
-                <Button
-                  onClick={() => {
-                    downloadQrCode(image.image_url, "aiQrCode");
-                  }}
-                >
-                  Download
-                </Button>
-              </div>
+      ) : image.image_url ? (
+        <Card className={"px-6 pt-6 pb-2 bg-background shadow-lg"}>
+          <CardContent>
+            <div className="relative flex flex-col justify-center items-center gap-y-2 w-[510px] border bg-primary border-gray-300 rounded shadow group p-2 mx-auto max-w-full">
+              <Image
+                src={image.image_url}
+                className="rounded "
+                alt="qr code"
+                width={480}
+                height={480}
+              />
+              <p className="text-gray-400 text-sm italic">
+                QR code took {(image.latency_ms / 1000).toFixed(2)} seconds to
+                generate.
+              </p>
+            </div>
+          </CardContent>
+          <CardFooter className="flex flex-col">
+            <div className="flex flex-row mt-4 items-center justify-center gap-2 ">
               {!isHomepage && (
-                <p className="text-gray-400 text-sm italic text-center mt-2">
-                  You should save the QR code if you want to update it later.
-                </p>
+                <Button
+                  variant={"outline"}
+                  onClick={() => {
+                    checkTypeAndSave();
+                  }}
+                  disabled={disableBtn && querySuccess}
+                >
+                  {loadingBtn ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    "Save QR Code"
+                  )}
+                </Button>
               )}
-              {isHomepage && (
-                <p className="text-gray-400 text-sm italic text-center mt-2">
-                  {`QR Code has been successfully saved. Click on "Your QR Codes" tab to view it.`}
-                </p>
-              )}
-            </CardFooter>
-          </Card>
-        )
+              <Button
+                onClick={() => {
+                  downloadQrCode(image.image_url, "aiQrCode");
+                }}
+              >
+                Download
+              </Button>
+            </div>
+            {!isHomepage && (
+              <p className="text-gray-400 text-sm italic text-center mt-2">
+                You should save the QR code if you want to update it later.
+              </p>
+            )}
+            {isHomepage && (
+              <p className="text-gray-400 text-sm italic text-center mt-2">
+                {`QR Code has been successfully saved. Click on "Your QR Codes" tab to view it.`}
+              </p>
+            )}
+          </CardFooter>
+        </Card>
+      ) : (
+        <div>
+          <GenerateQRCodeScreen />
+        </div>
       )}
     </div>
   );
