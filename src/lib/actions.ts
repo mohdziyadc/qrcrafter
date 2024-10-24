@@ -440,3 +440,21 @@ async function getAnonymousUser() {
     },
   });
 }
+
+/** Get Anon Qr Codes num */
+export async function getAnonQrCodesCount() {
+  const anonUser = await getAnonymousUser();
+  if (!anonUser) {
+    return {
+      success: false,
+      message: "No Anon User found",
+      count: -1,
+    };
+  }
+
+  return {
+    success: true,
+    message: "Anon QR Code found",
+    count: anonUser.numQrCodes,
+  };
+}

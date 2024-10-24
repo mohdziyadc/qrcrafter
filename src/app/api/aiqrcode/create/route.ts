@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getBase64UUID } from "@/lib/utils";
-import QRCode from "qrcode";
 import {
   AiAnonContactResponse,
   AiContactResponse,
@@ -11,11 +10,8 @@ import {
 import { replicateClient } from "@/lib/replicate";
 import { prismaClient } from "@/lib/db";
 import { JwtPayload, sign, verify } from "jsonwebtoken";
-import { serialize } from "cookie";
-import { NextApiRequest, NextApiResponse } from "next";
 import { AnonymousUser } from "@prisma/client";
 import { cookies } from "next/headers";
-import { strict } from "assert";
 import { r2Client } from "@/lib/r2Client";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;

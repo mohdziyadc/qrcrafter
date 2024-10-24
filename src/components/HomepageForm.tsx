@@ -7,7 +7,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import * as z from "zod";
 import {
   Form,
   FormControl,
@@ -22,12 +21,14 @@ import { Textarea } from "./ui/textarea";
 import MultiUrlSkeleton from "./MultiUrlSkeleton";
 import ContactFormSkeleton from "./ContactFormSkeleton";
 import { Button } from "./ui/button";
-import { Loader2, QrCode } from "lucide-react";
+import { Loader2, QrCode, Zap } from "lucide-react";
 import { useLoading } from "@/app/context/useLoading";
 import { useImage } from "@/app/context/useImage";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useToast } from "./ui/use-toast";
+import { getAnonQrCodesCount } from "@/lib/actions";
+import HomepageCTA from "./HomepageCTA";
 
 type Props = {
   qrType: string;
@@ -50,8 +51,7 @@ const HomepageForm = ({ qrType }: Props) => {
   const { loading, setLoading } = useLoading();
   const { image, setImage } = useImage();
   const { toast } = useToast();
-
-  const [qrCount, setQrCount] = useState(5);
+  const queryClient = useQueryClient();
 
   //creating a reference object - a workaround to access state in setTimeout
   const loadingRef = useRef(loading);
@@ -110,7 +110,7 @@ const HomepageForm = ({ qrType }: Props) => {
     onSuccess: (data) => {
       setLoading("success");
       if (data.allowed) {
-        setQrCount(5 - data.count);
+        queryClient.invalidateQueries({ queryKey: ["AnonQrCodeCount"] });
       }
       console.log("Setting Image: " + JSON.stringify(data));
       setImage(data.responseData);
@@ -234,7 +234,6 @@ const HomepageForm = ({ qrType }: Props) => {
             </Button>
           </form>
         </Form>
-        <div>QR Codes remaining: {qrCount}</div>
       </div>
     </>
   );

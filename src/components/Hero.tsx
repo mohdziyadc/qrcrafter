@@ -14,6 +14,7 @@ import NoQrFound from "./NoQrFound";
 import AiUrlTable from "./AiUrlTable";
 import HomePageTable from "./HomePageTable";
 import DynamicAIQRCodeCard from "./DynamicAIQRCodeCard";
+import HomepageCTA from "./HomepageCTA";
 // import { getFingerprintClient } from "@/lib/fingerprint";
 // const ClientJS = dynamic(() => import("../components/ClientJS"), {
 //   ssr: false,
@@ -150,13 +151,30 @@ export default function Hero() {
                     </CardHeader>
                     <CardContent>
                       <div className="flex flex-row">
-                        <div className="flex-[1] border-2 border-slate-400 h-fit p-4 mr-2 rounded-lg ">
-                          <HomepageForm qrType={type} />
+                        <div className="flex-[1] flex-col">
+                          <div className=" border-2 border-slate-400 h-fit p-4 mr-2 rounded-lg ">
+                            <HomepageForm qrType={type} />
+                          </div>
+                          <div>
+                            {3 > 2 && (
+                              <div
+                                className={` transition-transform duration-500 ease-in-out ${
+                                  3 > 2
+                                    ? "opacity-100 translate-y-0"
+                                    : "opacity-0 translate-y-4"
+                                }`}
+                              >
+                                <HomepageCTA qrCount={3} />
+                              </div>
+                            )}
+                          </div>
                         </div>
+
                         <div className="flex-[2] flex rounded-md border-dashed h-[48rem] border-blue-600 justify-center items-center border-2 ">
                           <DynamicAIQRCodeCard isHomepage />
                         </div>
                       </div>
+                      <div></div>
                     </CardContent>
                   </TabsContent>
                   <TabsContent value="get_qr">
