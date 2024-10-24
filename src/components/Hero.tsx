@@ -156,17 +156,7 @@ export default function Hero() {
                             <HomepageForm qrType={type} />
                           </div>
                           <div>
-                            {3 > 2 && (
-                              <div
-                                className={` transition-transform duration-500 ease-in-out ${
-                                  3 > 2
-                                    ? "opacity-100 translate-y-0"
-                                    : "opacity-0 translate-y-4"
-                                }`}
-                              >
-                                <HomepageCTA qrCount={3} />
-                              </div>
-                            )}
+                            <HomepageCTA />
                           </div>
                         </div>
 

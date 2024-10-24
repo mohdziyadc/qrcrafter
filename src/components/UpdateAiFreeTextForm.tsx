@@ -23,6 +23,7 @@ import { ScrollArea } from "./ui/scroll-area";
 import axios from "axios";
 import { useToast } from "./ui/use-toast";
 import { updateAnonAiFreetextQr } from "@/lib/actions";
+import downloadQrCode from "@/lib/downloadQrCode";
 type Props = {
   qrCode: AiFreeTextQr | AnonymousFreetextQr;
   editDialog: boolean;
@@ -179,30 +180,42 @@ const UpdateAiFreeTextForm = ({
               );
             }}
           />
-          <div className="flex flex-row justify-start items-center mt-4">
-            <Button
-              variant={"outline"}
-              type="button"
-              onClick={() => setEditDialog(false)}
-              className={cn({
-                hidden: isSuccess,
-              })}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              className="ml-2"
-              disabled={isSuccess || isAnonSuccess || !form.formState.isDirty}
-            >
-              {isUpdating || isAnonUpdating ? (
-                <Loader2 className=" animate-spin" />
-              ) : isSuccess ? (
-                <p>Updated</p>
-              ) : (
-                <p>Update QR</p>
-              )}
-            </Button>
+          <div className="flex flex-row justify-between items-center mt-4">
+            <div className="flex flex-row justify-start">
+              <Button
+                variant={"outline"}
+                type="button"
+                onClick={() => setEditDialog(false)}
+                className={cn({
+                  hidden: isSuccess,
+                })}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className="ml-2"
+                disabled={isSuccess || isAnonSuccess || !form.formState.isDirty}
+              >
+                {isUpdating || isAnonUpdating ? (
+                  <Loader2 className=" animate-spin" />
+                ) : isSuccess ? (
+                  <p>Updated</p>
+                ) : (
+                  <p>Update QR</p>
+                )}
+              </Button>
+            </div>
+            <div>
+              <Button
+                onClick={() => {
+                  downloadQrCode(qrCode.image_url, `qrCode_${qrCode.name}`);
+                }}
+                type="button"
+              >
+                Download
+              </Button>
+            </div>
           </div>
         </form>
       </Form>

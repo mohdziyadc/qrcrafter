@@ -24,6 +24,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useToast } from "./ui/use-toast";
 import { updateAnonAiContactQr } from "@/lib/actions";
+import downloadQrCode from "@/lib/downloadQrCode";
 
 type Props = {
   qrCode: AiContactQr | AnonymousContactQr;
@@ -261,30 +262,47 @@ const UpdateAiContactForm = ({
                 </FormItem>
               )}
             />
-            <div className="flex flex-row justify-start items-center mt-4">
-              <Button
-                variant={"outline"}
-                type="button"
-                onClick={() => setEditDialog(false)}
-                className={cn({
-                  //   hidden: isSuccess,
-                })}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                className="ml-2"
-                disabled={isSuccess || isAnonSuccess || !form.formState.isDirty}
-              >
-                {isLoading || isAnonUpdating ? (
-                  <Loader2 className=" animate-spin" />
-                ) : isSuccess ? (
-                  <p>Updated</p>
-                ) : (
-                  <p>Update QR</p>
-                )}
-              </Button>
+            <div className="flex flex-row justify-between items-center mt-4">
+              <div className="flex flex-row justify-start">
+                <Button
+                  variant={"outline"}
+                  type="button"
+                  onClick={() => setEditDialog(false)}
+                  className={cn({
+                    //   hidden: isSuccess,
+                  })}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  className="ml-2"
+                  disabled={
+                    isSuccess || isAnonSuccess || !form.formState.isDirty
+                  }
+                >
+                  {isLoading || isAnonUpdating ? (
+                    <Loader2 className=" animate-spin" />
+                  ) : isSuccess ? (
+                    <p>Updated</p>
+                  ) : (
+                    <p>Update QR</p>
+                  )}
+                </Button>
+              </div>
+              <div>
+                <Button
+                  onClick={() => {
+                    downloadQrCode(
+                      qrCode.image_url,
+                      `qrCode_${qrCode.uniqueToken}`
+                    );
+                  }}
+                  type="button"
+                >
+                  Download
+                </Button>
+              </div>
             </div>
           </form>
         </Form>
