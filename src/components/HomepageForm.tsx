@@ -57,11 +57,6 @@ const HomepageForm = ({ qrType }: Props) => {
   const loadingRef = useRef(loading);
   loadingRef.current = loading;
 
-  useEffect(() => {
-    console.log("QR TYPE:" + qrType);
-    console.log("Schema: " + JSON.stringify(getSchema()));
-  });
-
   const getSchema = () => {
     switch (qrType) {
       case "url":

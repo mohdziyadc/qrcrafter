@@ -34,7 +34,12 @@ const HomepageCTA = ({}: Props) => {
         <div className="italic text-primary/60">
           Sign up to create more QR Codes
         </div>
-        <Button className="mt-2  transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110  bg-gradient-to-tr  from-green-400 to-blue-600 hover:from-green-500 hover:to-blue-600 text-secondary">
+        <Button
+          onClick={() => {
+            console.log("Sign Up Button Clicked");
+          }}
+          className="mt-2  transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110  bg-gradient-to-tr  from-green-400 to-blue-600 hover:from-green-500 hover:to-blue-600 text-secondary"
+        >
           <Zap className="h-5 w-5  mr-2" />
           <div className="text-md font-bold">Sign Up</div>
         </Button>
