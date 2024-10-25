@@ -211,7 +211,7 @@ const AiContactTable = ({ isHomepage }: Props) => {
               </TableBody>
             </Table>
             <Dialog open={editDialog} onOpenChange={setEditDialog}>
-              <DialogContent>
+              <DialogContent className="max-w-[23rem] sm:max-w-md md:max-w-lg">
                 <DialogHeader>
                   <DialogTitle>Edit QR Code</DialogTitle>
                 </DialogHeader>
@@ -226,7 +226,7 @@ const AiContactTable = ({ isHomepage }: Props) => {
               </DialogContent>
             </Dialog>
             <AlertDialog open={deleteDialog} onOpenChange={setDeleteDialog}>
-              <AlertDialogContent>
+              <AlertDialogContent className="max-w-[23rem] sm:max-w-md md:max-w-lg">
                 <AlertDialogHeader>
                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                   <AlertDialogDescription>

@@ -34,7 +34,7 @@ const Navbar = forwardRef<HTMLElement, Props>(({ isPaid }: Props, ref) => {
     <nav className="max-w-full px-6 py-4 z-10">
       <div className="flex justify-between items-center">
         <div className=" flex flex-row justify-center items-center font-bold text-4xl">
-          <div className="mr-2">
+          <div className="mr-3">
             <Image
               src={LogoImage}
               alt="logo"

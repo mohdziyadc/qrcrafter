@@ -20,7 +20,7 @@ const LandingPage = ({ isPaid }: Props) => {
       <Navbar ref={pricing} isPaid={isPaid} />
       <Hero />
       <AiFeature />
-      <Features />
+      {/* <Features /> */}
       <UseCase />
       <Demo />
       <Pricing ref={pricing} />

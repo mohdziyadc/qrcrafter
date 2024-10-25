@@ -84,15 +84,16 @@ export default function Hero() {
             <div className="flex justify-center items-center w-full ">
               <div className="flex flex-col justify-center items-center">
                 <h1
-                  className="text-5xl md:text-6xl font-extrabold leading-tighter tracking-tighter mb-2"
+                  className="text-5xl flex flex-col justify-center items-center md:items-baseline md:flex-row md:text-6xl font-extrabold leading-tighter tracking-tighter mb-2"
                   data-aos="zoom-y-out"
                 >
-                  No more boring{" "}
-                  <span className="text-5xl pr-2 md:text-6xl font-extrabold leading-tighter tracking-tighter mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
+                  No more boring
+                  <span className="text-5xl ml-2 pr-2 md:text-6xl font-extrabold leading-tighter tracking-tighter mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
                     QR Codes
                   </span>
                 </h1>
-                <p className="text-2xl font-light text-primary opacity-70">
+
+                <p className="text-2xl text-center font-light text-primary opacity-70">
                   Create beautiful <span className="font-bold">dynamic AI</span>{" "}
                   generated QR Codes to level up your game.
                 </p>
@@ -150,21 +151,23 @@ export default function Hero() {
                       </DropdownMenu>
                     </CardHeader>
                     <CardContent>
-                      <div className="flex flex-row">
-                        <div className="flex-[1] flex-col">
+                      <div className="grid sm:grid-cols-3 grid-cols-1">
+                        <div className="md:col-span-1 mb-4 flex-col">
                           <div className=" border-2 border-slate-400 h-fit p-4 mr-2 rounded-lg ">
                             <HomepageForm qrType={type} />
                           </div>
-                          <div>
+                          <div className="md:block hidden">
                             <HomepageCTA />
                           </div>
                         </div>
 
-                        <div className="flex-[2] flex rounded-md border-dashed h-[48rem] border-blue-600 justify-center items-center border-2 ">
+                        <div className="md:col-span-2 flex rounded-md border-dashed h-[48rem] border-blue-600 justify-center items-center border-2 ">
                           <DynamicAIQRCodeCard isHomepage />
                         </div>
                       </div>
-                      <div></div>
+                      <div className="md:hidden block">
+                        <HomepageCTA />
+                      </div>
                     </CardContent>
                   </TabsContent>
                   <TabsContent value="get_qr">

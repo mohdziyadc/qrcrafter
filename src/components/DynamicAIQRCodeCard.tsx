@@ -351,21 +351,21 @@ const DynamicAIQRCodeCard = ({ isHomepage = false }: Props) => {
           </p>{" "}
         </div>
       ) : image.image_url ? (
-        <Card className={"px-6 pt-6 pb-2 bg-background shadow-lg"}>
-          <CardContent>
-            <div className="relative flex flex-col justify-center items-center gap-y-2 w-[510px] border bg-primary border-gray-300 rounded shadow group p-2 mx-auto max-w-full">
+        <Card className={"px-4 pt-6 pb-2 m-4 bg-background shadow-lg"}>
+          <CardContent className="w-full">
+            <div className="relative flex flex-col p-2 justify-center items-center gap-y-2 border bg-primary border-gray-300 rounded shadow group mx-auto">
               <Image
                 src={image.image_url}
-                className="rounded "
+                className="rounded w-full "
                 alt="qr code"
                 width={480}
                 height={480}
               />
-              <p className="text-gray-400 text-sm italic">
-                QR code took {(image.latency_ms / 1000).toFixed(2)} seconds to
-                generate.
-              </p>
             </div>
+            <p className="text-gray-400 mt-2 text-center text-sm italic">
+              QR code took {(image.latency_ms / 1000).toFixed(2)} seconds to
+              generate.
+            </p>
           </CardContent>
           <CardFooter className="flex flex-col">
             <div className="flex flex-row mt-4 items-center justify-center gap-2 ">
@@ -398,7 +398,7 @@ const DynamicAIQRCodeCard = ({ isHomepage = false }: Props) => {
               </p>
             )}
             {isHomepage && (
-              <p className="text-gray-400 text-sm italic text-center mt-2">
+              <p className="text-gray-400 sm:text-sm text-xs italic text-center mt-2">
                 {`QR Code has been successfully saved. Click on "Your QR Codes" tab to view it.`}
               </p>
             )}
