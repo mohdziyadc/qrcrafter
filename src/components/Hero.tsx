@@ -45,7 +45,7 @@ export default function Hero() {
 
   return (
     <>
-      <section className="relative  w-full">
+      <section className="relative z-10  w-full">
         {/* Illustration behind hero content */}
         {/* <div
         className="absolute left-1/2 transform -translate-x-1/2 bottom-0 pointer-events-none -z-10 hidden sm:block"
