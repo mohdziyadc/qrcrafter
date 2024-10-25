@@ -151,21 +151,21 @@ export default function Hero() {
                       </DropdownMenu>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid sm:grid-cols-3 grid-cols-1">
-                        <div className="md:col-span-1 mb-4 flex-col">
+                      <div className="grid lg:grid-cols-3 grid-cols-1">
+                        <div className="lg:col-span-1 mb-4 flex-col">
                           <div className=" border-2 border-slate-400 h-fit p-4 mr-2 rounded-lg ">
                             <HomepageForm qrType={type} />
                           </div>
-                          <div className="md:block hidden">
+                          <div className="lg:block hidden">
                             <HomepageCTA />
                           </div>
                         </div>
 
-                        <div className="md:col-span-2 flex rounded-md border-dashed h-[48rem] border-blue-600 justify-center items-center border-2 ">
+                        <div className="lg:col-span-2 flex rounded-md border-dashed h-[48rem] border-blue-600 justify-center items-center border-2 ">
                           <DynamicAIQRCodeCard isHomepage />
                         </div>
                       </div>
-                      <div className="md:hidden block">
+                      <div className="lg:hidden block">
                         <HomepageCTA />
                       </div>
                     </CardContent>

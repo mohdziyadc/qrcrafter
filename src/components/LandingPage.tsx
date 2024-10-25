@@ -22,7 +22,7 @@ const LandingPage = ({ isPaid }: Props) => {
       <AiFeature />
       {/* <Features /> */}
       <UseCase />
-      <Demo />
+      {/* <Demo /> */}
       <Pricing ref={pricing} />
     </>
   );
