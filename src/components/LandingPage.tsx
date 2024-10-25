@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 import Navbar from "./Navbar";
 import Hero from "./Hero";
 import AiFeature from "./AiFeature";
-import Features from "./features";
+import Features from "./Features";
 import UseCase from "./UseCase";
 import Demo from "./Demo";
 import Pricing from "./Pricing";
