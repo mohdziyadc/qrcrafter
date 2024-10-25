@@ -26,7 +26,7 @@ const HomepageCTA = ({}: Props) => {
   return (
     <div
       className={`transition-opacity duration-300 ease-in ${
-        qrCount > 2 ? "opacity-100 " : "opacity-0 "
+        qrCount >= 2 ? "opacity-100 " : "opacity-0 "
       }`}
     >
       <div className="flex flex-col mt-4 justify-center items-center ">

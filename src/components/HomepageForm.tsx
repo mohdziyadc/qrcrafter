@@ -29,6 +29,7 @@ import axios from "axios";
 import { useToast } from "./ui/use-toast";
 import { getAnonQrCodesCount } from "@/lib/actions";
 import HomepageCTA from "./HomepageCTA";
+import clsx from "clsx";
 
 type Props = {
   qrType: string;
@@ -52,10 +53,19 @@ const HomepageForm = ({ qrType }: Props) => {
   const { image, setImage } = useImage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [disableBtn, setDisableBtn] = useState(false);
 
   //creating a reference object - a workaround to access state in setTimeout
   const loadingRef = useRef(loading);
   loadingRef.current = loading;
+
+  const { data: qrCountData } = useQuery({
+    queryFn: async () => {
+      const res = await getAnonQrCodesCount();
+      return res;
+    },
+    queryKey: ["AnonQrCodeCount"],
+  });
 
   const getSchema = () => {
     switch (qrType) {
@@ -137,6 +147,21 @@ const HomepageForm = ({ qrType }: Props) => {
   useEffect(() => {
     form.reset();
   }, [form, qrType]);
+
+  useEffect(() => {
+    function checkQrCount() {
+      if (!qrCountData) {
+        return;
+      }
+
+      if (qrCountData.count >= 5) {
+        setDisableBtn(true);
+      } else {
+        setDisableBtn(false);
+      }
+    }
+    checkQrCount();
+  }, [qrCountData]);
   return (
     <>
       <div>
@@ -218,7 +243,13 @@ const HomepageForm = ({ qrType }: Props) => {
                 </FormItem>
               )}
             />
-            <Button className="mt-4 w-full" type="submit">
+            <Button
+              className={clsx("mt-4 w-full", {
+                "cursor-not-allowed ": disableBtn,
+              })}
+              type="submit"
+              disabled={disableBtn}
+            >
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
