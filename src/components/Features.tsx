@@ -38,44 +38,12 @@ const Features = (props: Props) => {
   ];
   return (
     <section className="relative">
-      <div
-        className="absolute left-1/2 transform -translate-x-1/2 bottom-0 pointer-events-none -z-10 hidden sm:block"
-        aria-hidden="true"
-      >
-        <svg
-          width="1360"
-          height="1080"
-          viewBox="0 0 1360 1080"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <defs>
-            <linearGradient
-              x1="50%"
-              y1="0%"
-              x2="50%"
-              y2="100%"
-              id="illustration-01"
-            >
-              <stop stopColor="#FFF" offset="0%" />
-              <stop stopColor="#EAEAEA" offset="77.402%" />
-              <stop stopColor="#DFDFDF" offset="100%" />
-            </linearGradient>
-          </defs>
-          <g fill="url(#illustration-01)" fillRule="evenodd">
-            <circle cx="1232" cy="900" r="128" />
-            <circle cx="105" cy="142" r="96" />
-          </g>
-          <g fill="url(#illustration-01)" fillRule="evenodd">
-            <circle cx="1132" cy="232" r="192" />
-            <circle cx="32" cy="678" r="32" />
-          </g>
-          <g fill="url(#illustration-01)" fillRule="evenodd">
-            <circle cx="656" cy="412" r="128" />
-            <circle cx="100" cy="898" r="96" />
-          </g>
-        </svg>
+      <div className="absolute bottom-0 left-0 right-0 -top-6 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
+      <div className="relative h-full w-full bg-slate-950">
+        <div className="absolute bottom-0 left-[-20%] right-0 top-[-10%] lg:w-[500px] lg:h-[500px] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,.15),rgba(255,255,255,0))]"></div>
+        <div className="absolute bottom-0 right-[-20%] top-[-10%] lg:w-[500px] lg:h-[500px]  rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,.15),rgba(255,255,255,0))]"></div>
       </div>
-      <div className="absolute left-0 right-0 m-auto  transform sm:-translate-y-3/4 sm:block hidden ">
+      <div className="absolute left-0 right-0 m-auto  transform sm:-translate-y-[60%] sm:block hidden ">
         <div className="-mt-5 flex justify-center items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -98,24 +66,26 @@ const Features = (props: Props) => {
         <div className="pt-12 md:pt-20">
           {/* Section header */}
           <div className="max-w-5xl mx-auto text-center pb-12 md:pb-16">
-            <h1 className="text-6xl font-extrabold mb-4">
-              A complete{" "}
-              <span className="bg-clip-text text-transparent  bg-gradient-to-br from-pink-600 via-purple-300 to-indigo-500 ">
+            <div className="text-5xl sm:text-6xl font-extrabold mb-4">
+              <p>A complete</p>{" "}
+              <p className="bg-clip-text text-transparent  bg-gradient-to-br from-pink-600 via-purple-300 to-indigo-500 ">
                 {" "}
-                QR Code
-              </span>{" "}
-              <span className=" underline underline-offset-4">solution</span>.
-            </h1>
-            <p className="text-xl line-clamp-2 text-gray-600">
-              <span className="font-bold">QRCrafter</span> is an all-in-one QR
+                QR Code{" "}
+                <span className="text-primary underline underline-offset-4">
+                  solution
+                </span>
+              </p>
+            </div>
+            <p className="md:text-xl text-lg text-center text-primary">
+              <span className="font-bold">QRCoded</span> is an all-in-one QR
               Code solution. You can create different types of QR Codes specific
               to your needs. Never reprint. You can just change the QR Code
               data.
             </p>
           </div>
         </div>
-        <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-6 pb-10">
+        <div className="grid md:grid-cols-12 sm:grid-cols-6  grid-cols-1 gap-6">
+          <div className="md:col-span-6 sm:col-span-3 pb-10">
             <div className="flex flex-col mb-4 ">
               <div className="text-4xl font-bold ">
                 <span className="bg-clip-text text-transparent  bg-gradient-to-br from-red-500  to-pink-300 ">
@@ -131,7 +101,7 @@ const Features = (props: Props) => {
             </div>
             <div className="flex flex-col">
               <Card
-                className="w-full mb-2 bg-primary text-secondary"
+                className="w-full mb-2  bg-primary-foreground text-secondary"
                 data-aos="zoom-y-out"
               >
                 <CardContent>
@@ -173,9 +143,10 @@ const Features = (props: Props) => {
               </Card>
             </div>
           </div>
-          <div className="col-span-6 flex flex-col">
+
+          <div className="md:col-span-6  flex flex-col">
             <Card
-              className="w-full flex-[1] bg-secondary-foreground/80"
+              className="w-full flex-[1] bg-primary/90"
               data-aos="zoom-y-out"
             >
               <CardContent>
@@ -186,8 +157,8 @@ const Features = (props: Props) => {
                   <div className="text-lg mt-2 text-primary-foreground">
                     Choose the type of QR Code specific to your needs.
                   </div>
-                  <div>
-                    <Menubar className="flex flex-row justify-evenly mt-6">
+                  <div className="relative mt-4">
+                    <Menubar className="grid md:grid-cols-4 grid-cols-2 h-fit">
                       <MenubarMenu>
                         <MenubarTrigger className="flex justify-center">
                           URL QR
@@ -198,9 +169,17 @@ const Features = (props: Props) => {
                           </MenubarItem>
                         </MenubarContent>
                       </MenubarMenu>
-                      <Separator orientation="vertical" />
+
+                      <Separator
+                        orientation="vertical"
+                        className="absolute h-4 hidden md:block left-[25%] bg-slate-300"
+                      />
+                      <Separator
+                        orientation="horizontal"
+                        className="absolute w-10  md:hidden block left-[20%] bg-slate-300"
+                      />
                       <MenubarMenu>
-                        <MenubarTrigger className="flex justify-center">
+                        <MenubarTrigger className="flex justify-center col-span-1">
                           Multi URL QR
                         </MenubarTrigger>
                         <MenubarContent>
@@ -210,10 +189,16 @@ const Features = (props: Props) => {
                           </MenubarItem>
                         </MenubarContent>
                       </MenubarMenu>
-                      <Separator orientation="vertical" />
-
+                      <Separator
+                        orientation="vertical"
+                        className="absolute h-4  hidden md:block left-[50%] bg-slate-300"
+                      />
+                      <Separator
+                        orientation="vertical"
+                        className="absolute h-6  block md:hidden left-[50%] bg-slate-300"
+                      />
                       <MenubarMenu>
-                        <MenubarTrigger className="flex justify-center">
+                        <MenubarTrigger className=" flex justify-center col-span-1">
                           Free Text QR
                         </MenubarTrigger>
                         <MenubarContent>
@@ -223,10 +208,16 @@ const Features = (props: Props) => {
                           </MenubarItem>
                         </MenubarContent>
                       </MenubarMenu>
-                      <Separator orientation="vertical" />
-
+                      <Separator
+                        orientation="vertical"
+                        className="absolute h-4  hidden md:block left-[75%] bg-slate-300"
+                      />
+                      <Separator
+                        orientation="horizontal"
+                        className="absolute w-10  md:hidden block left-[70%] bg-slate-300"
+                      />
                       <MenubarMenu>
-                        <MenubarTrigger className="flex justify-center">
+                        <MenubarTrigger className=" flex justify-center col-span-1 ">
                           Contact QR
                         </MenubarTrigger>
                         <MenubarContent>
