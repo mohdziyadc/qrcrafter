@@ -37,7 +37,7 @@ const GenerateQRCodeScreen = (props: Props) => {
         </svg>
       </div>
       <div className="mt-12">
-        <div className="text-2xl text-primary/70">
+        <div className=" text-2xl text-center text-primary/70">
           Your{" "}
           <span className="font-extrabold leading-tighter tracking-tighter mr-2 bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-pink-500">
             AI QR Codes

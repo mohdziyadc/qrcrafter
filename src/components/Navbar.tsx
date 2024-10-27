@@ -31,8 +31,8 @@ const Navbar = forwardRef<HTMLElement, Props>(({ isPaid }: Props, ref) => {
   console.log("isPaid " + isPaid);
 
   return (
-    <nav className="relative max-w-full z-10">
-      <div className="absolute top-0 z-[-10] h-[150vh] w-screen bg-[#2070922e] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:24px_24px]"></div>
+    <nav className="relative max-w-full z-11">
+      <div className="absolute top-0 z-[-10] h-[200vh] w-screen bg-[#2070922e] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:24px_24px]"></div>
       <div className="px-4 py-6">
         <div className="flex justify-between items-center">
           <div className=" flex flex-row justify-center items-center font-bold text-4xl">

@@ -21,7 +21,7 @@ const Providers = ({ children }: Props) => {
       duration: 700,
       easing: "ease-out-cubic",
     });
-  });
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
