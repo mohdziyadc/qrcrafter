@@ -17,14 +17,19 @@ type Props = {};
 const UseCase = (props: Props) => {
   return (
     <section className="relative ">
-      <div className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,_#000_40%,_#2dd4bf_100%)]"></div>
+      <div className="absolute top-0 -z-10 h-full w-full ">
+        <div className="absolute bottom-auto left-auto right-0 top-0 h-[500px] w-[500px] -translate-x-[30%] translate-y-[20%] rounded-full bg-[rgba(173,109,244,0.5)] opacity-50 blur-[80px]"></div>
+      </div>
+      <div className=" h-full w-full ">
+        <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+      </div>
       <div className="relative max-w-7xl mx-auto">
         <div className="pt-12 md:pt-20">
           {/* Section header */}
           <div className="max-w-4xl mx-auto text-center pb-12 md:pb-16">
             <h1 className="text-5xl font-extrabold mb-4">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-300 via-blue-500 to-purple-600">
-                Why do I need QRCrafter?
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-300 via-blue-500 to-violet-400">
+                Why do I need QRCoded?
               </span>
             </h1>
             <p className="text-xl text-center text-primary/90">
@@ -127,7 +132,7 @@ const UseCase = (props: Props) => {
       <div className=" absolute left-1/2 transform -translate-x-1/2 bottom-0   z-10">
         <Button className=" sm:w-[200px] w-[250px] mb-4">
           <div className="flex justify-between items-center">
-            <div>Get QRCrafter</div>
+            <div>Get QRCoded</div>
             <div className="ml-4 -mr-4">
               <ArrowRight className="w-6 h-6" />
             </div>
