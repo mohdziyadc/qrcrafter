@@ -15,6 +15,7 @@ import AiUrlTable from "./AiUrlTable";
 import HomePageTable from "./HomePageTable";
 import DynamicAIQRCodeCard from "./DynamicAIQRCodeCard";
 import HomepageCTA from "./HomepageCTA";
+import { usePostHog } from "posthog-js/react";
 // import { getFingerprintClient } from "@/lib/fingerprint";
 // const ClientJS = dynamic(() => import("../components/ClientJS"), {
 //   ssr: false,
@@ -24,6 +25,7 @@ import HomepageCTA from "./HomepageCTA";
 
 export default function Hero() {
   const [type, setType] = useState("url");
+  const posthog = usePostHog();
   const dropdownItems = [
     {
       title: "URL",
@@ -42,6 +44,11 @@ export default function Hero() {
       item: "free_text",
     },
   ];
+
+  useEffect(() => {
+    console.log("posthog called");
+    posthog?.capture("test");
+  }, [posthog]);
 
   return (
     <>

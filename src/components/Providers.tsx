@@ -6,6 +6,8 @@ import React, { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { SessionProvider } from "next-auth/react";
+import PHProvider from "./PHProvider";
+import PostHogPageView from "./PostHogPageView";
 
 type Props = {
   children: React.ReactNode;
@@ -24,11 +26,14 @@ const Providers = ({ children }: Props) => {
   }, []);
   return (
     <QueryClientProvider client={queryClient}>
-      <SessionProvider>
-        <LoadingContextProvider>
-          <ImageContextProvider>{children}</ImageContextProvider>
-        </LoadingContextProvider>
-      </SessionProvider>
+      <PHProvider>
+        <PostHogPageView />
+        <SessionProvider>
+          <LoadingContextProvider>
+            <ImageContextProvider>{children}</ImageContextProvider>
+          </LoadingContextProvider>
+        </SessionProvider>
+      </PHProvider>
     </QueryClientProvider>
   );
 };
