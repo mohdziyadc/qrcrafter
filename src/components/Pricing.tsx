@@ -1,15 +1,4 @@
 import React, { forwardRef } from "react";
-import { Button } from "./ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
-import { ArrowRight, MoveRightIcon } from "lucide-react";
-import QRCrafterPlusCard from "./QRCrafterPlusCard";
-import QRCrafterProCard from "./QRCrafterProCard";
 import JoinWaitlistCard from "./JoinWaitlistCard";
 
 type Props = {};

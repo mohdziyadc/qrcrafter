@@ -43,6 +43,7 @@
     "lucide-react": "^0.279.0",
     "next": "latest",
     "next-auth": "^4.23.2",
+    "posthog-js": "^1.179.0",
     "qrcode": "^1.5.3",
     "react": "latest",
     "react-dom": "latest",
