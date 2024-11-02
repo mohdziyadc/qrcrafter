@@ -16,6 +16,7 @@ import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { signOut, useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
+import { usePostHog } from "posthog-js/react";
 
 type Props = {
   isPaid: boolean;
@@ -27,8 +28,16 @@ const Navbar = forwardRef<HTMLElement, Props>(({ isPaid }: Props, ref) => {
 
   const pricingRef = ref as MutableRefObject<HTMLInputElement>;
   const { data: session } = useSession();
+  const posthog = usePostHog();
 
   console.log("isPaid " + isPaid);
+
+  const pricingClickHandler = () => {
+    posthog.capture("pricing_nav_btn_clicked");
+    pricingRef.current.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
 
   return (
     <nav className="relative max-w-full z-11">
@@ -55,14 +64,7 @@ const Navbar = forwardRef<HTMLElement, Props>(({ isPaid }: Props, ref) => {
               <Link href={"/try"}>Try</Link>
             </div>
             <div className="mr-5">
-              <p
-                className="hover:cursor-pointer"
-                onClick={() =>
-                  pricingRef.current.scrollIntoView({
-                    behavior: "smooth",
-                  })
-                }
-              >
+              <p className="hover:cursor-pointer" onClick={pricingClickHandler}>
                 Pricing
               </p>
             </div>
@@ -105,7 +107,10 @@ const Navbar = forwardRef<HTMLElement, Props>(({ isPaid }: Props, ref) => {
             )}
           </div>
 
-          <div className="md:hidden" onClick={handleMenuClick}>
+          <div
+            className="md:hidden hover:cursor-pointer"
+            onClick={handleMenuClick}
+          >
             {!toggleMenu ? (
               <Menu className="w-8 h-8" />
             ) : (
@@ -125,8 +130,12 @@ const Navbar = forwardRef<HTMLElement, Props>(({ isPaid }: Props, ref) => {
                     Home
                   </Link>
                   <Link
-                    href="/pricing"
+                    href={"#"}
                     className="py-3 hover:bg-muted text-center rounded-md w-full"
+                    onClick={() => {
+                      pricingClickHandler();
+                      handleMenuClick();
+                    }}
                   >
                     Pricing
                   </Link>
