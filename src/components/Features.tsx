@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Card,
   CardContent,
@@ -16,9 +16,6 @@ import {
 } from "./ui/menubar";
 import { Separator } from "./ui/separator";
 import { ArrowRight, LineChartIcon, QrCodeIcon } from "lucide-react";
-import Image from "next/image";
-import ChartImage from "public/qrChart_img.png";
-import { Button } from "./ui/button";
 import {
   Bar,
   BarChart,
@@ -27,9 +24,12 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { usePostHog } from "posthog-js/react";
 type Props = {};
 
 const Features = (props: Props) => {
+  const posthog = usePostHog();
+  const featureSectionRef = useRef<HTMLDivElement>(null);
   const recentScans = [
     {
       qrName: "Xmas Promo",
@@ -67,8 +67,32 @@ const Features = (props: Props) => {
       scanCount: 20,
     },
   ];
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            posthog.capture("feature_page_scrolled", {
+              scroll_percent: Math.round(entry.intersectionRatio * 100),
+            });
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.5,
+      }
+    );
+
+    if (featureSectionRef.current) {
+      observer.observe(featureSectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
   return (
-    <section className="relative overflow-x-hidden">
+    <section ref={featureSectionRef} className="relative overflow-x-hidden">
       <div className="absolute bottom-0 left-0 right-0 -top-6 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
       <div className="relative h-full w-full bg-slate-950">
         <div className="absolute bottom-0 left-[-10%] right-0 top-[-10%] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,.15),rgba(255,255,255,0))]"></div>
@@ -171,7 +195,7 @@ const Features = (props: Props) => {
                     Choose the type of QR Code specific to your needs.
                   </div>
                   <div className="relative mt-4">
-                    <Menubar className="grid md:grid-cols-4 grid-cols-2 h-fit">
+                    <Menubar className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-2 h-fit">
                       <MenubarMenu>
                         <MenubarTrigger className="flex justify-center">
                           URL QR
@@ -185,11 +209,11 @@ const Features = (props: Props) => {
 
                       <Separator
                         orientation="vertical"
-                        className="absolute h-4 hidden md:block left-[25%] bg-slate-300"
+                        className="absolute h-4 hidden lg:block left-[25%] bg-slate-300"
                       />
                       <Separator
                         orientation="horizontal"
-                        className="absolute w-10  md:hidden block left-[20%] bg-slate-300"
+                        className="absolute w-10  lg:hidden block left-[20%] bg-slate-300"
                       />
                       <MenubarMenu>
                         <MenubarTrigger className="flex justify-center col-span-1">
@@ -204,11 +228,11 @@ const Features = (props: Props) => {
                       </MenubarMenu>
                       <Separator
                         orientation="vertical"
-                        className="absolute h-4  hidden md:block left-[50%] bg-slate-300"
+                        className="absolute h-4  hidden lg:block left-[50%] bg-slate-300"
                       />
                       <Separator
                         orientation="vertical"
-                        className="absolute h-6  block md:hidden left-[50%] bg-slate-300"
+                        className="absolute h-6  block lg:hidden left-[50%] bg-slate-300"
                       />
                       <MenubarMenu>
                         <MenubarTrigger className=" flex justify-center col-span-1">
@@ -223,11 +247,11 @@ const Features = (props: Props) => {
                       </MenubarMenu>
                       <Separator
                         orientation="vertical"
-                        className="absolute h-4  hidden md:block left-[75%] bg-slate-300"
+                        className="absolute h-4  hidden lg:block left-[75%] bg-slate-300"
                       />
                       <Separator
                         orientation="horizontal"
-                        className="absolute w-10  md:hidden block left-[70%] bg-slate-300"
+                        className="absolute w-10  lg:hidden block left-[70%] bg-slate-300"
                       />
                       <MenubarMenu>
                         <MenubarTrigger className=" flex justify-center col-span-1 ">
