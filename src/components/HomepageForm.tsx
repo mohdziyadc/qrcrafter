@@ -30,6 +30,7 @@ import { useToast } from "./ui/use-toast";
 import { getAnonQrCodesCount } from "@/lib/actions";
 import HomepageCTA from "./HomepageCTA";
 import clsx from "clsx";
+import { usePostHog } from "posthog-js/react";
 
 type Props = {
   qrType: string;
@@ -54,6 +55,7 @@ const HomepageForm = ({ qrType }: Props) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [disableBtn, setDisableBtn] = useState(false);
+  const posthog = usePostHog();
 
   //creating a reference object - a workaround to access state in setTimeout
   const loadingRef = useRef(loading);
@@ -119,6 +121,10 @@ const HomepageForm = ({ qrType }: Props) => {
       }
       console.log("Setting Image: " + JSON.stringify(data));
       setImage(data.responseData);
+      posthog.capture("qr_generate_success", {
+        qrType: qrType,
+        qrCount: data.count,
+      });
     },
     onError: (error) => {
       toast({
@@ -127,6 +133,10 @@ const HomepageForm = ({ qrType }: Props) => {
         variant: "destructive",
       });
       console.log(`[MUTATION ERROR] ${error}`);
+      posthog.capture("qr_generate_error", {
+        qrType: qrType,
+        error_msg: JSON.stringify(error),
+      });
     },
   });
 
@@ -136,6 +146,10 @@ const HomepageForm = ({ qrType }: Props) => {
     console.log("QR Data " + JSON.stringify(qrData));
     getQrCode(qrData);
     setLoading("loading");
+
+    posthog.capture("qr_generate_processing", {
+      qrType: qrType,
+    });
 
     setTimeout(() => {
       if (loadingRef.current === "loading") {
