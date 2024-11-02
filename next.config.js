@@ -16,6 +16,7 @@ const nextConfig = {
     ],
     serverActions: true,
   },
+  skipTrailingSlashRedirect: true,
 };
 
 module.exports = nextConfig;
