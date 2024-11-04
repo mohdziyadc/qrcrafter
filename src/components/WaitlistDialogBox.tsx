@@ -45,27 +45,38 @@ const WaitlistDialogBox = ({ openDialog, setOpenDialog }: Props) => {
         <DialogContent className=" ">
           <DialogHeader>
             <DialogTitle className="font-bold">
-              Join the waitlist for QRCoded
+              Be a part of QRCoded's journey
             </DialogTitle>
           </DialogHeader>
 
           <div>
-            <div className="my-2 font-semibold">
+            <div className="my-2 font-normal">
               Join the waitlist for these benefits:
             </div>
             <ul className="px-4">
-              <li>✅ Exclusive Early Access</li>
-              <li>✅ Shape the product roadmap</li>
-              <li>✅ Priority Support</li>
-              <li>✅ Real-Time Updates on New Features</li>
-              <li>✅ Access to Exclusive Community</li>
+              <li>
+                <span className="mr-2">✅</span> Exclusive Early Access
+              </li>
+              <li>
+                <span className="mr-2">✅</span> Shape the product roadmap
+              </li>
+              <li>
+                <span className="mr-2">✅</span> Priority Support
+              </li>
+              <li>
+                <span className="mr-2">✅</span> Real-Time Updates on New
+                Features
+              </li>
+              <li>
+                <span className="mr-2">✅</span> Access to Exclusive Community
+              </li>
             </ul>
           </div>
           <div className="mt-4">
             <Button className="w-full">Discord</Button>
             <div className="flex flex-row mt-2 justify-center items-center">
               <Separator className="flex-[1]" />
-              <div className="px-4">OR</div>
+              <div className="px-4 text-muted-foreground">OR</div>
               <Separator className="flex-[1]" />
             </div>
             <div className="mt-2">
