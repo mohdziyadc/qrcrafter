@@ -11,6 +11,8 @@ import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { Input } from "./ui/input";
 import * as z from "zod";
+import { SiDiscord } from "@icons-pack/react-simple-icons";
+import { usePostHog } from "posthog-js/react";
 
 type Props = {
   openDialog: boolean;
@@ -21,9 +23,12 @@ const emailSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
 });
 
+const DISCORD_INVITE_LINK = "https://discord.gg/XmhXmTpt";
+
 const WaitlistDialogBox = ({ openDialog, setOpenDialog }: Props) => {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
+  const posthog = usePostHog();
   const handleEmailSubmit = () => {
     const result = emailSchema.safeParse({ email });
 
@@ -39,6 +44,11 @@ const WaitlistDialogBox = ({ openDialog, setOpenDialog }: Props) => {
     setEmailError("");
     setEmail("");
   }, [openDialog]);
+
+  const handleDiscordClick = () => {
+    posthog.capture("discord_btn_clicked");
+    window.open(DISCORD_INVITE_LINK, "_blank");
+  };
   return (
     <div>
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
@@ -73,7 +83,13 @@ const WaitlistDialogBox = ({ openDialog, setOpenDialog }: Props) => {
             </ul>
           </div>
           <div className="mt-4">
-            <Button className="w-full">Discord</Button>
+            <Button
+              className="w-full bg-[#5865F2] hover:bg-[#39429e] text-white text-lg font-semibold"
+              onClick={handleDiscordClick}
+            >
+              <SiDiscord size={24} className="mr-2" />
+              Join Discord
+            </Button>
             <div className="flex flex-row mt-2 justify-center items-center">
               <Separator className="flex-[1]" />
               <div className="px-4 text-muted-foreground">OR</div>
