@@ -81,7 +81,7 @@ const WaitlistDialogBox = ({ openDialog, setOpenDialog }: Props) => {
   return (
     <div>
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <DialogContent className=" ">
+        <DialogContent className="rounded-md">
           <DialogHeader>
             <DialogTitle className="font-bold">
               Be a part of QRCoded's journey

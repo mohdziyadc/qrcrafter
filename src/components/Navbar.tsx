@@ -146,7 +146,7 @@ const Navbar = forwardRef<HTMLElement, Props>(({ isPaid }: Props, ref) => {
                     Try
                   </Link>
 
-                  <Button className="w-full">Sign Up</Button>
+                  <SignInButton isMobile={true} />
                 </div>
               </CardContent>
             </Card>

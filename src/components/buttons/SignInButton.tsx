@@ -6,10 +6,13 @@ import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { usePostHog } from "posthog-js/react";
 import WaitlistDialogBox from "../WaitlistDialogBox";
+import clsx from "clsx";
 
-type Props = {};
+type Props = {
+  isMobile: boolean;
+};
 
-const SignInButton = (props: Props) => {
+const SignInButton = ({ isMobile }: Props) => {
   const { push } = useRouter();
   const [openDialog, setOpenDialog] = useState(false);
   const posthog = usePostHog();
@@ -26,7 +29,12 @@ const SignInButton = (props: Props) => {
     //   Sign Up <ArrowRight className="h-5 w-5 ml-2" />
     // </Button>
     <>
-      <Button className="text-base" onClick={btnClickHandler}>
+      <Button
+        className={clsx("text-base", {
+          "w-full": isMobile,
+        })}
+        onClick={btnClickHandler}
+      >
         Sign Up <ArrowRight className="h-5 w-5 ml-2" />
       </Button>
       <WaitlistDialogBox
