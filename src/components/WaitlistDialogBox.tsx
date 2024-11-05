@@ -13,6 +13,9 @@ import { Input } from "./ui/input";
 import * as z from "zod";
 import { SiDiscord } from "@icons-pack/react-simple-icons";
 import { usePostHog } from "posthog-js/react";
+import { useFormspark } from "@formspark/use-formspark";
+import { useToast } from "./ui/use-toast";
+import { Loader2 } from "lucide-react";
 
 type Props = {
   openDialog: boolean;
@@ -23,18 +26,38 @@ const emailSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
 });
 
-const DISCORD_INVITE_LINK = "https://discord.gg/XmhXmTpt";
+const DISCORD_INVITE_LINK = process.env.NEXT_PUBLIC_DISCORD_LINK as string;
+const FORMSPARK_FORM_ID = process.env.NEXT_PUBLIC_FORMSPARK_ID as string;
 
 const WaitlistDialogBox = ({ openDialog, setOpenDialog }: Props) => {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const posthog = usePostHog();
-  const handleEmailSubmit = () => {
+  const [submit, submitting] = useFormspark({
+    formId: FORMSPARK_FORM_ID,
+  });
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+
+  const handleEmailSubmit = async () => {
     const result = emailSchema.safeParse({ email });
 
     if (result.success) {
       setEmailError("");
-      console.log("Email is valid:", result.data.email);
+      try {
+        setLoading(true);
+        await submit({ email });
+        setOpenDialog(false);
+        toast({
+          title: "Thank you!",
+          description:
+            "Thank you for joining the waitlist. You will hear from us soon!",
+        });
+      } catch (e) {
+        throw new Error("FORMSPARK ERROR - " + e);
+      } finally {
+        setLoading(false);
+      }
     } else {
       setEmailError(result.error.errors[0].message); // Display error message
     }
@@ -108,7 +131,11 @@ const WaitlistDialogBox = ({ openDialog, setOpenDialog }: Props) => {
                 className="w-full mt-2"
                 onClick={handleEmailSubmit}
               >
-                Submit
+                {loading ? (
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                ) : (
+                  <div>Submit</div>
+                )}
               </Button>
             </div>
           </div>
