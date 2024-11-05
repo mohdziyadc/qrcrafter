@@ -103,7 +103,7 @@ const Navbar = forwardRef<HTMLElement, Props>(({ isPaid }: Props, ref) => {
               // >
               //   Get QRCrafter
               // </Button>
-              <SignInButton />
+              <SignInButton isMobile={false} />
             )}
           </div>
 
