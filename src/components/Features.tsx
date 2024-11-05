@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Card,
   CardContent,
@@ -25,11 +25,14 @@ import {
   YAxis,
 } from "recharts";
 import { usePostHog } from "posthog-js/react";
+import { Button } from "./ui/button";
+import WaitlistDialogBox from "./WaitlistDialogBox";
 type Props = {};
 
 const Features = (props: Props) => {
   const posthog = usePostHog();
   const featureSectionRef = useRef<HTMLDivElement>(null);
+  const [openDialog, setOpenDialog] = useState(false);
   const recentScans = [
     {
       qrName: "Xmas Promo",
@@ -91,8 +94,17 @@ const Features = (props: Props) => {
 
     return () => observer.disconnect();
   }, []);
+
+  const ctaBtnHandler = () => {
+    setOpenDialog(!openDialog);
+    posthog.capture("feature_page_cta_clicked");
+  };
+
   return (
-    <section ref={featureSectionRef} className="relative overflow-x-hidden">
+    <section
+      ref={featureSectionRef}
+      className="relative mb-10  overflow-x-hidden"
+    >
       <div className="absolute bottom-0 left-0 right-0 -top-6 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
       <div className="relative h-full w-full bg-slate-950">
         <div className="absolute bottom-0 left-[-10%] right-0 top-[-10%] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,.15),rgba(255,255,255,0))]"></div>
@@ -385,6 +397,23 @@ const Features = (props: Props) => {
           </div>
         </div>
       </div>
+      <div className="sticky flex justify-center z-10">
+        <Button
+          className=" sm:w-[200px] w-[250px] mb-4"
+          onClick={ctaBtnHandler}
+        >
+          <div className="flex justify-between items-center">
+            <div>Get QRCoded</div>
+            <div className="ml-4 -mr-4">
+              <ArrowRight className="w-6 h-6" />
+            </div>
+          </div>
+        </Button>
+      </div>
+      <WaitlistDialogBox
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+      />
     </section>
   );
 };
