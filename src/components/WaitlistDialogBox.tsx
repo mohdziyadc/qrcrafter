@@ -1,12 +1,6 @@
 import { Dialog } from "@radix-ui/react-dialog";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import {
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
+import { DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { Input } from "./ui/input";
@@ -48,12 +42,24 @@ const WaitlistDialogBox = ({ openDialog, setOpenDialog }: Props) => {
         setLoading(true);
         await submit({ email });
         setOpenDialog(false);
+        posthog.capture("email_submit_success", {
+          user_email: email,
+        });
         toast({
           title: "Thank you!",
           description:
             "Thank you for joining the waitlist. You will hear from us soon!",
         });
       } catch (e) {
+        posthog.capture("email_submit_fail", {
+          user_email: email,
+        });
+        toast({
+          title: "Uh Oh!",
+          description:
+            "An unknown error occured during this process. Please try again",
+          variant: "destructive",
+        });
         throw new Error("FORMSPARK ERROR - " + e);
       } finally {
         setLoading(false);
