@@ -47,7 +47,7 @@ const Navbar = ({ isPaid, pricingRef, playgroundRef }: Props) => {
     });
   };
   return (
-    <nav className="relative max-w-full z-11">
+    <nav className="relative  border-2 border-double border-teal-400 rounded-lg   m-2   max-w-full z-11">
       <div className="absolute top-0 z-[-10] h-[200vh] w-screen bg-[#2070922e] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:24px_24px]"></div>
       <div className="px-4 py-6">
         <div className="flex justify-between items-center">
@@ -64,17 +64,22 @@ const Navbar = ({ isPaid, pricingRef, playgroundRef }: Props) => {
             <div>QRCoded</div>
           </div>
           <div className=" hidden md:flex flex-row text-lg justify-center items-center">
-            <div className="mr-5">
-              <Link href={"/"}>Home</Link>
+            <div className="relative group mr-5">
+              <Link href={"/"}>
+                Home
+                <span className="absolute left-0 -bottom-1 rounded-xl  w-0 h-[2px] bg-white transition-all duration-500 group-hover:w-full"></span>
+              </Link>
             </div>
-            <div className="mr-5">
+            <div className="relative group mr-5">
               <p className="hover:cursor-pointer" onClick={tryClickHandler}>
                 Try
+                <span className="absolute rounded-xl  left-0 -bottom-1  w-0 h-[2px] bg-white transition-all duration-500 group-hover:w-full"></span>
               </p>
             </div>
-            <div className="mr-5">
+            <div className="relative group mr-5">
               <p className="hover:cursor-pointer" onClick={pricingClickHandler}>
                 Pricing
+                <span className="absolute rounded-xl  left-0 -bottom-1  w-0 h-[2px] bg-white transition-all duration-500 group-hover:w-full"></span>
               </p>
             </div>
           </div>

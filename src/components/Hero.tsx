@@ -74,7 +74,7 @@ const Hero = forwardRef<HTMLDivElement, Props>((_, ref) => {
                   data-aos="zoom-y-out"
                   className="md:text-2xl text-xl max-w-xl text-center font-light text-primary mb-2 opacity-70"
                 >
-                  Create beautiful <span className="font-bold">dynamic AI</span>{" "}
+                  Create stunning <span className="font-bold">dynamic AI</span>{" "}
                   generated QR Codes with scan analytics to level up your QR
                   game.
                 </p>
