@@ -20,13 +20,14 @@ import { usePostHog } from "posthog-js/react";
 
 type Props = {
   isPaid: boolean;
+  pricingRef: React.RefObject<HTMLElement>;
+  playgroundRef: React.RefObject<HTMLDivElement>;
 };
 
-const Navbar = forwardRef<HTMLElement, Props>(({ isPaid }: Props, ref) => {
+const Navbar = ({ isPaid, pricingRef, playgroundRef }: Props) => {
   const [toggleMenu, setToggleMenu] = useState(false);
   const handleMenuClick = () => setToggleMenu(!toggleMenu);
 
-  const pricingRef = ref as MutableRefObject<HTMLInputElement>;
   const { data: session } = useSession();
   const posthog = usePostHog();
 
@@ -34,11 +35,17 @@ const Navbar = forwardRef<HTMLElement, Props>(({ isPaid }: Props, ref) => {
 
   const pricingClickHandler = () => {
     posthog.capture("pricing_nav_btn_clicked");
-    pricingRef.current.scrollIntoView({
+    pricingRef.current?.scrollIntoView({
       behavior: "smooth",
     });
   };
 
+  const tryClickHandler = () => {
+    posthog.capture("nav_try_btn_clicked");
+    playgroundRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
   return (
     <nav className="relative max-w-full z-11">
       <div className="absolute top-0 z-[-10] h-[200vh] w-screen bg-[#2070922e] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:24px_24px]"></div>
@@ -61,7 +68,9 @@ const Navbar = forwardRef<HTMLElement, Props>(({ isPaid }: Props, ref) => {
               <Link href={"/"}>Home</Link>
             </div>
             <div className="mr-5">
-              <Link href={"/try"}>Try</Link>
+              <p className="hover:cursor-pointer" onClick={tryClickHandler}>
+                Try
+              </p>
             </div>
             <div className="mr-5">
               <p className="hover:cursor-pointer" onClick={pricingClickHandler}>
@@ -130,6 +139,16 @@ const Navbar = forwardRef<HTMLElement, Props>(({ isPaid }: Props, ref) => {
                     Home
                   </Link>
                   <Link
+                    href="#"
+                    className="py-3 hover:bg-muted text-center rounded-md w-full"
+                    onClick={() => {
+                      tryClickHandler();
+                      handleMenuClick();
+                    }}
+                  >
+                    Try
+                  </Link>
+                  <Link
                     href={"#"}
                     className="py-3 hover:bg-muted text-center rounded-md w-full"
                     onClick={() => {
@@ -138,12 +157,6 @@ const Navbar = forwardRef<HTMLElement, Props>(({ isPaid }: Props, ref) => {
                     }}
                   >
                     Pricing
-                  </Link>
-                  <Link
-                    href="#"
-                    className="py-3 hover:bg-muted text-center rounded-md w-full"
-                  >
-                    Try
                   </Link>
 
                   <SignInButton isMobile={true} />
@@ -155,7 +168,7 @@ const Navbar = forwardRef<HTMLElement, Props>(({ isPaid }: Props, ref) => {
       </div>
     </nav>
   );
-});
+};
 
 Navbar.displayName = "Navbar";
 export default Navbar;

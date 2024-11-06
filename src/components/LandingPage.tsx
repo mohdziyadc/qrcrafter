@@ -15,11 +15,16 @@ type Props = {
 
 const LandingPage = ({ isPaid }: Props) => {
   const pricing = useRef<HTMLElement>(null);
+  const playgroundRef = useRef<HTMLDivElement>(null);
 
   return (
     <>
-      <Navbar ref={pricing} isPaid={isPaid} />
-      <Hero />
+      <Navbar
+        pricingRef={pricing}
+        playgroundRef={playgroundRef}
+        isPaid={isPaid}
+      />
+      <Hero ref={playgroundRef} />
       <AiFeature />
       <Features />
       <UseCase />

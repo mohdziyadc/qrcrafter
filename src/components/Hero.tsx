@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Check, ChevronDown } from "lucide-react";
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import HomepageForm from "./HomepageForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
@@ -23,7 +23,11 @@ import { usePostHog } from "posthog-js/react";
 
 // import ModalVideo from '@/components/modal-video'
 
-export default function Hero() {
+type Props = {
+  ref: React.RefObject<HTMLDivElement>;
+};
+
+const Hero = forwardRef<HTMLDivElement, Props>((_, ref) => {
   const [type, setType] = useState("url");
   const posthog = usePostHog();
   const dropdownItems = [
@@ -59,25 +63,26 @@ export default function Hero() {
             {/* Section header */}
             <div className="flex justify-center items-center w-full ">
               <div className="flex flex-col justify-center items-center">
-                <h1
-                  className="text-5xl flex flex-col justify-center items-center md:items-baseline md:flex-row md:text-6xl font-extrabold leading-tighter tracking-tighter mb-2"
-                  data-aos="zoom-y-out"
-                >
+                <h1 className="text-5xl flex flex-col justify-center items-center md:items-baseline md:flex-row md:text-6xl font-extrabold leading-tighter tracking-tighter mb-3">
                   No more boring
-                  <span className="text-5xl ml-2 pr-2 md:text-6xl font-extrabold leading-tighter tracking-tighter mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
+                  <span className="text-5xl ml-2 pr-2 md:text-6xl font-extrabold leading-tighter tracking-tighter  bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
                     QR Codes
                   </span>
                 </h1>
 
-                <p className="text-2xl text-center font-light text-primary opacity-70">
+                <p
+                  data-aos="zoom-y-out"
+                  className="md:text-2xl text-xl max-w-xl text-center font-light text-primary mb-2 opacity-70"
+                >
                   Create beautiful <span className="font-bold">dynamic AI</span>{" "}
-                  generated QR Codes to level up your game.
+                  generated QR Codes with scan analytics to level up your QR
+                  game.
                 </p>
               </div>
             </div>
 
             {/* Hero image */}
-            <div className="w-full mt-4 ">
+            <div className="w-full mt-4 " ref={ref}>
               <Card className="border-4 border-primary border-dashed">
                 <Tabs defaultValue="generate" className="w-full">
                   <TabsList className="mt-4 ml-4">
@@ -197,8 +202,10 @@ export default function Hero() {
       </section>
     </>
   );
-}
+});
 
+Hero.displayName = "Hero";
+export default Hero;
 /**
  *   Create beautiful <span className="font-bold">dynamic AI</span>{" "}
                 generated QR Codes to level up your marketing game.
