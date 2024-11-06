@@ -10,11 +10,19 @@ import {
 import { Check, MoveRightIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { usePostHog } from "posthog-js/react";
+import WaitlistDialogBox from "./WaitlistDialogBox";
 
 type Props = {};
 
 const JoinWaitlistCard = (props: Props) => {
   const [openDialog, setOpenDialog] = useState(false);
+  const posthog = usePostHog();
+
+  const waitlistBtnHandler = () => {
+    setOpenDialog(!openDialog);
+    posthog.capture("join_waitlist_btn_clicked");
+  };
   const features = [
     {
       check: true,
@@ -51,44 +59,48 @@ const JoinWaitlistCard = (props: Props) => {
   ];
 
   return (
-    <Card className="border-4 border-primary bg-secondary-foreground text-primary-foreground">
-      <CardHeader>
-        <CardTitle className="text-3xl">QRCoded Pro</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-col">
-          <div className="mt-4">
-            {features.map((feature, idx) => (
-              <div
-                key={idx}
-                className={cn("flex flex-row text-lg mb-2", {
-                  "text-muted-foreground/60": !feature.check,
-                })}
-              >
-                <div>
-                  {feature.check && (
-                    <Check className="h-6 w-6 mr-2" color="#4CAF50" />
-                  )}
+    <>
+      <Card className="border-4 border-primary bg-secondary-foreground text-primary-foreground">
+        <CardHeader>
+          <CardTitle className="text-3xl">QRCoded Pro</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col">
+            <div className="mt-4">
+              {features.map((feature, idx) => (
+                <div
+                  key={idx}
+                  className={cn("flex flex-row text-lg mb-2", {
+                    "text-muted-foreground/60": !feature.check,
+                  })}
+                >
+                  <div>
+                    {feature.check && (
+                      <Check className="h-6 w-6 mr-2" color="#4CAF50" />
+                    )}
+                  </div>
+                  <div>{feature.desc}</div>
                 </div>
-                <div>{feature.desc}</div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </CardContent>
-      <CardFooter className="flex flex-col">
-        <Button
-          className="flex flex-row text-primary text-lg p-6 w-full"
-          variant={"outline"}
-          onClick={() => {
-            setOpenDialog(true);
-          }}
-        >
-          <p>Join waitlist</p>
-          <MoveRightIcon className="h-8 w-8 ml-4" />
-        </Button>
-      </CardFooter>
-    </Card>
+        </CardContent>
+        <CardFooter className="flex flex-col">
+          <Button
+            className="flex flex-row text-primary text-lg p-6 w-full"
+            variant={"outline"}
+            onClick={waitlistBtnHandler}
+          >
+            <p>Join waitlist</p>
+            <MoveRightIcon className="h-8 w-8 ml-4" />
+          </Button>
+        </CardFooter>
+      </Card>
+      <WaitlistDialogBox
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+      />
+    </>
   );
 };
 

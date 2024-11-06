@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import {
   ArrowRight,
@@ -11,10 +11,19 @@ import {
   UtensilsCrossedIcon,
 } from "lucide-react";
 import { Button } from "./ui/button";
+import { usePostHog } from "posthog-js/react";
+import WaitlistDialogBox from "./WaitlistDialogBox";
 
 type Props = {};
 
 const UseCase = (props: Props) => {
+  const [openDialog, setOpenDialog] = useState(false);
+  const posthog = usePostHog();
+
+  const ctaBtnClickHandler = () => {
+    setOpenDialog(!openDialog);
+    posthog.capture("usecase_cta_btn_clicked");
+  };
   return (
     <section className="relative ">
       <div className="absolute top-0 -z-10 h-full w-full ">
@@ -130,7 +139,10 @@ const UseCase = (props: Props) => {
         </div>
       </div>
       <div className=" absolute left-1/2 transform -translate-x-1/2 bottom-0   z-10">
-        <Button className=" sm:w-[200px] w-[250px] mb-4">
+        <Button
+          className=" sm:w-[200px] w-[250px] mb-4"
+          onClick={ctaBtnClickHandler}
+        >
           <div className="flex justify-between items-center">
             <div>Get QRCoded</div>
             <div className="ml-4 -mr-4">
@@ -139,6 +151,10 @@ const UseCase = (props: Props) => {
           </div>
         </Button>
       </div>
+      <WaitlistDialogBox
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+      />
     </section>
   );
 };
