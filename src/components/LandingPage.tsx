@@ -7,6 +7,7 @@ import Features from "./Features";
 import UseCase from "./UseCase";
 import Demo from "./Demo";
 import Pricing from "./Pricing";
+import Footer from "./Footer";
 
 type Props = {
   isPaid: boolean;
@@ -24,6 +25,7 @@ const LandingPage = ({ isPaid }: Props) => {
       <UseCase />
       {/* <Demo /> */}
       <Pricing ref={pricing} />
+      <Footer />
     </>
   );
 };
