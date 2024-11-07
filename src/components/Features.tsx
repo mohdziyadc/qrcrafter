@@ -93,7 +93,7 @@ const Features = (props: Props) => {
     }
 
     return () => observer.disconnect();
-  }, []);
+  });
 
   const ctaBtnHandler = () => {
     setOpenDialog(!openDialog);

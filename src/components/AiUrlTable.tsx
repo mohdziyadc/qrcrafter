@@ -75,8 +75,6 @@ const AiUrlTable = ({ isHomepage }: Props) => {
     if (anonQrcodeSuccess) {
       setAnonQrCodes(anonQrcodesData.qrCodes);
     }
-    console.log("ANON QR CODES: " + anonQrCodes);
-    console.log("IS ERROR: " + aiQrcodeError);
   }, [anonQrcodesData, anonQrcodeSuccess]);
 
   const { mutate: deleteAiUrlQr, isLoading: isDeleting } = useMutation({
