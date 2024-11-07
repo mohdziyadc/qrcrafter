@@ -17,7 +17,7 @@ export async function POST(req: Request, res: Response) {
     const base64Uuid = getBase64UUID();
     const encodedUuid = encodeURIComponent(base64Uuid);
     const generateQR = await QRCode.toDataURL(
-      `http://localhost:3000/dynamicfreetext/${encodedUuid}`,
+      `${process.env.NEXT_PUBLIC_APP_URL}/dynamicfreetext/${encodedUuid}`,
       {
         errorCorrectionLevel: "M",
         rendererOpts: {

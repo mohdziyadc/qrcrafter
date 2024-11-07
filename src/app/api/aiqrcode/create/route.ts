@@ -229,7 +229,7 @@ async function getUrlQrCode(
   console.log("{BODY from getUrl} " + JSON.stringify(body));
   const startTime = performance.now();
   let imageUrl = await replicateClient.generateQRCode({
-    url: `http://localhost:3000/api/a/${encodedToken}`,
+    url: `${process.env.NEXT_PUBLIC_APP_URL}/api/a/${encodedToken}`,
     prompt: prompt,
     qr_conditioning_scale: 2,
     num_inference_steps: 30,
@@ -261,7 +261,7 @@ async function getMultiUrlQrCode(
 
   const start = performance.now();
   let imageUrl = await replicateClient.generateQRCode({
-    url: `http://localhost:3000/aimulti/${encodedToken}`,
+    url: `${process.env.NEXT_PUBLIC_APP_URL}/aimulti/${encodedToken}`,
     prompt: prompt,
     qr_conditioning_scale: 2,
     num_inference_steps: 30,
@@ -290,7 +290,7 @@ async function getFreeTextQrCode(
   const start = performance.now();
 
   let imageUrl = await replicateClient.generateQRCode({
-    url: `http://localhost:3000/aitext/${encodedToken}`,
+    url: `${process.env.NEXT_PUBLIC_APP_URL}/aitext/${encodedToken}`,
     prompt: prompt,
     qr_conditioning_scale: 2.5,
     num_inference_steps: 30,
@@ -327,7 +327,7 @@ async function getContactQrCode(
 
   const startTime = performance.now();
   let imageUrl = await replicateClient.generateQRCode({
-    url: `http://localhost:3000/aicontact/${encodedToken}`,
+    url: `${process.env.NEXT_PUBLIC_APP_URL}/aicontact/${encodedToken}`,
     prompt: prompt,
     qr_conditioning_scale: 2,
     num_inference_steps: 30,

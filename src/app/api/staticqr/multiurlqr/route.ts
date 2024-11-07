@@ -15,7 +15,7 @@ export async function POST(req: Request, res: Response) {
     // return NextResponse.json({ urlArray: urls });
     // console.log(urls);
     const generateUserQr = await QRCode.toDataURL(
-      `http://localhost:3000/multiqr/${session.user.id}`,
+      `${process.env.NEXT_PUBLIC_APP_URL}/multiqr/${session.user.id}`,
       {
         errorCorrectionLevel: "M",
         rendererOpts: {

@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     const startTime = performance.now();
 
     let imageUrl = await replicateClient.generateQRCode({
-      url: `http://localhost:3000/aicontact/${encodedToken}`,
+      url: `${process.env.NEXT_PUBLIC_APP_URL}/aicontact/${encodedToken}`,
       prompt: prompt,
       qr_conditioning_scale: 2,
       num_inference_steps: 30,

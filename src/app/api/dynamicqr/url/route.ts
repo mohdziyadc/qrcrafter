@@ -19,7 +19,7 @@ export async function POST(req: Request, res: Response) {
     const base64uuid = getBase64UUID();
     const encodeUuid = encodeURIComponent(base64uuid);
     const generateQr = await QRCode.toDataURL(
-      `http://localhost:3000/api/redirect/${encodeUuid}`,
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/redirect/${encodeUuid}`,
       {
         errorCorrectionLevel: "M",
         rendererOpts: {

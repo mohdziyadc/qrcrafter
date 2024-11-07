@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     const startTime = performance.now();
 
     let imageUrl = await replicateClient.generateQRCode({
-      url: `http://localhost:3000/api/a/${encodedToken}`,
+      url: `${process.env.NEXT_PUBLIC_APP_URL}/api/a/${encodedToken}`,
       prompt: prompt,
       qr_conditioning_scale: 2,
       num_inference_steps: 30,
