@@ -1,12 +1,19 @@
 import DynamicAIQRCodeCard from "@/components/DynamicAIQRCodeCard";
 import DynamicAIQRCodeForm from "@/components/DynamicAIQRCodeForm";
+import { getAuthSession } from "@/lib/auth";
 import { ArrowLeft, ChevronLeft } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import React from "react";
 
 type Props = {};
 
-const AIQrCode = (props: Props) => {
+const AIQrCode = async (props: Props) => {
+  const session = await getAuthSession();
+  if (!session?.user) {
+    return redirect("/");
+  }
   return (
     <div className="flex flex-col p-6">
       <div className="w-full flex justify-start items-center ">
@@ -21,7 +28,7 @@ const AIQrCode = (props: Props) => {
       </div>
       <div className="mt-4 flex flex-row  items-center">
         <DynamicAIQRCodeForm />
-        <DynamicAIQRCodeCard />
+        <DynamicAIQRCodeCard isHomepage={false} />
       </div>
     </div>
   );
