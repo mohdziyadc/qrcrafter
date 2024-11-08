@@ -24,8 +24,9 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
-import QRCrafterLogo from "public/qrCrafter-Logo.png";
 
+const LOGO_URL =
+  "https://pub-c39a57a5d64440d1a0abfeecdb85f452.r2.dev/qrCrafter-Logo.png";
 type Props = {};
 
 type signInForm = z.infer<typeof signInFormSchema>;
@@ -44,7 +45,7 @@ const SignIn = (props: Props) => {
         <CardHeader className="mb-4">
           <CardTitle className="flex flex-row items-center justify-center">
             <Image
-              src={QRCrafterLogo}
+              src={LOGO_URL}
               alt="logo"
               width={45}
               height={45}
