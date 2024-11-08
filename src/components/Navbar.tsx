@@ -10,7 +10,6 @@ import React, {
 import SignInButton from "./buttons/SignInButton";
 import DashboardButton from "./buttons/DashboardButton";
 import Image from "next/image";
-import LogoImage from "public/qrCrafter-Logo.png";
 import { ArrowRightIcon, Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
@@ -23,6 +22,9 @@ type Props = {
   pricingRef: React.RefObject<HTMLElement>;
   playgroundRef: React.RefObject<HTMLDivElement>;
 };
+
+const LOGO_URL =
+  "https://pub-c39a57a5d64440d1a0abfeecdb85f452.r2.dev/qrCrafter-Logo.png";
 
 const Navbar = ({ isPaid, pricingRef, playgroundRef }: Props) => {
   const [toggleMenu, setToggleMenu] = useState(false);
@@ -46,6 +48,7 @@ const Navbar = ({ isPaid, pricingRef, playgroundRef }: Props) => {
       behavior: "smooth",
     });
   };
+
   return (
     <nav className="relative  border-2 border-double border-teal-400 rounded-lg   m-2   max-w-full z-11">
       <div className="absolute top-0 z-[-10] h-[200vh] w-screen bg-[#2070922e] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:24px_24px]"></div>
@@ -54,7 +57,7 @@ const Navbar = ({ isPaid, pricingRef, playgroundRef }: Props) => {
           <div className=" flex flex-row justify-center items-center font-bold text-4xl">
             <div className="mr-3">
               <Image
-                src={LogoImage}
+                src={LOGO_URL}
                 alt="logo"
                 width={40}
                 height={40}
