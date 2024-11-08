@@ -84,7 +84,7 @@ const WaitlistDialogBox = ({ openDialog, setOpenDialog }: Props) => {
         <DialogContent className="rounded-md">
           <DialogHeader>
             <DialogTitle className="font-bold">
-              Be a part of QRCoded's journey
+              Be a part of QRCoded&apos;s journey
             </DialogTitle>
           </DialogHeader>
 

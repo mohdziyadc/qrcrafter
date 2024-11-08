@@ -29,7 +29,7 @@ const Pricing = forwardRef<HTMLElement, Props>(({}: Props, ref) => {
     }
 
     return () => observer.disconnect();
-  }, []);
+  });
   return (
     <section ref={ref} id="pricing" className="relative ">
       <div ref={pricingSectionRef}>
