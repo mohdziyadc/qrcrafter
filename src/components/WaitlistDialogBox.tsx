@@ -79,7 +79,7 @@ const WaitlistDialogBox = ({ openDialog, setOpenDialog }: Props) => {
     window.open(DISCORD_INVITE_LINK, "_blank");
   };
   return (
-    <div>
+    <div className="">
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent className="rounded-md">
           <DialogHeader>

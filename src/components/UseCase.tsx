@@ -35,13 +35,13 @@ const UseCase = (props: Props) => {
       <div className="relative max-w-7xl mx-auto">
         <div className="pt-12 md:pt-20">
           {/* Section header */}
-          <div className="max-w-4xl mx-auto text-center pb-12 md:pb-16">
+          <div className="max-w-4xl mx-auto text-center px-4 pb-12 md:pb-16">
             <h1 className="text-5xl font-extrabold mb-4">
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-300 via-blue-500 to-violet-400">
                 Why do I need QRCoded?
               </span>
             </h1>
-            <p className="text-xl text-center text-primary/90">
+            <p className="text-xl text-center  text-primary/90">
               Did you know that <span className="font-bold">57%</span> of
               consumers are more likely to engage with a brand&apos;s digital
               content after scanning a QR code?

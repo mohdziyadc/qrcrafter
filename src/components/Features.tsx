@@ -207,9 +207,9 @@ const Features = (props: Props) => {
                     Choose the type of QR Code specific to your needs.
                   </div>
                   <div className="relative mt-4">
-                    <Menubar className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-2 h-fit">
+                    <Menubar className="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-2 h-fit ">
                       <MenubarMenu>
-                        <MenubarTrigger className="flex justify-center">
+                        <MenubarTrigger className="flex justify-center border-2 lg:border-0 border-white">
                           URL QR
                         </MenubarTrigger>
                         <MenubarContent>
@@ -221,14 +221,11 @@ const Features = (props: Props) => {
 
                       <Separator
                         orientation="vertical"
-                        className="absolute h-4 hidden lg:block left-[25%] bg-slate-300"
+                        className="absolute h-4 hidden lg:block left-1/4 bg-slate-300"
                       />
-                      <Separator
-                        orientation="horizontal"
-                        className="absolute w-10  lg:hidden block left-[20%] bg-slate-300"
-                      />
+
                       <MenubarMenu>
-                        <MenubarTrigger className="flex justify-center col-span-1">
+                        <MenubarTrigger className="flex justify-center border-2 lg:border-0 col-span-1 border-white">
                           Multi URL QR
                         </MenubarTrigger>
                         <MenubarContent>
@@ -242,12 +239,9 @@ const Features = (props: Props) => {
                         orientation="vertical"
                         className="absolute h-4  hidden lg:block left-[50%] bg-slate-300"
                       />
-                      <Separator
-                        orientation="vertical"
-                        className="absolute h-6  block lg:hidden left-[50%] bg-slate-300"
-                      />
+
                       <MenubarMenu>
-                        <MenubarTrigger className=" flex justify-center col-span-1">
+                        <MenubarTrigger className=" flex justify-center col-span-1 border-2 mt-1 lg:mt-0 lg:border-0 border-white">
                           Free Text QR
                         </MenubarTrigger>
                         <MenubarContent>
@@ -261,12 +255,9 @@ const Features = (props: Props) => {
                         orientation="vertical"
                         className="absolute h-4  hidden lg:block left-[75%] bg-slate-300"
                       />
-                      <Separator
-                        orientation="horizontal"
-                        className="absolute w-10  lg:hidden block left-[70%] bg-slate-300"
-                      />
+
                       <MenubarMenu>
-                        <MenubarTrigger className=" flex justify-center col-span-1 ">
+                        <MenubarTrigger className=" flex justify-center col-span-1 border-2 mt-1 lg:mt-0 lg:border-0 border-white">
                           Contact QR
                         </MenubarTrigger>
                         <MenubarContent>
