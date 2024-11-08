@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "QRCrafter",
+  title: "QRCoded",
   description: "Create stunning dynamic QR codes",
 };
 
