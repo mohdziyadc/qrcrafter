@@ -29,12 +29,11 @@ export async function POST(req: NextRequest) {
         console.log("GenerationToken " + generationToken);
         const decoded = verify(generationToken, JWT_SECRET);
         visitorId = (decoded as JwtPayload).visitorId;
-        console.log("Vistor Id from api: " + JSON.stringify(decoded));
       } catch (e) {
         console.log("Invalid Token error: " + e);
       }
     } else {
-      console.log("Generation Token: " + generationToken);
+      console.log("Generation Token Exists");
     }
     if (!visitorId) {
       visitorId = Math.random().toString(36).substring(2, 9); //alphanumeric
