@@ -5,23 +5,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Check, ChevronDown } from "lucide-react";
-import { forwardRef, useEffect, useState } from "react";
+import { Check, ChevronDown, MoveRightIcon } from "lucide-react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import HomepageForm from "./HomepageForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import NoQrFound from "./NoQrFound";
-import AiUrlTable from "./AiUrlTable";
-import HomePageTable from "./HomePageTable";
 import DynamicAIQRCodeCard from "./DynamicAIQRCodeCard";
 import HomepageCTA from "./HomepageCTA";
 import { usePostHog } from "posthog-js/react";
-// import { getFingerprintClient } from "@/lib/fingerprint";
-// const ClientJS = dynamic(() => import("../components/ClientJS"), {
-//   ssr: false,
-// });
-
-// import ModalVideo from '@/components/modal-video'
+import clsx from "clsx";
+import HomePageTable from "./HomePageTable";
 
 type Props = {
   ref: React.RefObject<HTMLDivElement>;
@@ -30,6 +23,9 @@ type Props = {
 const Hero = forwardRef<HTMLDivElement, Props>((_, ref) => {
   const [type, setType] = useState("url");
   const posthog = usePostHog();
+
+  const [isScrolled, setIsScrolled] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const dropdownItems = [
     {
       title: "URL",
@@ -50,9 +46,32 @@ const Hero = forwardRef<HTMLDivElement, Props>((_, ref) => {
   ];
 
   useEffect(() => {
-    console.log("posthog called");
-    posthog?.capture("test");
-  }, [posthog]);
+    const handleScroll = () => {
+      console.log("Handle scroll called");
+
+      if (scrollContainerRef.current) {
+        if (scrollContainerRef.current.scrollLeft > 0) {
+          setIsScrolled(true);
+        } else {
+          setIsScrolled(false);
+        }
+      }
+    };
+
+    const scrollContainer = scrollContainerRef.current;
+    if (scrollContainer) {
+      scrollContainer.addEventListener("scroll", handleScroll, {
+        passive: true,
+        capture: true,
+      });
+    }
+
+    return () => {
+      if (scrollContainer) {
+        scrollContainer.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -152,46 +171,61 @@ const Hero = forwardRef<HTMLDivElement, Props>((_, ref) => {
                     </CardContent>
                   </TabsContent>
                   <TabsContent value="get_qr">
-                    <CardHeader className="flex flex-row items-baseline -mt-4">
-                      <div className="p-2 opacity-75 text-sm">QR Type: </div>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger className="bg-muted py-2 text-sm rounded-md outline-none">
-                          <div className="flex flex-row justify-between mx-4">
-                            {
+                    <CardHeader className="flex flex-row items-baseline justify-between -mt-4">
+                      <div className="flex flex-row ">
+                        <div className="p-2 opacity-75 text-sm">QR Type: </div>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger className="bg-muted py-2 text-sm rounded-md outline-none">
+                            <div className="flex flex-row justify-between mx-4">
                               {
-                                url: "URL",
-                                multi_url: "Multi URL",
-                                contact: "Contact",
-                                free_text: "Free text",
-                              }[type]
+                                {
+                                  url: "URL",
+                                  multi_url: "Multi URL",
+                                  contact: "Contact",
+                                  free_text: "Free text",
+                                }[type]
+                              }
+                              <ChevronDown className="w-4 h-4 ml-3" />
+                            </div>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="w-12">
+                            {dropdownItems.map((dropdownItem, idx) => (
+                              <DropdownMenuItem
+                                key={idx}
+                                onClick={() => {
+                                  setType(dropdownItem.item);
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    type === dropdownItem.item
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                {dropdownItem.title}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                      <div>
+                        <div
+                          className={clsx(
+                            `flex justify-center text-xs items-center sm:hidden opacity-100 transition-opacity duration-300`,
+                            {
+                              "opacity-0": isScrolled,
                             }
-                            <ChevronDown className="w-4 h-4 ml-3" />
-                          </div>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-12">
-                          {dropdownItems.map((dropdownItem, idx) => (
-                            <DropdownMenuItem
-                              key={idx}
-                              onClick={() => {
-                                setType(dropdownItem.item);
-                              }}
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  type === dropdownItem.item
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              {dropdownItem.title}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                          )}
+                        >
+                          Scroll to edit
+                          <MoveRightIcon className="h-6 w-6 ml-2 " />
+                        </div>
+                      </div>
                     </CardHeader>
                     <CardContent className="min-h-screen">
-                      <HomePageTable qrType={type} />
+                      <HomePageTable qrType={type} ref={scrollContainerRef} />
                     </CardContent>
                   </TabsContent>
                 </Tabs>

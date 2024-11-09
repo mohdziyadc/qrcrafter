@@ -33,8 +33,6 @@ const Navbar = ({ isPaid, pricingRef, playgroundRef }: Props) => {
   const { data: session } = useSession();
   const posthog = usePostHog();
 
-  console.log("isPaid " + isPaid);
-
   const pricingClickHandler = () => {
     posthog.capture("pricing_nav_btn_clicked");
     pricingRef.current?.scrollIntoView({
@@ -136,7 +134,7 @@ const Navbar = ({ isPaid, pricingRef, playgroundRef }: Props) => {
           </div>
         </div>
         {toggleMenu && (
-          <div className="fixed  pr-10 z-20  w-full  lg:hidden">
+          <div className="absolute  pr-10 z-20  w-full  lg:hidden">
             <Card className="w-full mt-2">
               <CardContent>
                 <div className="flex flex-col text-lg items-center justify-center  ">

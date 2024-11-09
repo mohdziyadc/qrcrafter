@@ -18,7 +18,7 @@ const LandingPage = ({ isPaid }: Props) => {
   const playgroundRef = useRef<HTMLDivElement>(null);
 
   return (
-    <>
+    <div className="overflow-x-hidden">
       <Navbar
         pricingRef={pricing}
         playgroundRef={playgroundRef}
@@ -31,7 +31,7 @@ const LandingPage = ({ isPaid }: Props) => {
       {/* <Demo /> */}
       <Pricing ref={pricing} />
       <Footer />
-    </>
+    </div>
   );
 };
 

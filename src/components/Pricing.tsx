@@ -43,7 +43,7 @@ const Pricing = forwardRef<HTMLElement, Props>(({}: Props, ref) => {
                   Pricing
                 </span>
               </h1>
-              <p className="text-2xl ">
+              <p className="text-2xl p-2 text-center">
                 <span className="font-bold">Beautiful</span> QR codes,{" "}
                 <span className="font-bold">Sensible</span> Pricing.
                 <span className="font-bold"> Elevate</span> your business with
