@@ -7,7 +7,7 @@ type Props = {};
 const PrivacyPolicy = (props: Props) => {
   return (
     <div className="relative">
-      <div className="absolute top-0 z-[-2] h-screen w-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]"></div>
+      <div className="absolute top-0 z-[-2] h-full w-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]"></div>
       <div className="max-w-7xl text-xl py-8  m-auto">
         <h1 className="font-bold text-3xl mb-4">Privacy Policy for QRCoded</h1>
         <p>
@@ -16,10 +16,10 @@ const PrivacyPolicy = (props: Props) => {
           it, and how we handle it. By using our services, you agree to the
           terms of this Privacy Policy.
         </p>
-        <Separator />
+        <Separator className="my-6 bg-white" />
         <div>
-          Quick Summary
-          <ul className="ml-6">
+          <p className="font-bold">Quick Summary</p>
+          <ul className="ml-6 my-4 space-y-2">
             <li>
               • We collect anonymous statistics about your visit, such as which
               pages you view, through Posthog Analytics.
@@ -34,25 +34,32 @@ const PrivacyPolicy = (props: Props) => {
             </li>
           </ul>
         </div>
-        <Separator />
-        <div>
-          <h2>1. Information We Collect Anonymous Usage Information:</h2>
+        <Separator className="my-6 bg-white" />
+        <div className="policy-divs">
+          <h2>1. Information We Collect</h2>
+          <h3>Anonymous Usage Information:</h3>
           <p>
             When you use QRCoded, we automatically collect certain data to
             understand how our service is used and improve it. This includes,
             but is not limited to, pages you visit, time spent on each page, and
             interactions within the app. The collected information does not
-            identify you personally and is stored anonymously. Cookies and
-            Anonymous User IDs: We use cookies to generate anonymous user IDs.
-            These cookies help us track usage statistics to analyze traffic
-            patterns and improve user experience. You can control cookie
-            settings through your browser, but note that disabling cookies may
-            impact your experience on our site. Dynamic AI QR Codes: When you
-            create a dynamic AI QR Code, the data associated with the code is
-            stored on our servers. This stored data allows you to update the
-            content associated with the QR code without needing to regenerate
-            it. However, we do not store personal information unless you
-            explicitly provide it within the QR code content.
+            identify you personally and is stored anonymously.
+          </p>
+          <h3>Cookies and Anonymous User IDs:</h3>
+          <p>
+            We use cookies to generate anonymous user IDs. These cookies help us
+            track usage statistics to analyze traffic patterns and improve user
+            experience. You can control cookie settings through your browser,
+            but note that disabling cookies may impact your experience on our
+            site.
+          </p>
+          <h3>Dynamic AI QR Codes:</h3>
+          <p>
+            When you create a dynamic AI QR Code, the data associated with the
+            code is stored on our servers. This stored data allows you to update
+            the content associated with the QR code without needing to
+            regenerate it. However, we do not store personal information unless
+            you explicitly provide it within the QR code content.
           </p>
 
           <h2>2. How We Use Your Information</h2>
@@ -121,7 +128,10 @@ const PrivacyPolicy = (props: Props) => {
           <p>
             If you have questions or concerns regarding this Privacy Policy or
             our data handling practices, please contact us at
-            support@qrcoded.com.
+            <span className="underline ml-1 underline-offset-2">
+              support@qrcoded.com
+            </span>
+            .
           </p>
         </div>
       </div>

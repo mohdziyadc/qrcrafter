@@ -59,6 +59,27 @@
   }
 }
 
+.policy-divs h2 {
+  @apply font-bold;
+  @apply mb-4;
+  display: inline-block;
+  border-bottom: 2px solid white;
+  padding-bottom: 0.25rem;
+}
+
+.policy-divs p {
+  @apply mb-2;
+  line-height: 2rem;
+}
+
+.policy-divs h3 {
+  @apply font-semibold mb-2;
+}
+
+.policy-divs h3::before {
+  content: "->";
+  @apply h-6 w-6 font-normal mr-2;
+}
 /** BLue */
 
 /* @layer base {
