@@ -85,7 +85,7 @@ const Hero = forwardRef<HTMLDivElement, Props>((_, ref) => {
                 <h1 className="text-5xl flex flex-col justify-center items-center md:items-baseline md:flex-row md:text-6xl font-extrabold leading-tighter tracking-tighter mb-3">
                   No more boring
                   <span className="text-5xl ml-2 pr-2 md:text-6xl font-extrabold leading-tighter tracking-tighter  bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">
-                    QR Codes
+                    QR Codes from Preview branch
                   </span>
                 </h1>
 
