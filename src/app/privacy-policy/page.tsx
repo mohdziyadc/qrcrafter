@@ -120,9 +120,9 @@ const PrivacyPolicy = (props: Props) => {
           <p>
             We may update this Privacy Policy from time to time to reflect
             changes in our practices or for other operational, legal, or
-            regulatory reasons. When we make updates, we will revise the "last
-            updated" date at the bottom of this page. We encourage you to review
-            this policy periodically.
+            regulatory reasons. When we make updates, we will revise the
+            &quot;last updated&quot; date at the bottom of this page. We
+            encourage you to review this policy periodically.
           </p>
           <h2>8. Contact Us</h2>
           <p>
@@ -133,6 +133,9 @@ const PrivacyPolicy = (props: Props) => {
             </span>
             .
           </p>
+          <div className="font-semibold italic mt-4">
+            Last updated: 13/11/24
+          </div>
         </div>
       </div>
     </div>
