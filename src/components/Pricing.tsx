@@ -67,7 +67,7 @@ const Pricing = forwardRef<HTMLElement, Props>(({}: Props, ref) => {
         </div>
       </div> */}
       <div className="grid  grid-cols-1 p-6 gap-4 max-w-lg m-auto">
-        <div data-aos="zoom-y-out">
+        <div>
           <JoinWaitlistCard />
         </div>
       </div>
