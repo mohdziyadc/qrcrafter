@@ -17,7 +17,7 @@ const TermsAndConditions = (props: Props) => {
           these Terms, you may not use the Service. Please also review our
           Privacy Policy, which explains how we collect, use, and protect your
           information. These Terms constitute a legal agreement between you and
-          QRCoded (&quot;we&quot;, &quot;our&quot; or "us").
+          QRCoded (&quot;we&quot;, &quot;our&quot; or &quot;us&quot;).
         </p>
         <Separator className="my-6 bg-white" />
         <div className="policy-divs">
