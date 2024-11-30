@@ -11,7 +11,7 @@ const LOGO_URL =
 const Footer = (props: Props) => {
   return (
     <section className="bg-primary-foreground pt-4 pb-2 fle flex-col justify-center items-center">
-      <div className="flex flex-row mb-4 px-8 justify-between items-center w-full">
+      <div className="flex sm:flex-row flex-col gap-4 sm:gap-0 mb-4 px-8 justify-between items-center w-full">
         <div className="flex gap-4 justify-center items-center">
           <Image
             src={LOGO_URL}
