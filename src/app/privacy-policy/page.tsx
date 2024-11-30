@@ -134,7 +134,7 @@ const PrivacyPolicy = (props: Props) => {
             .
           </p>
           <div className="font-semibold italic mt-4">
-            Last updated: 13/11/24
+            Last updated: 30/11/24
           </div>
         </div>
       </div>

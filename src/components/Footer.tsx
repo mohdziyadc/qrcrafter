@@ -26,7 +26,9 @@ const Footer = (props: Props) => {
           <div>
             <Link href={"/privacy-policy"}>Privacy Policy</Link>
           </div>
-          <div>Terms &amp; Conditions</div>
+          <div>
+            <Link href={"/terms-and-conditions"}>Terms &amp; Conditions</Link>
+          </div>
         </div>
       </div>
       <div className="flex justify-center text-sm text-primary/70 items-center">
