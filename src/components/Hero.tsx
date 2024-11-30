@@ -112,43 +112,26 @@ const Hero = forwardRef<HTMLDivElement, Props>((_, ref) => {
                   </TabsList>
 
                   <TabsContent value="generate" className="-mt-2">
-                    <CardHeader className="flex flex-row items-baseline">
+                    <CardHeader className="flex flex-row sm:items-baseline items-center gap-2">
                       <div className="p-2 opacity-75 text-sm">QR Type: </div>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger className="bg-muted py-2 text-sm rounded-md outline-none">
-                          <div className="flex flex-row justify-between mx-4">
-                            {
-                              {
-                                url: "URL",
-                                multi_url: "Multi URL",
-                                contact: "Contact",
-                                free_text: "Free text",
-                              }[type]
-                            }
-                            <ChevronDown className="w-4 h-4 ml-3" />
+                      <Tabs defaultValue="url">
+                        <TabsList className="bg-secondary h-fit text-primary-foreground">
+                          <div className="grid sm:grid-cols-4 grid-cols-2 gap-2">
+                            {dropdownItems.map((tab) => (
+                              <TabsTrigger
+                                value={tab.item}
+                                key={tab.item}
+                                onClick={() => {
+                                  setType(tab.item);
+                                }}
+                                className="px-4 py-2"
+                              >
+                                {tab.title}
+                              </TabsTrigger>
+                            ))}
                           </div>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-12">
-                          {dropdownItems.map((dropdownItem, idx) => (
-                            <DropdownMenuItem
-                              key={idx}
-                              onClick={() => {
-                                setType(dropdownItem.item);
-                              }}
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  type === dropdownItem.item
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              {dropdownItem.title}
-                            </DropdownMenuItem>
-                          ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                        </TabsList>
+                      </Tabs>
                     </CardHeader>
                     <CardContent>
                       <div className="grid lg:grid-cols-3 grid-cols-1">
@@ -172,57 +155,28 @@ const Hero = forwardRef<HTMLDivElement, Props>((_, ref) => {
                   </TabsContent>
                   <TabsContent value="get_qr">
                     <CardHeader className="flex flex-row items-baseline justify-between -mt-4">
-                      <div className="flex flex-row ">
+                      <div className="flex flex-row sm:items-baseline items-center ">
                         <div className="p-2 opacity-75 text-sm">QR Type: </div>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger className="bg-muted py-2 text-sm rounded-md outline-none">
-                            <div className="flex flex-row justify-between mx-4">
-                              {
-                                {
-                                  url: "URL",
-                                  multi_url: "Multi URL",
-                                  contact: "Contact",
-                                  free_text: "Free text",
-                                }[type]
-                              }
-                              <ChevronDown className="w-4 h-4 ml-3" />
+                        <Tabs defaultValue="url">
+                          <TabsList className="bg-secondary h-fit text-primary-foreground">
+                            <div className="grid sm:grid-cols-4 grid-cols-2 gap-2">
+                              {dropdownItems.map((tab) => (
+                                <TabsTrigger
+                                  value={tab.item}
+                                  key={tab.item}
+                                  onClick={() => {
+                                    setType(tab.item);
+                                  }}
+                                  className="px-4 py-2"
+                                >
+                                  {tab.title}
+                                </TabsTrigger>
+                              ))}
                             </div>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent className="w-12">
-                            {dropdownItems.map((dropdownItem, idx) => (
-                              <DropdownMenuItem
-                                key={idx}
-                                onClick={() => {
-                                  setType(dropdownItem.item);
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    "mr-2 h-4 w-4",
-                                    type === dropdownItem.item
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  )}
-                                />
-                                {dropdownItem.title}
-                              </DropdownMenuItem>
-                            ))}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                          </TabsList>
+                        </Tabs>
                       </div>
-                      <div>
-                        <div
-                          className={clsx(
-                            `flex justify-center text-xs items-center sm:hidden opacity-100 transition-opacity duration-300`,
-                            {
-                              "opacity-0": isScrolled,
-                            }
-                          )}
-                        >
-                          Scroll to edit
-                          <MoveRightIcon className="h-6 w-6 ml-2 " />
-                        </div>
-                      </div>
+                      <div></div>
                     </CardHeader>
                     <CardContent className="min-h-screen">
                       <HomePageTable qrType={type} ref={scrollContainerRef} />

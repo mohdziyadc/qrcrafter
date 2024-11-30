@@ -12,7 +12,7 @@ import { AiURLQRCode, AnonymousURLQr } from "@prisma/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import LoadingSpinner from "@/app/manage/loading";
-import { Edit2, Loader2, Trash2 } from "lucide-react";
+import { Edit2, Loader2, MoveRightIcon, Trash2 } from "lucide-react";
 import { DialogContent, Dialog, DialogHeader, DialogTitle } from "./ui/dialog";
 import {
   AlertDialog,
@@ -28,6 +28,7 @@ import UpdateAiUrlForm from "./UpdateAiUrlForm";
 import { useToast } from "./ui/use-toast";
 import NoQrFound from "./NoQrFound";
 import { deleteAnonAiUrlQrcode, getAnonAiUrlList } from "@/lib/actions";
+import clsx from "clsx";
 
 type Props = {
   isHomepage: boolean;
@@ -181,6 +182,14 @@ const AiUrlTable = ({ isHomepage }: Props) => {
               ))}
             </TableBody>
           </Table>
+          <div
+            className={clsx(
+              `flex justify-end text-xs items-center sm:hidden opacity-100 transition-opacity duration-300`
+            )}
+          >
+            Scroll to edit
+            <MoveRightIcon className="h-6 w-6 ml-2 " />
+          </div>
           <Dialog open={editDialog} onOpenChange={setEditDialog}>
             <DialogContent className="max-w-[23rem] sm:max-w-md md:max-w-lg">
               <DialogHeader>

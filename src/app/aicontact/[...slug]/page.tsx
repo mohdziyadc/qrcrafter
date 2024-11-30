@@ -60,7 +60,9 @@ const AiContactPage = (props: Props) => {
         </div>
       )}
       {!loading && !contactQr && (
-        <div className="text-3xl">No contact present</div>
+        <div className="text-3xl flex justify-center items-center w-full h-screen">
+          No contact present
+        </div>
       )}
       {contactQr && (
         <Card className=" m-auto mt-8 w-1/3">

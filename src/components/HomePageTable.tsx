@@ -3,6 +3,8 @@ import AiUrlTable from "./AiUrlTable";
 import AiMultiUrlTable from "./AiMultiUrlTable";
 import AiFreeTextTable from "./AiFreeTextTable";
 import AiContactTable from "./AiContactTable";
+import clsx from "clsx";
+import { MoveRightIcon } from "lucide-react";
 
 type Props = {
   qrType: string;

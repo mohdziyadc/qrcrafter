@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import { Edit2, Loader2, Trash2 } from "lucide-react";
+import { Edit2, Loader2, MoveRightIcon, Trash2 } from "lucide-react";
 import { AiFreeTextQr, AnonymousFreetextQr } from "@prisma/client";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import {
@@ -28,6 +28,7 @@ import UpdateAiFreeTextForm from "./UpdateAiFreeTextForm";
 import { useToast } from "./ui/use-toast";
 import NoQrFound from "./NoQrFound";
 import { deleteAnonAiFreetextQr, getAnonAiFreetextList } from "@/lib/actions";
+import clsx from "clsx";
 
 type Props = {
   isHomepage: boolean;
@@ -162,54 +163,66 @@ const AiFreeTextTable = ({ isHomepage }: Props) => {
           <NoQrFound isHomepage={isHomepage} qrType="Free Text" />
         </div>
       ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>S.No</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Text</TableHead>
-              <TableHead>Edit</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {(isHomepage ? anonQrCodes : qrCodes).map((qrCode, idx) => {
-              const freeText = isHomepage
-                ? (qrCode as AnonymousFreetextQr).free_text
-                : (qrCode as AiFreeTextQr).freetext;
-              const displayText =
-                freeText.length > 80 ? `${freeText.slice(0, 80)}...` : freeText;
-              return (
-                <TableRow key={qrCode.id}>
-                  <TableCell>{idx + 1}</TableCell>
-                  <TableCell>{qrCode.name}</TableCell>
-                  <TableCell>{displayText}</TableCell>
-                  <TableCell>
-                    <div className="flex flex-row justify-start items-center">
-                      <div
-                        className="hover:bg-secondary-foreground/10 rounded-md w-fit p-2"
-                        onClick={() => {
-                          setEditDialog(true);
-                          setQrCode(qrCode);
-                        }}
-                      >
-                        <Edit2 className="h-4 w-4 " />
+        <>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>S.No</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Text</TableHead>
+                <TableHead>Edit</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {(isHomepage ? anonQrCodes : qrCodes).map((qrCode, idx) => {
+                const freeText = isHomepage
+                  ? (qrCode as AnonymousFreetextQr).free_text
+                  : (qrCode as AiFreeTextQr).freetext;
+                const displayText =
+                  freeText.length > 80
+                    ? `${freeText.slice(0, 80)}...`
+                    : freeText;
+                return (
+                  <TableRow key={qrCode.id}>
+                    <TableCell>{idx + 1}</TableCell>
+                    <TableCell>{qrCode.name}</TableCell>
+                    <TableCell>{displayText}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-row justify-start items-center">
+                        <div
+                          className="hover:bg-secondary-foreground/10 rounded-md w-fit p-2"
+                          onClick={() => {
+                            setEditDialog(true);
+                            setQrCode(qrCode);
+                          }}
+                        >
+                          <Edit2 className="h-4 w-4 " />
+                        </div>
+                        <div
+                          className="ml-1 text-red-500 hover:bg-secondary-foreground/10 w-fit p-2 rounded-md"
+                          onClick={() => {
+                            setQrCode(qrCode);
+                            setDeleteDialog(true);
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </div>
                       </div>
-                      <div
-                        className="ml-1 text-red-500 hover:bg-secondary-foreground/10 w-fit p-2 rounded-md"
-                        onClick={() => {
-                          setQrCode(qrCode);
-                          setDeleteDialog(true);
-                        }}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </div>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+          <div
+            className={clsx(
+              `flex justify-end text-xs items-center sm:hidden opacity-100 transition-opacity duration-300`
+            )}
+          >
+            Scroll to edit
+            <MoveRightIcon className="h-6 w-6 ml-2 " />
+          </div>
+        </>
       )}
 
       <Dialog open={editDialog} onOpenChange={setEditDialog}>

@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import { Edit2, Loader2, Trash2 } from "lucide-react";
+import { Edit2, Loader2, MoveRightIcon, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import {
   AlertDialog,
@@ -27,6 +27,7 @@ import UpdateAiMultiUrlForm from "./UpdateAiMultiUrlForm";
 import { useToast } from "./ui/use-toast";
 import NoQrFound from "./NoQrFound";
 import { deleteAnonAiMultiUrlQr, getAnonAiMultiUrlList } from "@/lib/actions";
+import clsx from "clsx";
 
 type Props = {
   isHomepage: boolean;
@@ -194,6 +195,14 @@ const AiMultiUrlTable = ({ isHomepage }: Props) => {
               ))}
             </TableBody>
           </Table>
+          <div
+            className={clsx(
+              `flex justify-end text-xs items-center sm:hidden opacity-100 transition-opacity duration-300`
+            )}
+          >
+            Scroll to edit
+            <MoveRightIcon className="h-6 w-6 ml-2 " />
+          </div>
           <Dialog open={editDialog} onOpenChange={setEditDialog}>
             <DialogContent className="max-w-[23rem] sm:max-w-md md:max-w-lg">
               <DialogHeader>

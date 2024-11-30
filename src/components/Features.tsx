@@ -62,12 +62,8 @@ const Features = (props: Props) => {
       scanCount: 50,
     },
     {
-      qrName: "Coupon #1",
-      scanCount: 60,
-    },
-    {
       qrName: "Socials QR",
-      scanCount: 20,
+      scanCount: 60,
     },
   ];
 
