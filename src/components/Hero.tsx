@@ -1,19 +1,10 @@
 import { Card, CardContent, CardHeader } from "./ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { Check, ChevronDown, MoveRightIcon } from "lucide-react";
 import { forwardRef, useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
 import HomepageForm from "./HomepageForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import DynamicAIQRCodeCard from "./DynamicAIQRCodeCard";
 import HomepageCTA from "./HomepageCTA";
 import { usePostHog } from "posthog-js/react";
-import clsx from "clsx";
 import HomePageTable from "./HomePageTable";
 
 type Props = {
