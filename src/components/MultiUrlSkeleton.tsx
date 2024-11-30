@@ -80,9 +80,9 @@ const MultiUrlSkeleton = ({ form }: Props) => {
           </motion.div>
         ))}
       </ScrollArea>
-      <div className="flex items-center justify-center mt-4">
+      <div className="flex flex-row items-center justify-center mt-4">
         <Separator className="flex-[1]" />
-        <div className="mx-4">
+        <div className="mx-4 flex sm:flex-row flex-col gap-1 sm:gap-0 justify-center items-center">
           {/* To make it a normal btn add type attribute. If it isnt added, it will try to submit the form */}
           <Button
             type="button"

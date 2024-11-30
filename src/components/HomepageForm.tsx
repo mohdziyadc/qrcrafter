@@ -251,7 +251,8 @@ const HomepageForm = ({ qrType }: Props) => {
                     />
                   </FormControl>
                   <FormDescription className="">
-                    This is what the image in your QR code will look like.
+                    This is what the image in your QR code will look like. Be
+                    creative here!
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
