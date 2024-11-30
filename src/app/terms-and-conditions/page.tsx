@@ -7,7 +7,7 @@ const TermsAndConditions = (props: Props) => {
   return (
     <div className="relative">
       <div className="absolute top-0 z-[-2] h-full w-screen bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]"></div>
-      <div className="max-w-7xl text-xl py-8  m-auto">
+      <div className="max-w-7xl text-xl p-8  m-auto">
         <h1 className="font-bold text-3xl mb-4">Terms and Conditions</h1>
         <h2 className="font-bold mb-2">Welcome to QRCoded!</h2>
         <p>
