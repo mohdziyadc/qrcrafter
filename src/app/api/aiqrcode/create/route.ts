@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { getBase64UUID } from "@/lib/utils";
 import {
   AiAnonContactResponse,
-  AiContactResponse,
   AiFreeTextResponse,
   AiMultiUrlResponse,
   AiUrlResponse,
@@ -10,7 +9,6 @@ import {
 import { replicateClient } from "@/lib/replicate";
 import { prismaClient } from "@/lib/db";
 import { JwtPayload, sign, verify } from "jsonwebtoken";
-import { AnonymousUser } from "@prisma/client";
 import { cookies } from "next/headers";
 import { r2Client } from "@/lib/r2Client";
 
@@ -78,12 +76,12 @@ export async function POST(req: NextRequest) {
           case "url":
             response = await getUrlQrCode(body, encodedToken);
             if (response) {
-              // const imageBuffer = await r2Client.urlToBuffer(
-              //   response.image_url
-              // );
-              // const { url: r2ImageUrl } = await r2Client.uploadImage(
-              //   imageBuffer
-              // );
+              const imageBuffer = await r2Client.urlToBuffer(
+                response.image_url
+              );
+              const { url: r2ImageUrl } = await r2Client.uploadImage(
+                imageBuffer
+              );
               await prisma.anonymousURLQr.create({
                 data: {
                   url: response.user_url,
@@ -247,15 +245,15 @@ async function getUrlQrCode(
   const { prompt, name, url } = body;
   console.log("{BODY from getUrl} " + JSON.stringify(body));
   const startTime = performance.now();
-  // let imageUrl = await replicateClient.generateQRCode({
-  //   url: `${process.env.NEXT_PUBLIC_APP_URL}/api/a/${encodedToken}`,
-  //   prompt: prompt,
-  //   qr_conditioning_scale: 2,
-  //   num_inference_steps: 30,
-  //   guidance_scale: 10,
-  //   negative_prompt:
-  //     "Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, blurry",
-  // });
+  let imageUrl = await replicateClient.generateQRCode({
+    url: `${process.env.NEXT_PUBLIC_APP_URL}/api/a/${encodedToken}`,
+    prompt: prompt,
+    qr_conditioning_scale: 2,
+    num_inference_steps: 30,
+    guidance_scale: 10,
+    negative_prompt:
+      "Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, blurry",
+  });
 
   const endTime = performance.now();
   const durationMS = endTime - startTime;
@@ -264,7 +262,7 @@ async function getUrlQrCode(
     name: name,
     latency_ms: Math.round(durationMS),
     token: encodedToken,
-    image_url: "",
+    image_url: imageUrl,
     user_url: url,
   };
 
