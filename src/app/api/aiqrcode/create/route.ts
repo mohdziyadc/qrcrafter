@@ -51,11 +51,11 @@ export async function POST(req: NextRequest) {
       async (prisma) => {
         const anonymousUser = await prisma.anonymousUser.upsert({
           where: {
-            vistorId: visitorId,
+            vistorId: visitorId!,
           },
           update: {},
           create: {
-            vistorId: visitorId,
+            vistorId: visitorId!,
             numQrCodes: 0,
           },
         });
