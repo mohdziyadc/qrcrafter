@@ -118,7 +118,7 @@ const AiURLForm = (props: Props) => {
                 <FormItem>
                   <FormLabel>URL</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://qrcrafter.pro" {...field} />
+                    <Input placeholder="https://qrcoded.pro" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is what your QR code will link to.
