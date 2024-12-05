@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
               await prisma.anonymousURLQr.create({
                 data: {
                   url: response.user_url,
-                  image_url: "",
+                  image_url: r2ImageUrl,
                   name: response.name,
                   anonymousUserId: anonymousUser.id,
                   uniqueToken: encodedToken,
