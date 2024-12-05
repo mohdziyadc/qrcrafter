@@ -48,26 +48,182 @@ export async function POST(req: NextRequest) {
 
       console.log("Cookie Set " + newToken);
     }
-    let anonymousUser: AnonymousUser | undefined;
-    try {
-      anonymousUser = (await prismaClient.anonymousUser.findUnique({
-        where: {
-          vistorId: visitorId,
-        },
-      })) as AnonymousUser;
-    } catch (e) {
-      console.log("[PRISMA ERORR] " + e);
-    }
 
-    if (!anonymousUser) {
-      anonymousUser = await prismaClient.anonymousUser.create({
-        data: {
-          vistorId: visitorId,
-        },
-      });
-    }
+    const result = await prismaClient.$transaction(
+      async (prisma) => {
+        const anonymousUser = await prisma.anonymousUser.upsert({
+          where: {
+            vistorId: visitorId,
+          },
+          update: {},
+          create: {
+            vistorId: visitorId,
+            numQrCodes: 0,
+          },
+        });
+        if (anonymousUser.numQrCodes >= 5) {
+          throw new Error("QR Code Limit Reached");
+        }
 
-    if (anonymousUser.numQrCodes >= 5) {
+        const token = getBase64UUID();
+        const encodedToken = encodeURIComponent(token);
+
+        let response:
+          | AiUrlResponse
+          | AiMultiUrlResponse
+          | AiFreeTextResponse
+          | AiAnonContactResponse;
+
+        switch (qrType) {
+          case "url":
+            response = await getUrlQrCode(body, encodedToken);
+            if (response) {
+              // const imageBuffer = await r2Client.urlToBuffer(
+              //   response.image_url
+              // );
+              // const { url: r2ImageUrl } = await r2Client.uploadImage(
+              //   imageBuffer
+              // );
+              await prisma.anonymousURLQr.create({
+                data: {
+                  url: response.user_url,
+                  image_url: "",
+                  name: response.name,
+                  anonymousUserId: anonymousUser.id,
+                  uniqueToken: encodedToken,
+                  createdAt: new Date(),
+                },
+              });
+
+              await prisma.anonymousUser.update({
+                where: {
+                  vistorId: visitorId,
+                },
+                data: {
+                  numQrCodes: { increment: 1 },
+                  lastGeneratedAt: new Date(),
+                },
+              });
+            }
+            break;
+          //must add this break statement in order to avoid multiple api calls during execution
+          case "multi_url":
+            response = await getMultiUrlQrCode(body, encodedToken);
+            if (response) {
+              const imageBuffer = await r2Client.urlToBuffer(
+                response.image_url
+              );
+              const { url: r2ImageUrl } = await r2Client.uploadImage(
+                imageBuffer
+              );
+              await prisma.anonymousMultiUrlQr.create({
+                data: {
+                  name: response.name,
+                  urls: response.user_urls,
+                  titles: response.user_titles,
+                  anonymousUserId: anonymousUser.id,
+                  uniqueToken: encodedToken,
+                  image_url: r2ImageUrl,
+                },
+              });
+
+              await prisma.anonymousUser.update({
+                where: {
+                  vistorId: visitorId,
+                },
+                data: {
+                  numQrCodes: { increment: 1 },
+                  lastGeneratedAt: new Date(),
+                },
+              });
+            }
+            break;
+          case "free_text":
+            response = await getFreeTextQrCode(body, encodedToken);
+            if (response) {
+              const imageBuffer = await r2Client.urlToBuffer(
+                response.image_url
+              );
+              const { url: r2ImageUrl } = await r2Client.uploadImage(
+                imageBuffer
+              );
+              await prisma.anonymousFreetextQr.create({
+                data: {
+                  name: response.name,
+                  free_text: response.user_free_text,
+                  image_url: r2ImageUrl,
+                  anonymousUserId: anonymousUser.id,
+                  uniqueToken: encodedToken,
+                },
+              });
+
+              await prisma.anonymousUser.update({
+                where: {
+                  vistorId: visitorId,
+                },
+                data: {
+                  numQrCodes: { increment: 1 },
+                  lastGeneratedAt: new Date(),
+                },
+              });
+            }
+            break;
+          case "contact":
+            response = await getContactQrCode(body, encodedToken);
+            if (response) {
+              const imageBuffer = await r2Client.urlToBuffer(
+                response.image_url
+              );
+              const { url: r2ImageUrl } = await r2Client.uploadImage(
+                imageBuffer
+              );
+              await prisma.anonymousContactQr.create({
+                data: {
+                  first_name: response.user_first_name,
+                  name: response.name,
+                  last_name: response.user_last_name,
+                  image_url: r2ImageUrl,
+                  phone_number: response.user_phone_number,
+                  organisation: response.user_organisation,
+                  email: response.user_email,
+                  anonymousUserId: anonymousUser.id,
+                  uniqueToken: encodedToken,
+                },
+              });
+
+              await prisma.anonymousUser.update({
+                where: {
+                  vistorId: visitorId,
+                },
+                data: {
+                  numQrCodes: { increment: 1 },
+                  lastGeneratedAt: new Date(),
+                },
+              });
+            }
+            break;
+          default:
+            response = await getUrlQrCode(body, encodedToken);
+            return;
+        }
+        return { response, count: anonymousUser.numQrCodes };
+      },
+      {
+        timeout: 10000,
+        maxWait: 5000,
+      }
+    );
+
+    return NextResponse.json(
+      {
+        allowed: true,
+        responseData: result?.response,
+        count: result?.count,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    if (error instanceof Error && error.message === "QR Code Limit Reached") {
       return NextResponse.json(
         {
           allowed: false,
@@ -77,142 +233,6 @@ export async function POST(req: NextRequest) {
         { status: 429 }
       );
     }
-
-    const token = getBase64UUID();
-    const encodedToken = encodeURIComponent(token);
-
-    let response:
-      | AiUrlResponse
-      | AiMultiUrlResponse
-      | AiFreeTextResponse
-      | AiAnonContactResponse;
-
-    switch (qrType) {
-      case "url":
-        response = await getUrlQrCode(body, encodedToken);
-        if (response) {
-          const imageBuffer = await r2Client.urlToBuffer(response.image_url);
-          const { url: r2ImageUrl } = await r2Client.uploadImage(imageBuffer);
-          await prismaClient.anonymousURLQr.create({
-            data: {
-              url: response.user_url,
-              image_url: r2ImageUrl,
-              name: response.name,
-              anonymousUserId: anonymousUser.id,
-              uniqueToken: encodedToken,
-              createdAt: new Date(),
-            },
-          });
-
-          await prismaClient.anonymousUser.update({
-            where: {
-              vistorId: visitorId,
-            },
-            data: {
-              numQrCodes: { increment: 1 },
-              lastGeneratedAt: new Date(),
-            },
-          });
-        }
-        break;
-      //must add this break statement in order to avoid multiple api calls during execution
-      case "multi_url":
-        response = await getMultiUrlQrCode(body, encodedToken);
-        if (response) {
-          const imageBuffer = await r2Client.urlToBuffer(response.image_url);
-          const { url: r2ImageUrl } = await r2Client.uploadImage(imageBuffer);
-          await prismaClient.anonymousMultiUrlQr.create({
-            data: {
-              name: response.name,
-              urls: response.user_urls,
-              titles: response.user_titles,
-              anonymousUserId: anonymousUser.id,
-              uniqueToken: encodedToken,
-              image_url: r2ImageUrl,
-            },
-          });
-
-          await prismaClient.anonymousUser.update({
-            where: {
-              vistorId: visitorId,
-            },
-            data: {
-              numQrCodes: { increment: 1 },
-              lastGeneratedAt: new Date(),
-            },
-          });
-        }
-        break;
-      case "free_text":
-        response = await getFreeTextQrCode(body, encodedToken);
-        if (response) {
-          const imageBuffer = await r2Client.urlToBuffer(response.image_url);
-          const { url: r2ImageUrl } = await r2Client.uploadImage(imageBuffer);
-          await prismaClient.anonymousFreetextQr.create({
-            data: {
-              name: response.name,
-              free_text: response.user_free_text,
-              image_url: r2ImageUrl,
-              anonymousUserId: anonymousUser.id,
-              uniqueToken: encodedToken,
-            },
-          });
-
-          await prismaClient.anonymousUser.update({
-            where: {
-              vistorId: visitorId,
-            },
-            data: {
-              numQrCodes: { increment: 1 },
-              lastGeneratedAt: new Date(),
-            },
-          });
-        }
-        break;
-      case "contact":
-        response = await getContactQrCode(body, encodedToken);
-        if (response) {
-          const imageBuffer = await r2Client.urlToBuffer(response.image_url);
-          const { url: r2ImageUrl } = await r2Client.uploadImage(imageBuffer);
-          await prismaClient.anonymousContactQr.create({
-            data: {
-              first_name: response.user_first_name,
-              name: response.name,
-              last_name: response.user_last_name,
-              image_url: r2ImageUrl,
-              phone_number: response.user_phone_number,
-              organisation: response.user_organisation,
-              email: response.user_email,
-              anonymousUserId: anonymousUser.id,
-              uniqueToken: encodedToken,
-            },
-          });
-
-          await prismaClient.anonymousUser.update({
-            where: {
-              vistorId: visitorId,
-            },
-            data: {
-              numQrCodes: { increment: 1 },
-              lastGeneratedAt: new Date(),
-            },
-          });
-        }
-        break;
-      default:
-        response = await getUrlQrCode(body, encodedToken);
-        return;
-    }
-
-    return NextResponse.json(
-      {
-        allowed: true,
-        responseData: response,
-        count: anonymousUser.numQrCodes,
-      },
-      { status: 200 }
-    );
-  } catch (error) {
     console.log("INTERNAL SERVOR ERROR " + JSON.stringify(error));
     return NextResponse.json("[INTERNAL SERVOR ERROR] " + error, {
       status: 500,
@@ -227,15 +247,15 @@ async function getUrlQrCode(
   const { prompt, name, url } = body;
   console.log("{BODY from getUrl} " + JSON.stringify(body));
   const startTime = performance.now();
-  let imageUrl = await replicateClient.generateQRCode({
-    url: `${process.env.NEXT_PUBLIC_APP_URL}/api/a/${encodedToken}`,
-    prompt: prompt,
-    qr_conditioning_scale: 2,
-    num_inference_steps: 30,
-    guidance_scale: 10,
-    negative_prompt:
-      "Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, blurry",
-  });
+  // let imageUrl = await replicateClient.generateQRCode({
+  //   url: `${process.env.NEXT_PUBLIC_APP_URL}/api/a/${encodedToken}`,
+  //   prompt: prompt,
+  //   qr_conditioning_scale: 2,
+  //   num_inference_steps: 30,
+  //   guidance_scale: 10,
+  //   negative_prompt:
+  //     "Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, blurry",
+  // });
 
   const endTime = performance.now();
   const durationMS = endTime - startTime;
@@ -244,7 +264,7 @@ async function getUrlQrCode(
     name: name,
     latency_ms: Math.round(durationMS),
     token: encodedToken,
-    image_url: imageUrl,
+    image_url: "",
     user_url: url,
   };
 
